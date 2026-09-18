@@ -39,17 +39,6 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
-        /* Scrollbar oscuro elegante para el modal y listas */
-        .dark-custom-scrollbar::-webkit-scrollbar {
-            width: 5px;
-        }
-        .dark-custom-scrollbar::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.1);
-        }
-        .dark-custom-scrollbar::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 9999px;
-        }
     </style>
 </head>
 <body class="bg-amber-950 text-white selection:bg-orange-500 selection:text-white">
@@ -409,56 +398,62 @@
           const isLight = selectedItem.isLight;
           const filteredComunas = COMUNAS_SANTIAGO.filter(c => c.toLowerCase().includes(comunaSearch.toLowerCase()));
 
-          // Componente interno reutilizable para el contenido del Carrito / Checkout en formato horizontal amplio con diseño oscuro elegante
+          // Determinamos si el fondo dinámico actual es claro/luminoso para forzar textos oscuros/negros de alto contraste
+          const isCurrentBgLight = isLight || selectedItem.id === 'pollo';
+          const textColorClass = isCurrentBgLight ? 'text-stone-950 font-black' : 'text-white';
+          const subTextColorClass = isCurrentBgLight ? 'text-stone-900 font-bold' : 'text-white/90';
+          const borderBoxClass = isCurrentBgLight ? 'border-stone-900/30 bg-white/60' : 'border-white/20 bg-black/30';
+
+          // Componente interno reutilizable para el contenido del Carrito / Checkout en formato horizontal amplio sin scroll
           const renderCartContent = () => (
-            <div className="flex flex-col space-y-4">
-              <div className="flex items-center justify-between border-b pb-2.5 border-white/15 text-white">
-                <span className="text-xs md:text-sm uppercase tracking-wider font-extrabold text-white">Productos en tu bolsa</span>
+            <div className="flex flex-col space-y-3.5">
+              <div className={`flex items-center justify-between border-b pb-2 ${isCurrentBgLight ? 'border-stone-900/20 text-stone-950' : 'border-white/20 text-white'}`}>
+                <span className={`text-xs md:text-sm uppercase tracking-wider font-black ${textColorClass}`}>Productos en tu bolsa</span>
                 {cart.length > 0 && (
                   <button 
                     onClick={clearCart}
-                    className="text-xs md:text-sm font-black transition flex items-center gap-1.5 cursor-pointer text-white/90 hover:text-white"
+                    className={`text-xs md:text-sm font-black transition flex items-center gap-1.5 cursor-pointer ${textColorClass} hover:opacity-75`}
                   >
-                    <i className="fa-solid fa-trash-can text-xs text-white/90"></i> Vaciar
+                    <i className="fa-solid fa-trash-can text-xs"></i> Vaciar
                   </button>
                 )}
               </div>
 
               {cart.length === 0 ? (
-                <div className="py-10 text-center text-xs md:text-sm space-y-2 text-white font-bold opacity-80">
-                  <i className="fa-solid fa-bag-shopping text-4xl opacity-50 block mb-1 text-white"></i>
+                <div className={`py-6 text-center text-xs md:text-sm space-y-2 font-bold ${textColorClass} opacity-80`}>
+                  <i className="fa-solid fa-bag-shopping text-3xl opacity-50 block mb-1"></i>
                   Tu bolsa está vacía. ¡Añade platos!
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-start">
                   
-                  {/* Columna Izquierda del Modal: Lista de productos con fondo oscuro elegante */}
-                  <div className="md:col-span-6 space-y-3 flex flex-col">
-                    <div className="space-y-2.5 max-h-64 md:max-h-80 overflow-y-auto dark-custom-scrollbar pr-2">
+                  {/* Columna Izquierda del Modal: Lista de productos */}
+                  <div className="md:col-span-6 space-y-2.5 flex flex-col">
+                    <div className="space-y-2">
                       {cart.map((item) => (
-                        <div key={item.cartItemId} className="flex items-center justify-between gap-3 bg-black/30 border-white/15 text-white shadow-md backdrop-blur-md p-3 rounded-xl border">
-                          <div className="flex items-center gap-2.5 min-w-0">
-                            <img src={item.image} alt={item.title} className="w-10 h-10 object-cover rounded-lg shrink-0 border border-white/10" />
+                        <div key={item.cartItemId} className={`flex items-center justify-between gap-2.5 shadow-sm backdrop-blur-md p-2.5 rounded-xl border ${borderBoxClass}`}>
+                          <div className="flex items-center gap-2 min-w-0">
+                            <img src={item.image} alt={item.title} className="w-9 h-9 object-cover rounded-lg shrink-0 border border-black/10" />
                             <div className="min-w-0">
-                              <h4 className="font-black text-xs truncate text-white">{item.displayTitle}</h4>
-                              <p className="text-xs font-extrabold text-orange-300">{item.price} c/u</p>
+                              <h4 className={`font-black text-xs truncate ${textColorClass}`}>{item.displayTitle}</h4>
+                              <p className={`text-xs font-black ${isCurrentBgLight ? 'text-amber-900' : 'text-orange-300'}`}>{item.price} c/u</p>
                             </div>
                           </div>
 
                           <div className="flex items-center gap-2 shrink-0">
-                            <div className="flex items-center bg-black/40 border-white/20 text-white border rounded-lg px-1.5 py-0.5">
-                              <button onClick={() => updateCartItemQty(item.cartItemId, -1)} className="px-1 text-xs font-black cursor-pointer text-white">
+                            <div className={`flex items-center border rounded-lg px-1.5 py-0.5 ${isCurrentBgLight ? 'bg-white border-stone-900/30 text-stone-950' : 'bg-black/40 border-white/20 text-white'}`}>
+                              <button onClick={() => updateCartItemQty(item.cartItemId, -1)} className="px-1 text-xs font-black cursor-pointer">
                                 <i className="fa-solid fa-minus text-[7px]"></i>
                               </button>
-                              <span className="w-5 text-center text-xs font-black text-white">{item.quantity}</span>
-                              <button onClick={() => updateCartItemQty(item.cartItemId, 1)} className="px-1 text-xs font-black cursor-pointer text-white">
+                              <span className="w-4 text-center text-xs font-black">{item.quantity}</span>
+                              <button onClick={() => updateCartItemQty(item.cartItemId, 1)} className="px-1 text-xs font-black cursor-pointer">
                                 <i className="fa-solid fa-plus text-[7px]"></i>
                               </button>
                             </div>
-                            <span className="font-black text-xs w-14 text-right text-white">${(item.rawPrice * item.quantity).toLocaleString('es-CL')}</span>
+                            <span className={`font-black text-xs w-12 text-right ${textColorClass}`}>${(item.rawPrice * item.quantity).toLocaleString('es-CL')}</span>
                             <button 
                               onClick={() => removeCartItem(item.cartItemId)}
-                              className="w-6 h-6 rounded-full flex items-center justify-center transition cursor-pointer text-xs shrink-0 bg-red-500/20 text-red-300 hover:bg-red-500 hover:text-white border border-red-500/30 font-bold"
+                              className={`w-6 h-6 rounded-full flex items-center justify-center transition cursor-pointer text-xs shrink-0 font-bold ${isCurrentBgLight ? 'bg-stone-950 text-white hover:bg-stone-800' : 'bg-red-500/20 text-red-300 hover:bg-red-500 hover:text-white border border-red-500/30'}`}
                               title="Eliminar"
                             >
                               <i className="fa-solid fa-trash-can text-[9px]"></i>
@@ -468,18 +463,18 @@
                       ))}
                     </div>
 
-                    <div className="flex justify-between items-center pt-2.5 border-t border-white/15 text-white font-black text-sm">
+                    <div className={`flex justify-between items-center pt-2 border-t ${isCurrentBgLight ? 'border-stone-900/20 text-stone-950' : 'border-white/20 text-white'} font-black text-sm`}>
                       <span>Total a pagar:</span>
-                      <span className="text-base font-black text-orange-400">
+                      <span className={`text-base font-black ${isCurrentBgLight ? 'text-stone-950' : 'text-orange-400'}`}>
                         ${cart.reduce((acc, item) => acc + (item.rawPrice * item.quantity), 0).toLocaleString('es-CL')}
                       </span>
                     </div>
                   </div>
 
-                  {/* Columna Derecha del Modal: Formulario con campos de fondo oscuro/negro elegante */}
+                  {/* Columna Derecha del Modal: Formulario */}
                   <div className="md:col-span-6">
-                    <form onSubmit={handleCheckoutSubmit} className="space-y-3">
-                      <h4 className="text-xs md:text-sm font-black uppercase tracking-wider text-white">Datos de Entrega</h4>
+                    <form onSubmit={handleCheckoutSubmit} className="space-y-2.5">
+                      <h4 className={`text-xs md:text-sm font-black uppercase tracking-wider ${textColorClass}`}>Datos de Entrega</h4>
                       
                       <input 
                         type="text" 
@@ -487,7 +482,11 @@
                         required
                         value={formData.fullName}
                         onChange={(e) => setFormData({...formData, fullName: e.target.value})}
-                        className="w-full bg-black/40 border-white/25 text-white placeholder-white/50 font-bold backdrop-blur-md border rounded-xl px-3.5 py-2.5 text-xs md:text-sm outline-none focus:border-orange-500 transition shadow-inner"
+                        className={`w-full font-black backdrop-blur-md border rounded-xl px-3 py-2 text-xs md:text-sm outline-none transition shadow-inner ${
+                          isCurrentBgLight 
+                            ? 'bg-white/90 border-stone-900/30 text-stone-950 placeholder-stone-900/50 focus:border-stone-950' 
+                            : 'bg-black/40 border-white/25 text-white placeholder-white/50 focus:border-orange-500'
+                        }`}
                       />
 
                       <input 
@@ -496,23 +495,31 @@
                         required
                         value={formData.address}
                         onChange={(e) => setFormData({...formData, address: e.target.value})}
-                        className="w-full bg-black/40 border-white/25 text-white placeholder-white/50 font-bold backdrop-blur-md border rounded-xl px-3.5 py-2.5 text-xs md:text-sm outline-none focus:border-orange-500 transition shadow-inner"
+                        className={`w-full font-black backdrop-blur-md border rounded-xl px-3 py-2 text-xs md:text-sm outline-none transition shadow-inner ${
+                          isCurrentBgLight 
+                            ? 'bg-white/90 border-stone-900/30 text-stone-950 placeholder-stone-900/50 focus:border-stone-950' 
+                            : 'bg-black/40 border-white/25 text-white placeholder-white/50 focus:border-orange-500'
+                        }`}
                       />
 
-                      <div className="grid grid-cols-2 gap-2.5">
+                      <div className="grid grid-cols-2 gap-2">
                         {/* Selector de Comuna Personalizado */}
                         <div className="relative" ref={comunaRef}>
                           <div 
                             onClick={() => setComunaDropdownOpen(!comunaDropdownOpen)}
-                            className="w-full bg-black/40 border-white/25 text-white font-black backdrop-blur-md border rounded-xl px-3.5 py-2.5 text-xs md:text-sm flex items-center justify-between cursor-pointer transition select-none shadow-inner"
+                            className={`w-full font-black backdrop-blur-md border rounded-xl px-3 py-2 text-xs md:text-sm flex items-center justify-between cursor-pointer transition select-none shadow-inner ${
+                              isCurrentBgLight 
+                                ? 'bg-white/90 border-stone-900/30 text-stone-950' 
+                                : 'bg-black/40 border-white/25 text-white'
+                            }`}
                           >
                             <span className="truncate">{formData.comuna}</span>
-                            <i className="fa-solid fa-chevron-down text-[10px] text-white opacity-70"></i>
+                            <i className="fa-solid fa-chevron-down text-[10px] opacity-70"></i>
                           </div>
 
                           {comunaDropdownOpen && (
-                            <div className="absolute left-0 right-0 mt-1 bg-stone-900 text-white border-white/20 shadow-2xl rounded-2xl border z-50 p-2.5">
-                              <div className="flex items-center gap-2 bg-black/50 border-white/15 text-white px-2.5 py-1.5 rounded-xl border mb-2">
+                            <div className="absolute left-0 right-0 mt-1 bg-stone-900 text-white border-white/20 shadow-2xl rounded-2xl border z-50 p-2">
+                              <div className="flex items-center gap-1.5 bg-black/50 border-white/15 text-white px-2.5 py-1 rounded-xl border mb-1.5">
                                 <i className="fa-solid fa-search text-xs text-white opacity-70"></i>
                                 <input 
                                   type="text" 
@@ -520,10 +527,10 @@
                                   value={comunaSearch}
                                   onChange={(e) => setComunaSearch(e.target.value)}
                                   autoFocus
-                                  className="bg-transparent w-full text-xs md:text-sm outline-none placeholder-white/50 font-bold text-white"
+                                  className="bg-transparent w-full text-xs outline-none placeholder-white/50 font-bold text-white"
                                 />
                               </div>
-                              <div className="max-h-56 overflow-y-auto dark-custom-scrollbar space-y-1 pr-1">
+                              <div className="max-h-40 overflow-y-auto no-scrollbar space-y-0.5 pr-0.5">
                                 {filteredComunas.length > 0 ? (
                                   filteredComunas.map((comuna) => (
                                     <div 
@@ -533,7 +540,7 @@
                                         setComunaDropdownOpen(false);
                                         setComunaSearch('');
                                       }}
-                                      className={`px-3 py-2 rounded-xl text-xs md:text-sm cursor-pointer transition font-bold ${
+                                      className={`px-2.5 py-1.5 rounded-xl text-xs cursor-pointer transition font-bold ${
                                         formData.comuna === comuna 
                                           ? 'bg-orange-500 text-white font-black' 
                                           : 'hover:bg-white/10 text-white'
@@ -554,14 +561,18 @@
                         <div className="relative" ref={paymentRef}>
                           <div 
                             onClick={() => setPaymentDropdownOpen(!paymentDropdownOpen)}
-                            className="w-full bg-black/40 border-white/25 text-white font-black backdrop-blur-md border rounded-xl px-3.5 py-2.5 text-xs md:text-sm flex items-center justify-between cursor-pointer transition select-none shadow-inner"
+                            className={`w-full font-black backdrop-blur-md border rounded-xl px-3 py-2 text-xs md:text-sm flex items-center justify-between cursor-pointer transition select-none shadow-inner ${
+                              isCurrentBgLight 
+                                ? 'bg-white/90 border-stone-900/30 text-stone-950' 
+                                : 'bg-black/40 border-white/25 text-white'
+                            }`}
                           >
                             <span className="truncate">{formData.paymentMethod}</span>
-                            <i className="fa-solid fa-chevron-down text-[10px] text-white opacity-70"></i>
+                            <i className="fa-solid fa-chevron-down text-[10px] opacity-70"></i>
                           </div>
 
                           {paymentDropdownOpen && (
-                            <div className="absolute left-0 right-0 mt-1 bg-stone-900 text-white border-white/20 shadow-2xl rounded-2xl border z-50 p-2.5 space-y-1">
+                            <div className="absolute left-0 right-0 mt-1 bg-stone-900 text-white border-white/20 shadow-2xl rounded-2xl border z-50 p-2 space-y-1">
                               {METODOS_PAGO.map((metodo) => (
                                 <div 
                                   key={metodo}
@@ -569,7 +580,7 @@
                                     setFormData({...formData, paymentMethod: metodo});
                                     setPaymentDropdownOpen(false);
                                   }}
-                                  className={`px-3 py-2 rounded-xl text-xs md:text-sm cursor-pointer transition font-bold ${
+                                  className={`px-2.5 py-1.5 rounded-xl text-xs cursor-pointer transition font-bold ${
                                     formData.paymentMethod === metodo 
                                       ? 'bg-orange-500 text-white font-black' 
                                       : 'hover:bg-white/10 text-white'
@@ -589,14 +600,22 @@
                         required
                         value={formData.phone}
                         onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                        className="w-full bg-black/40 border-white/25 text-white placeholder-white/50 font-bold backdrop-blur-md border rounded-xl px-3.5 py-2.5 text-xs md:text-sm outline-none focus:border-orange-500 transition shadow-inner"
+                        className={`w-full font-black backdrop-blur-md border rounded-xl px-3 py-2 text-xs md:text-sm outline-none transition shadow-inner ${
+                          isCurrentBgLight 
+                            ? 'bg-white/90 border-stone-900/30 text-stone-950 placeholder-stone-900/50 focus:border-stone-950' 
+                            : 'bg-black/40 border-white/25 text-white placeholder-white/50 focus:border-orange-500'
+                        }`}
                       />
 
                       <button 
                         type="submit"
-                        className="w-full font-black py-3 rounded-xl transition shadow-xl text-xs md:text-sm uppercase tracking-wider cursor-pointer mt-1 flex items-center justify-center gap-2.5 bg-stone-950 hover:bg-black text-white border border-white/20"
+                        className={`w-full font-black py-2.5 rounded-xl transition shadow-xl text-xs uppercase tracking-wider cursor-pointer mt-1 flex items-center justify-center gap-2 ${
+                          isCurrentBgLight 
+                            ? 'bg-stone-950 text-white hover:bg-stone-800 border border-stone-950' 
+                            : 'bg-stone-950 text-white hover:bg-black border border-white/20'
+                        }`}
                       >
-                        <i className="fa-brands fa-whatsapp text-lg text-emerald-400"></i>
+                        <i className="fa-brands fa-whatsapp text-sm text-emerald-400"></i>
                         Enviar Pedido por WhatsApp
                       </button>
                     </form>
@@ -927,12 +946,12 @@
                 </div>
               </main>
 
-              {/* 3. Modal Horizontal Amplio, Mayor Altura Vertical y Diseño Oscuro Elegante */}
+              {/* 3. Modal Horizontal Amplio, Altura Generosa sin Scroll y Contraste Inteligente */}
               {cartOpen && (
                 <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-4">
                   
-                  {/* Se incrementó max-h a [92vh] y se otorgó mayor altura y soltura vertical general */}
-                  <div className={`bg-gradient-to-br ${selectedItem.bgGradient} rounded-3xl max-w-3xl md:max-w-4xl w-full p-6 md:p-8 shadow-2xl border border-white/30 relative animate-in fade-in zoom-in duration-200 max-h-[92vh] overflow-y-auto dark-custom-scrollbar`}>
+                  {/* Altura generosa sin scroll ("no-scrollbar") y adaptabilidad cromática inteligente para textos oscuros si el fondo es claro */}
+                  <div className={`bg-gradient-to-br ${selectedItem.bgGradient} rounded-3xl max-w-3xl md:max-w-4xl w-full p-6 md:p-8 shadow-2xl border ${isCurrentBgLight ? 'border-stone-900/30' : 'border-white/30'} relative animate-in fade-in zoom-in duration-200 no-scrollbar`}>
                     
                     {/* Botón cerrar */}
                     <button 
@@ -941,20 +960,24 @@
                         e.stopPropagation();
                         setCartOpen(false);
                       }}
-                      className="absolute top-5 right-5 w-9 h-9 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center transition cursor-pointer z-20 font-bold text-base border border-white/20"
+                      className={`absolute top-5 right-5 w-9 h-9 rounded-full flex items-center justify-center transition cursor-pointer z-20 font-bold text-base border ${
+                        isCurrentBgLight 
+                          ? 'bg-stone-950/10 hover:bg-stone-950/20 text-stone-950 border-stone-900/30' 
+                          : 'bg-black/40 hover:bg-black/60 text-white border-white/20'
+                      }`}
                     >
                       <i className="fa-solid fa-xmark text-sm"></i>
                     </button>
 
-                    <h3 className="text-xl md:text-2xl font-black mb-5 tracking-wide drop-shadow-sm pr-12 text-white">Resumen de tu Pedido</h3>
+                    <h3 className={`text-xl md:text-2xl font-black mb-4 tracking-wide drop-shadow-sm pr-12 ${textColorClass}`}>Resumen de tu Pedido</h3>
 
                     {orderSuccess ? (
-                      <div className="py-16 text-center space-y-4">
-                        <div className="w-20 h-20 bg-black/40 text-emerald-400 rounded-full flex items-center justify-center mx-auto text-3xl font-bold border border-white/20">
+                      <div className="py-12 text-center space-y-4">
+                        <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto text-3xl font-bold border ${isCurrentBgLight ? 'bg-stone-950/10 text-stone-950 border-stone-900/30' : 'bg-black/40 text-emerald-400 border-white/20'}`}>
                           <i className="fa-solid fa-check text-2xl"></i>
                         </div>
-                        <h4 className="text-xl font-black text-white">¡Redirigiendo a WhatsApp!</h4>
-                        <p className="text-sm font-bold opacity-80 text-white">Se abrió tu chat con el pedido detallado. ¡Gracias por elegir HŌFU!</p>
+                        <h4 className={`text-xl font-black ${textColorClass}`}>¡Redirigiendo a WhatsApp!</h4>
+                        <p className={`text-sm font-bold opacity-80 ${textColorClass}`}>Se abrió tu chat con el pedido detallado. ¡Gracias por elegir HŌFU!</p>
                       </div>
                     ) : (
                       renderCartContent()
