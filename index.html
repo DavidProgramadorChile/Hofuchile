@@ -423,7 +423,7 @@
           const totalCartItemsCount = cart.reduce((acc, item) => acc + item.quantity, 0);
 
           return (
-            <div className={`min-h-screen w-full bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-x-hidden select-none relative pb-12`}>
+            <div className={`min-h-screen w-full bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-x-hidden select-none relative pb-28 lg:pb-12`}>
               
               {/* Elemento Volador para la Animación de Succión (Fly-to-Cart) */}
               {flyingItem && (
@@ -570,8 +570,8 @@
                 })}
               </div>
 
-              {/* 2. Main Hero Section */}
-              <main className="flex-1 flex items-center justify-center px-4 md:px-8 py-8 z-10 w-full max-w-7xl mx-auto">
+              {/* 2. Main Hero Section con margen inferior holgado para móvil */}
+              <main className="flex-1 flex items-center justify-center px-4 md:px-8 py-8 z-10 w-full max-w-7xl mx-auto pb-16 lg:pb-0">
                 <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                   
                   {/* Columna Izquierda (PC) */}
@@ -656,7 +656,7 @@
                     </div>
 
                     {/* Controles en Móvil (INTACTOS) */}
-                    <div className={`flex lg:hidden flex-col items-center text-center space-y-3 w-full px-3 mt-1 pb-4 transition-all duration-300 ease-out ${animating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
+                    <div className={`flex lg:hidden flex-col items-center text-center space-y-3 w-full px-3 mt-1 pb-6 transition-all duration-300 ease-out ${animating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
                       <p className={`text-xs sm:text-sm font-medium leading-relaxed max-w-xs ${isLight ? 'text-stone-900/90' : 'text-white/95'} drop-shadow`}>
                         {selectedItem.description}
                       </p>
