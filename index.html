@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HŌFU - Menu Master</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- React y ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel para compilar JSX en el navegador -->
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        /* Transiciones fluidas estilo app nativa */
+        .native-transition {
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        /* Animación de pulso para el contador del carrito */
+        @keyframes badgePop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.4); }
+            100% { transform: scale(1); }
+        }
+        .badge-bounce {
+            animation: badgePop 0.3s ease-in-out;
+        }
+        /* Ocultar barras de scroll para un diseño limpio y profesional */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-amber-950 text-white selection:bg-orange-500 selection:text-white">
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // Estructura completa de categorías y productos
+        const categoriesData = {
+          gohan: {
+            name: 'GOHAN',
+            items: [
+              {
+                id: 'salmon',
+                title: 'Gohan Salmón',
+                description: 'Base de Arroz • Salmón • Palta • Queso Crema • Cebollín',
+                price: '$6.500',
+                rawPrice: 6500,
+                bgGradient: 'from-amber-700 via-orange-600 to-stone-950',
+                isLight: false,
+                image: 'img/gohansalmon.png',
+              },
+              {
+                id: 'camaron',
+                title: 'Gohan Camarón',
+                description: 'Base de Arroz • Camarón Apanado • Palta • Queso Crema • Cebollín',
+                price: '$6.000',
+                rawPrice: 6000,
+                bgGradient: 'from-rose-800 via-orange-700 to-stone-950',
+                isLight: false,
+                image: 'img/gohancamaron.png',
+              },
+              {
+                id: 'pollo',
+                title: 'Gohan Pollo',
+                description: 'Base de Arroz • Pollo Apanado • Palta • Queso Crema • Cebollín',
+                price: '$5.500',
+                rawPrice: 5500,
+                bgGradient: 'from-amber-400 via-yellow-400 to-orange-400',
+                isLight: true,
+                image: 'img/gohanpollo.png',
+              },
+            ]
+          },
+          rolls: {
+            name: 'SPECIAL ROLLS',
+            items: [
+              {
+                id: 'tempuraroll',
+                title: 'Tempura Roll',
+                description: 'Camarón Apanado • Palta • Queso Crema',
+                price: '$4.800',
+                rawPrice: 4800,
+                bgGradient: 'from-amber-600 via-amber-700 to-stone-950',
+                isLight: false,
+                image: 'img/tempuraroll.png',
+              },
+              {
+                id: 'eskimalroll',
+                title: 'Eskimal Roll',
+                description: 'Camarón • Palta • Queso Crema',
+                price: '$4.600',
+                rawPrice: 4600,
+                bgGradient: 'from-teal-600 via-cyan-800 to-stone-950',
+                isLight: false,
+                image: 'img/eskimalroll.png',
+              }
+            ]
+          },
+          bebidas: {
+            name: 'BEBIDAS',
+            items: [
+              {
+                id: 'bebidal15',
+                title: 'Bebidas de Lt 1.5',
+                description: 'Bebida formato familiar 1.5 Litros bien fría para acompañar',
+                price: '$2.500',
+                rawPrice: 2500,
+                bgGradient: 'from-red-800 via-stone-900 to-stone-950',
+                isLight: false,
+                image: 'img/bebida1.5.png',
+                hasFlavorSelector: true
+              },
+              {
+                id: 'bebidasa350',
+                title: 'Bebibas 350 cc',
+                description: 'Bebida en lata individual 350 cc refrescante',
+                price: '$1.500',
+                rawPrice: 1500,
+                bgGradient: 'from-blue-800 via-indigo-900 to-stone-950',
+                isLight: false,
+                image: 'img/bebidaslata.png',
+                hasFlavorSelector: true
+              }
+            ]
+          },
+          extras: {
+            name: 'EXTRAS',
+            items: [
+              {
+                id: 'soyaextra',
+                title: 'Salsa Soya Extra',
+                description: 'Porción adicional de salsa de soya tradicional',
+                price: '$500',
+                rawPrice: 500,
+                bgGradient: 'from-amber-900 via-stone-900 to-stone-950',
+                isLight: false,
+                image: 'img/soyaextra.png',
+              },
+              {
+                id: 'unaguiextra',
+                title: 'Salsa Unagui Extra',
+                description: 'Salsa dulce de anguila caramelizada adicional',
+                price: '$800',
+                rawPrice: 800,
+                bgGradient: 'from-amber-800 via-orange-950 to-stone-950',
+                isLight: false,
+                image: 'img/unaguiextra.png',
+              },
+              {
+                id: 'porcionpalta',
+                title: 'Porción de Palta',
+                description: 'Extra de palta fresca en láminas',
+                price: '$1.200',
+                rawPrice: 1200,
+                bgGradient: 'from-emerald-700 via-green-900 to-stone-950',
+                isLight: false,
+                image: 'img/porcionpalta.png',
+              },
+              {
+                id: 'quesocremaextra',
+                title: 'Queso Crema Extra',
+                description: 'Porción adicional de queso crema Philadelphia',
+                price: '$1.000',
+                rawPrice: 1000,
+                bgGradient: 'from-yellow-700 via-amber-900 to-stone-950',
+                isLight: false,
+                image: 'img/quesocremaextra.png',
+              }
+            ]
+          }
+        };
+
+        const SABORES_BEBIDAS = ["Coca-Cola", "Coca-Cola Zero", "Fanta", "Sprite"];
+
+        const COMUNAS_SANTIAGO = [
+          "Cerrillos", "Cerro Navia", "Conchalí", "El Bosque", "Estación Central", 
+          "Huechuraba", "Independencia", "La Cisterna", "La Florida", "La Granja", 
+          "La Pintana", "La Reina", "Las Condes", "Lo Barnechea", "Lo Espejo", 
+          "Lo Prado", "Macul", "Maipú", "Ñuñoa", "Pedro Aguirre Cerda", 
+          "Peñalolén", "Providencia", "Pudahuel", "Quilicura", "Quinta Normal", 
+          "Recoleta", "Renca", "San Joaquín", "San Miguel", "San Ramón", 
+          "Santiago", "Vitacura"
+        ];
+
+        const METODOS_PAGO = ["Efectivo", "Tarjeta"];
+
+        function HofuLanding() {
+          const [activeCategory, setActiveCategory] = useState('gohan');
+          const [selectedItem, setSelectedItem] = useState(categoriesData.gohan.items[0]);
+          const [selectedFlavor, setSelectedFlavor] = useState('Coca-Cola');
+          const [animating, setAnimating] = useState(false);
+          const [quantity, setQuantity] = useState(1);
+
+          // Estados para interactividad (Buscador limpio, Carrito y Modal Checkout)
+          const [searchOpen, setSearchOpen] = useState(false);
+          const [searchQuery, setSearchQuery] = useState('');
+          const [cartOpen, setCartOpen] = useState(false);
+          const [cart, setCart] = useState([]);
+          const [orderSuccess, setOrderSuccess] = useState(false);
+          const [badgePulsing, setBadgePulsing] = useState(false);
+          
+          // Estado para animación de succión (Fly-to-Cart)
+          const [flyingItem, setFlyingItem] = useState(null);
+
+          const [formData, setFormData] = useState({ 
+            fullName: '', 
+            address: '', 
+            comuna: 'Santiago', 
+            phone: '',
+            paymentMethod: 'Efectivo'
+          });
+
+          // Estado para selectores personalizados
+          const [comunaDropdownOpen, setComunaDropdownOpen] = useState(false);
+          const [comunaSearch, setComunaSearch] = useState('');
+          const [paymentDropdownOpen, setPaymentDropdownOpen] = useState(false);
+
+          const comunaRef = useRef(null);
+          const paymentRef = useRef(null);
+          const searchContainerRef = useRef(null);
+          const cartButtonRef = useRef(null);
+          const productImgRef = useRef(null);
+
+          // Manejar clics fuera de los dropdowns y buscador para cerrarlos
+          useEffect(() => {
+            function handleClickOutside(event) {
+              if (comunaRef.current && !comunaRef.current.contains(event.target)) {
+                setComunaDropdownOpen(false);
+              }
+              if (paymentRef.current && !paymentRef.current.contains(event.target)) {
+                setPaymentDropdownOpen(false);
+              }
+              if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
+                setSearchOpen(false);
+              }
+            }
+            document.addEventListener("mousedown", handleClickOutside);
+            return () => document.removeEventListener("mousedown", handleClickOutside);
+          }, []);
+
+          // Cambiar de categoría con transición fluida
+          const handleCategoryChange = (categoryKey) => {
+            if (categoryKey === activeCategory) return;
+            setAnimating(true);
+            setActiveCategory(categoryKey);
+            const firstItem = categoriesData[categoryKey].items[0];
+            setSelectedItem(firstItem);
+            setSelectedFlavor('Coca-Cola');
+            setQuantity(1);
+            setTimeout(() => setAnimating(false), 350);
+          };
+
+          // Cambiar de producto con transición fluida tipo app nativa
+          const handleItemChange = (item) => {
+            if (item.id === selectedItem.id) return;
+            setAnimating(true);
+            setSelectedItem(item);
+            setSelectedFlavor('Coca-Cola');
+            setQuantity(1);
+            setTimeout(() => setAnimating(false), 350);
+          };
+
+          // Control de cantidad
+          const decreaseQty = () => setQuantity(prev => (prev > 1 ? prev - 1 : 1));
+          const increaseQty = () => setQuantity(prev => prev + 1);
+
+          // Añadir producto actual al carrito con Animación de Succión (Fly-to-Cart)
+          const addToCart = () => {
+            if (productImgRef.current && cartButtonRef.current) {
+              const startRect = productImgRef.current.getBoundingClientRect();
+              const endRect = cartButtonRef.current.getBoundingClientRect();
+
+              setFlyingItem({
+                image: selectedItem.image,
+                startX: startRect.left + startRect.width / 2 - 25,
+                startY: startRect.top + startRect.height / 2 - 25,
+                endX: endRect.left + endRect.width / 2 - 25,
+                endY: endRect.top + endRect.height / 2 - 25
+              });
+
+              setTimeout(() => {
+                setFlyingItem(null);
+                setBadgePulsing(true);
+                setTimeout(() => setBadgePulsing(false), 300);
+              }, 600);
+            }
+
+            const flavorSuffix = selectedItem.hasFlavorSelector ? ` (${selectedFlavor})` : '';
+            const cartItemId = `${selectedItem.id}${flavorSuffix}`;
+            const cartItemTitle = `${selectedItem.title}${flavorSuffix}`;
+
+            setCart(prevCart => {
+              const existingIndex = prevCart.findIndex(item => item.cartItemId === cartItemId);
+              if (existingIndex > -1) {
+                const updated = [...prevCart];
+                updated[existingIndex].quantity += quantity;
+                return updated;
+              } else {
+                return [...prevCart, { 
+                  ...selectedItem, 
+                  cartItemId, 
+                  displayTitle: cartItemTitle, 
+                  quantity 
+                }];
+              }
+            });
+            setQuantity(1);
+          };
+
+          // Modificar cantidad en carrito
+          const updateCartItemQty = (cartItemId, delta) => {
+            setCart(prevCart => {
+              return prevCart.map(item => {
+                if (item.cartItemId === cartItemId) {
+                  const newQty = item.quantity + delta;
+                  return newQty > 0 ? { ...item, quantity: newQty } : null;
+                }
+                return item;
+              }).filter(Boolean);
+            });
+          };
+
+          // Eliminar un producto específico del carrito
+          const removeCartItem = (cartItemId) => {
+            setCart(prevCart => prevCart.filter(item => item.cartItemId !== cartItemId));
+          };
+
+          // Vaciar todo el carrito
+          const clearCart = () => {
+            setCart([]);
+          };
+
+          // Filtrar productos para el buscador principal entre todas las categorías
+          const allProducts = Object.values(categoriesData).flatMap(cat => cat.items);
+          const filteredProducts = searchQuery.trim() === '' ? [] : allProducts.filter(p => 
+            p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            p.description.toLowerCase().includes(searchQuery.toLowerCase())
+          );
+
+          const selectSearchedItem = (item) => {
+            const targetCat = Object.keys(categoriesData).find(catKey => 
+              categoriesData[catKey].items.some(i => i.id === item.id)
+            ) || 'gohan';
+            
+            setAnimating(true);
+            setActiveCategory(targetCat);
+            setSelectedItem(item);
+            setSelectedFlavor('Coca-Cola');
+            setQuantity(1);
+            setSearchOpen(false);
+            setSearchQuery('');
+            setTimeout(() => setAnimating(false), 350);
+          };
+
+          // Procesar formulario y enviar a WhatsApp
+          const handleCheckoutSubmit = (e) => {
+            e.preventDefault();
+            if (!formData.fullName || !formData.address || !formData.phone) return;
+
+            const totalAmount = cart.reduce((acc, item) => acc + (item.rawPrice * item.quantity), 0);
+            
+            let message = `*¡Hola HŌFU! Quisiera realizar el siguiente pedido:*\n\n`;
+            message += `*📋 DETALLE DE LA ORDEN:*\n`;
+            cart.forEach((item, idx) => {
+              message += `${idx + 1}. ${item.displayTitle} x${item.quantity} - $${(item.rawPrice * item.quantity).toLocaleString('es-CL')}\n`;
+            });
+            message += `\n*💰 Total a pagar:* $${totalAmount.toLocaleString('es-CL')}\n`;
+            message += `*💳 Método de pago:* ${formData.paymentMethod}\n\n`;
+            
+            message += `*📍 DATOS DE ENTREGA:*\n`;
+            message += `• *Nombre:* ${formData.fullName}\n`;
+            message += `• *Dirección:* ${formData.address}\n`;
+            message += `• *Comuna:* ${formData.comuna}\n`;
+            message += `• *Teléfono:* ${formData.phone}\n`;
+
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/56920468336?text=${encodedMessage}`;
+
+            setOrderSuccess(true);
+            
+            setTimeout(() => {
+              window.open(whatsappUrl, '_blank');
+              setOrderSuccess(false);
+              setCart([]);
+              setCartOpen(false);
+              setFormData({ fullName: '', address: '', comuna: 'Santiago', phone: '', paymentMethod: 'Efectivo' });
+            }, 2000);
+          };
+
+          const isLight = selectedItem.isLight;
+          const filteredComunas = COMUNAS_SANTIAGO.filter(c => c.toLowerCase().includes(comunaSearch.toLowerCase()));
+
+          return (
+            <div className={`min-h-screen w-full bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-x-hidden select-none relative`}>
+              
+              {/* Elemento Volador para la Animación de Succión (Fly-to-Cart) */}
+              {flyingItem && (
+                <div 
+                  style={{
+                    position: 'fixed',
+                    left: `${flyingItem.startX}px`,
+                    top: `${flyingItem.startY}px`,
+                    zIndex: 9999,
+                    pointerEvents: 'none',
+                    animation: 'flyToCart 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards'
+                  }}
+                >
+                  <img src={flyingItem.image} alt="Flying item" className="w-14 h-14 object-contain drop-shadow-2xl rounded-full bg-black/40 p-1 border border-white/30" />
+                </div>
+              )}
+
+              <style>{`
+                @keyframes flyToCart {
+                  0% {
+                    transform: translate(0, 0) scale(1) rotate(0deg);
+                    opacity: 1;
+                  }
+                  100% {
+                    transform: translate(${flyingItem ? flyingItem.endX - flyingItem.startX : 0}px, ${flyingItem ? flyingItem.endY - flyingItem.startY : 0}px) scale(0.15) rotate(360deg);
+                    opacity: 0.2;
+                  }
+                }
+              `}</style>
+
+              {/* 1. Navbar Principal con Buscador Integrado y No Invasivo */}
+              <header className="w-full px-6 md:px-12 py-5 flex items-center justify-between z-30 max-w-7xl mx-auto relative">
+                {/* Logo HŌFU */}
+                <div className="flex items-center cursor-pointer">
+                  <span className={`font-black tracking-[0.3em] text-2xl md:text-3xl uppercase drop-shadow-sm ${isLight ? 'text-stone-950' : 'text-white'}`}>
+                    HŌFU
+                  </span>
+                </div>
+
+                {/* Sistema de Pestañas de Categorías (Desktop) */}
+                <nav className={`hidden md:flex items-center gap-1 ${isLight ? 'bg-black/10 border-stone-900/20 text-stone-900' : 'bg-black/20 border-white/20 text-white'} backdrop-blur-md px-4 py-1.5 rounded-full border text-xs tracking-wider font-medium shadow-md`}>
+                  {Object.keys(categoriesData).map((catKey) => {
+                    const isActive = activeCategory === catKey;
+                    return (
+                      <button
+                        key={catKey}
+                        onClick={() => handleCategoryChange(catKey)}
+                        className={`px-4 py-2 rounded-full transition-all duration-300 cursor-pointer tracking-wider ${
+                          isActive 
+                            ? `${isLight ? 'bg-stone-950 text-white' : 'bg-white/25 text-white'} shadow-sm font-bold scale-105` 
+                            : `${isLight ? 'hover:text-stone-950 text-stone-900/80' : 'hover:text-white text-white/80'}`
+                        }`}
+                      >
+                        {categoriesData[catKey].name}
+                      </button>
+                    );
+                  })}
+                </nav>
+
+                {/* Controles Derechos: Buscador & Carrito */}
+                <div className="flex items-center gap-3" ref={searchContainerRef}>
+                  
+                  {/* Buscador Integrado No Invasivo */}
+                  <div className="flex items-center relative">
+                    {!searchOpen ? (
+                      <button 
+                        onClick={() => setSearchOpen(true)}
+                        className={`w-10 h-10 rounded-full ${isLight ? 'bg-black/10 border-stone-900/20 text-stone-900 hover:bg-black/20' : 'bg-black/20 border-white/20 text-white hover:bg-black/30'} backdrop-blur-md flex items-center justify-center border transition cursor-pointer shadow-md`}
+                        title="Buscar producto"
+                      >
+                        <i className="fa-solid fa-search text-xs"></i>
+                      </button>
+                    ) : (
+                      <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border ${isLight ? 'bg-white text-stone-950 border-stone-300' : 'bg-stone-900 text-white border-white/20'} shadow-lg transition-all duration-300 w-48 sm:w-64`}>
+                        <i className="fa-solid fa-search text-xs opacity-50 shrink-0"></i>
+                        <input 
+                          type="text" 
+                          placeholder="Buscar plato, bebida..." 
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          autoFocus
+                          className="bg-transparent w-full text-xs outline-none placeholder-current placeholder-opacity-50"
+                        />
+                        <button 
+                          onClick={() => {
+                            setSearchOpen(false);
+                            setSearchQuery('');
+                          }}
+                          className="w-5 h-5 rounded-full flex items-center justify-center opacity-60 hover:opacity-100 transition cursor-pointer text-xs"
+                        >
+                          <i className="fa-solid fa-xmark text-xs"></i>
+                        </button>
+                      </div>
+                    )}
+
+                    {/* Resultados del buscador */}
+                    {searchOpen && searchQuery.trim() !== '' && (
+                      <div className={`absolute right-0 top-12 w-72 sm:w-80 ${isLight ? 'bg-white text-stone-950 border-stone-300' : 'bg-stone-900 text-white border-white/10'} p-3 rounded-2xl shadow-2xl border z-40`}>
+                        <div className="max-h-48 overflow-y-auto space-y-1">
+                          {filteredProducts.length > 0 ? (
+                            filteredProducts.map(prod => (
+                              <div 
+                                key={prod.id}
+                                onClick={() => selectSearchedItem(prod)}
+                                className={`flex items-center justify-between p-2 rounded-xl ${isLight ? 'hover:bg-stone-100' : 'hover:bg-white/10'} cursor-pointer transition text-xs`}
+                              >
+                                <div className="flex items-center gap-2">
+                                  <img src={prod.image} alt={prod.title} className="w-8 h-8 object-cover rounded-lg" />
+                                  <span className="font-semibold">{prod.title}</span>
+                                </div>
+                                <span className="font-bold text-orange-400">{prod.price}</span>
+                              </div>
+                            ))
+                          ) : (
+                            <div className="p-3 text-center text-xs opacity-50">No se encontraron resultados</div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Botón Carrito con Ref para Animación Fly-to-Cart */}
+                  <button 
+                    ref={cartButtonRef}
+                    onClick={() => setCartOpen(true)}
+                    className={`w-10 h-10 rounded-full ${isLight ? 'bg-black/10 border-stone-900/20 text-stone-900 hover:bg-black/20' : 'bg-black/20 border-white/20 text-white hover:bg-black/30'} backdrop-blur-md flex items-center justify-center border transition relative cursor-pointer shadow-md`}
+                  >
+                    <i className="fa-solid fa-bag-shopping text-xs"></i>
+                    {cart.reduce((sum, item) => sum + item.quantity, 0) > 0 && (
+                      <span className={`absolute -top-1 -right-1 w-4 h-4 bg-orange-500 text-white rounded-full text-[10px] flex items-center justify-center font-bold ${badgePulsing ? 'badge-bounce' : ''}`}>
+                        {cart.reduce((sum, item) => sum + item.quantity, 0)}
+                      </span>
+                    )}
+                  </button>
+
+                </div>
+              </header>
+
+              {/* Menú de categorías móvil */}
+              <div className={`flex md:hidden overflow-x-auto px-4 py-2 gap-2 scrollbar-none z-20 border-b ${isLight ? 'border-stone-900/10 bg-black/5 text-stone-900' : 'border-white/10 bg-black/15 text-white'} backdrop-blur-md justify-start sm:justify-center`}>
+                {Object.keys(categoriesData).map((catKey) => {
+                  const isActive = activeCategory === catKey;
+                  return (
+                    <button
+                      key={catKey}
+                      onClick={() => handleCategoryChange(catKey)}
+                      className={`px-4 py-1.5 rounded-full text-[10px] tracking-wider whitespace-nowrap transition-all duration-300 cursor-pointer ${
+                        isActive 
+                          ? `${isLight ? 'bg-stone-950 text-white font-bold' : 'bg-white/30 text-white font-bold'} scale-105` 
+                          : `${isLight ? 'text-stone-900/80' : 'text-white/80'}`
+                      }`}
+                    >
+                      {categoriesData[catKey].name}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* 2. Main Hero Section con Transición Fluida Estilo App Nativa */}
+              <main className="flex-1 flex items-center justify-center px-4 md:px-8 py-2 z-10 w-full">
+                <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center mx-auto">
+                  
+                  {/* Columna Izquierda (Desktop): Título, descripción, selector de sabor y controles */}
+                  <div className="lg:col-span-5 hidden lg:flex flex-col justify-center space-y-4 order-1 text-left pt-2">
+                    <div className={`space-y-3 lg:space-y-4 transition-all duration-300 ease-out ${animating ? 'opacity-0 -translate-x-6 scale-95' : 'opacity-100 translate-x-0 scale-100'}`}>
+                      <h1 className="text-4xl lg:text-6xl font-extrabold tracking-tight leading-tight whitespace-nowrap drop-shadow-sm">
+                        <span>{selectedItem.title}</span>
+                      </h1>
+                      
+                      <p className={`text-base lg:text-lg leading-relaxed max-w-md font-medium ${isLight ? 'text-stone-900/90' : 'text-white/95'} drop-shadow`}>
+                        {selectedItem.description}
+                      </p>
+
+                      {/* Selector de Sabor Estilizado (Solo en Bebidas) */}
+                      {selectedItem.hasFlavorSelector && (
+                        <div className="space-y-1.5 pt-1">
+                          <label className="text-xs font-bold uppercase tracking-wider opacity-90 block">Elige tu sabor:</label>
+                          <div className="flex flex-wrap gap-2">
+                            {SABORES_BEBIDAS.map((flavor) => (
+                              <button
+                                key={flavor}
+                                onClick={() => setSelectedFlavor(flavor)}
+                                className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+                                  selectedFlavor === flavor
+                                    ? 'bg-orange-500 border-orange-400 text-white shadow-md scale-105'
+                                    : `${isLight ? 'bg-black/5 border-stone-900/20 text-stone-900 hover:bg-black/10' : 'bg-black/30 border-white/20 text-white/90 hover:bg-black/50'}`
+                                }`}
+                              >
+                                {flavor}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Control de Cantidad y Botón Añadir al Carrito */}
+                      <div className="pt-2 flex items-center gap-4">
+                        <div className={`flex items-center rounded-full border px-3 py-1.5 ${isLight ? 'bg-black/5 border-stone-900/20' : 'bg-black/30 border-white/25'} backdrop-blur-md shadow-md`}>
+                          <button onClick={decreaseQty} className="w-7 h-7 flex items-center justify-center font-bold text-base hover:opacity-75 transition cursor-pointer">
+                            <i className="fa-solid fa-minus text-xs"></i>
+                          </button>
+                          <span className="w-8 text-center font-bold text-sm">{quantity}</span>
+                          <button onClick={increaseQty} className="w-7 h-7 flex items-center justify-center font-bold text-base hover:opacity-75 transition cursor-pointer">
+                            <i className="fa-solid fa-plus text-xs"></i>
+                          </button>
+                        </div>
+
+                        <button 
+                          onClick={addToCart}
+                          className={`font-semibold px-8 py-3.5 rounded-full flex items-center gap-3 transition shadow-xl text-sm group cursor-pointer border ${isLight ? 'bg-stone-950 text-white border-black hover:bg-stone-900' : 'bg-stone-950 text-white border-white/20 hover:bg-black'}`}
+                        >
+                          Añadir al carrito 
+                          <span className="w-6 h-6 bg-white text-stone-950 rounded-full flex items-center justify-center text-xs font-bold group-hover:translate-x-1 transition">
+                            <i className="fa-solid fa-plus text-[10px]"></i>
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Versión Móvil: Título superior */}
+                  <div className={`flex lg:hidden flex-col items-center text-center order-1 pt-2 pb-0 transition-all duration-300 ease-out ${animating ? 'opacity-0 scale-90' : 'opacity-100 scale-100'}`}>
+                    <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight whitespace-nowrap drop-shadow-sm">
+                      <span>{selectedItem.title}</span>
+                    </h1>
+                  </div>
+
+                  {/* Columna Central: Visor de Producto Dinámico */}
+                  <div className="lg:col-span-4 relative flex flex-col items-center justify-center order-2">
+                    <div className="relative w-full h-[250px] sm:h-[320px] lg:h-[420px] flex items-center justify-center my-0">
+                      <div className={`absolute w-60 h-60 sm:w-72 sm:h-72 ${isLight ? 'bg-white/60' : 'bg-white/20'} rounded-full blur-3xl pointer-events-none transition-all duration-500`}></div>
+                      
+                      <img 
+                        ref={productImgRef}
+                        src={selectedItem.image} 
+                        alt={selectedItem.title}
+                        className={`max-h-full max-w-full object-contain drop-shadow-[0_30px_30px_rgba(0,0,0,0.5)] transition-all duration-400 ease-out ${
+                          animating ? 'opacity-0 scale-75 rotate-3 translate-y-6' : 'opacity-100 scale-100 rotate-0 translate-y-0'
+                        }`}
+                        onError={(e)=>{
+                          e.target.src = "https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&q=80&w=800";
+                        }}
+                      />
+                    </div>
+
+                    {/* Descripción, Selector de Sabor y Controles en Móvil */}
+                    <div className={`flex lg:hidden flex-col items-center text-center space-y-3 w-full px-2 mt-0 transition-all duration-300 ease-out ${animating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
+                      <p className={`text-xs sm:text-sm font-medium leading-relaxed max-w-xs ${isLight ? 'text-stone-900/90' : 'text-white/95'} drop-shadow`}>
+                        {selectedItem.description}
+                      </p>
+
+                      {/* Selector de Sabor Estilizado (Móvil) */}
+                      {selectedItem.hasFlavorSelector && (
+                        <div className="space-y-1 w-full max-w-xs pt-1">
+                          <label className="text-[10px] font-bold uppercase tracking-wider opacity-90 block text-center">Elige tu sabor:</label>
+                          <div className="flex flex-wrap justify-center gap-1.5">
+                            {SABORES_BEBIDAS.map((flavor) => (
+                              <button
+                                key={flavor}
+                                onClick={() => setSelectedFlavor(flavor)}
+                                className={`px-2.5 py-1 rounded-xl text-[10px] font-semibold border transition-all cursor-pointer ${
+                                  selectedFlavor === flavor
+                                    ? 'bg-orange-500 border-orange-400 text-white shadow-md scale-105'
+                                    : `${isLight ? 'bg-black/5 border-stone-900/20 text-stone-900' : 'bg-black/30 border-white/20 text-white/90'}`
+                                }`}
+                              >
+                                {flavor}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="flex items-center gap-3 pt-1">
+                        <div className={`flex items-center rounded-full border px-2 py-1 ${isLight ? 'bg-black/5 border-stone-900/20' : 'bg-black/30 border-white/25'} backdrop-blur-md`}>
+                          <button onClick={decreaseQty} className="w-6 h-6 flex items-center justify-center font-bold text-sm">
+                            <i className="fa-solid fa-minus text-[10px]"></i>
+                          </button>
+                          <span className="w-6 text-center font-bold text-xs">{quantity}</span>
+                          <button onClick={increaseQty} className="w-6 h-6 flex items-center justify-center font-bold text-sm">
+                            <i className="fa-solid fa-plus text-[10px]"></i>
+                          </button>
+                        </div>
+
+                        <button 
+                          onClick={addToCart}
+                          className={`font-semibold px-5 py-2.5 rounded-full flex items-center gap-2 transition shadow-xl text-xs group cursor-pointer border ${isLight ? 'bg-stone-950 text-white border-black hover:bg-stone-900' : 'bg-stone-950 text-white border-white/20 hover:bg-black'}`}
+                        >
+                          Añadir al carrito 
+                          <span className="w-5 h-5 bg-white text-stone-950 rounded-full flex items-center justify-center text-[10px] font-bold">
+                            <i className="fa-solid fa-plus text-[8px]"></i>
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="text-center mt-2 hidden lg:block">
+                      <p className={`font-serif italic text-xs sm:text-sm tracking-wide ${isLight ? 'text-stone-950/80' : 'text-white/95'} drop-shadow`}>
+                        Calidad y sabor,<br /> frescos en cada bocado
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Columna Derecha: Precio Actual y Miniaturas */}
+                  <div className="lg:col-span-3 flex flex-col justify-center items-center lg:items-end space-y-8 order-3">
+                    
+                    {/* Precio actual */}
+                    <div className={`text-center lg:text-right space-y-1 transition-all duration-300 ease-out ${animating ? 'opacity-0 scale-90 translate-y-2' : 'opacity-100 scale-100 translate-y-0'}`}>
+                      <div className="text-4xl lg:text-5xl font-extrabold tracking-tight drop-shadow-sm">{selectedItem.price}</div>
+                    </div>
+
+                    {/* Miniaturas interactivas */}
+                    <div className="space-y-3 w-full flex flex-col items-center lg:items-end">
+                      <div className="flex gap-2 sm:gap-3 justify-center lg:justify-end flex-wrap max-w-xs">
+                        {categoriesData[activeCategory].items.map((item) => (
+                          <button
+                            key={item.id}
+                            onClick={() => handleItemChange(item)}
+                            className={`w-14 h-16 rounded-xl overflow-hidden border-2 transition-all duration-300 relative cursor-pointer ${isLight ? 'bg-black/10' : 'bg-black/30'} shadow-md ${
+                              selectedItem.id === item.id
+                                ? `${isLight ? 'border-stone-950 ring-2 ring-stone-950/40' : 'border-white ring-2 ring-white/50'} scale-110 shadow-xl`
+                                : `${isLight ? 'border-stone-900/30 opacity-70 hover:opacity-100' : 'border-white/30 opacity-70 hover:opacity-100'}`
+                            }`}
+                          >
+                            <img 
+                              src={item.image} 
+                              alt={item.title} 
+                              className="w-full h-full object-cover"
+                              onError={(e)=>{
+                                e.target.src = "https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&q=80&w=800";
+                              }}
+                            />
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                  </div>
+
+                </div>
+              </main>
+
+              {/* 3. Modal de Resumen de Pedido & Formulario WhatsApp */}
+              {cartOpen && (
+                <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-4">
+                  
+                  {/* Modal responsivo: Panel de control profesional ultra amplio y holgado en PC, diseño vertical intacto en móvil */}
+                  <div className={`bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} rounded-3xl max-w-md lg:max-w-6xl w-full p-6 lg:p-10 shadow-2xl border ${isLight ? 'border-stone-900/20' : 'border-white/20'} relative animate-in fade-in zoom-in duration-200 max-h-[92vh] lg:max-h-[90vh] overflow-y-auto lg:overflow-visible no-scrollbar`}>
+                    
+                    {/* Botón cerrar */}
+                    <button 
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setCartOpen(false);
+                      }}
+                      className={`absolute top-6 right-6 w-9 h-9 rounded-full ${isLight ? 'bg-black/10 hover:bg-black/20 text-stone-950' : 'bg-white/10 hover:bg-white/20 text-white'} flex items-center justify-center transition cursor-pointer z-20 font-bold text-sm`}
+                    >
+                      <i className="fa-solid fa-xmark text-xs"></i>
+                    </button>
+
+                    <h3 className="text-2xl font-extrabold mb-6 tracking-wide drop-shadow-sm pr-12">Resumen de tu Pedido</h3>
+
+                    {orderSuccess ? (
+                      <div className="py-16 text-center space-y-3">
+                        <div className="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto text-2xl font-bold">
+                          <i className="fa-solid fa-check text-xl"></i>
+                        </div>
+                        <h4 className="text-lg font-bold">¡Redirigiendo a WhatsApp!</h4>
+                        <p className="text-xs opacity-80">Se abrió tu chat con el pedido detallado. ¡Gracias por elegir HŌFU!</p>
+                      </div>
+                    ) : cart.length === 0 ? (
+                      <div className="py-16 text-center opacity-70 text-sm space-y-2">
+                        <i className="fa-solid fa-bag-shopping text-4xl opacity-40 block mb-2"></i>
+                        Tu bolsa de compras está vacía. ¡Añade tus platos favoritos!
+                      </div>
+                    ) : (
+                      /* Layout de dos columnas ultra holgadas para PC, 1 columna en móvil */
+                      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+                        
+                        {/* Columna Izquierda (PC): Resumen de Bolsa, Ítems y Total */}
+                        <div className="lg:col-span-5 flex flex-col space-y-4">
+                          <div className="flex items-center justify-between border-b pb-2.5 border-white/15">
+                            <span className="text-xs uppercase tracking-wider font-bold opacity-90">Productos en tu bolsa</span>
+                            <button 
+                              onClick={clearCart}
+                              className="text-xs font-bold text-red-400 hover:text-red-300 transition flex items-center gap-1.5 cursor-pointer"
+                            >
+                              <i className="fa-solid fa-trash-can text-xs"></i> Vaciar carrito
+                            </button>
+                          </div>
+
+                          {/* Lista de productos muy holgada y sin scroll molesto */}
+                          <div className="space-y-3 max-h-56 lg:max-h-80 overflow-y-auto no-scrollbar pr-1">
+                            {cart.map((item) => (
+                              <div key={item.cartItemId} className={`flex items-center justify-between ${isLight ? 'bg-white/40 border-stone-900/10' : 'bg-black/40 border-white/10'} backdrop-blur-md p-3 rounded-2xl border`}>
+                                <div className="flex items-center gap-3">
+                                  <img src={item.image} alt={item.title} className="w-12 h-12 object-cover rounded-xl" />
+                                  <div>
+                                    <h4 className="font-bold text-xs lg:text-sm">{item.displayTitle}</h4>
+                                    <p className="text-[11px] text-orange-400 font-bold">{item.price} c/u</p>
+                                  </div>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                  <div className={`flex items-center ${isLight ? 'bg-white/60 border-stone-900/20' : 'bg-stone-900 border-white/20'} border rounded-lg px-2 py-1`}>
+                                    <button onClick={() => updateCartItemQty(item.cartItemId, -1)} className="px-1 text-xs font-bold cursor-pointer">
+                                      <i className="fa-solid fa-minus text-[8px]"></i>
+                                    </button>
+                                    <span className="w-6 text-center text-xs font-bold">{item.quantity}</span>
+                                    <button onClick={() => updateCartItemQty(item.cartItemId, 1)} className="px-1 text-xs font-bold cursor-pointer">
+                                      <i className="fa-solid fa-plus text-[8px]"></i>
+                                    </button>
+                                  </div>
+                                  <span className="font-bold text-xs lg:text-sm w-16 text-right">${(item.rawPrice * item.quantity).toLocaleString('es-CL')}</span>
+                                  <button 
+                                    onClick={() => removeCartItem(item.cartItemId)}
+                                    className="w-7 h-7 rounded-full bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white flex items-center justify-center transition cursor-pointer text-xs"
+                                    title="Eliminar producto"
+                                  >
+                                    <i className="fa-solid fa-trash-can text-[10px]"></i>
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+
+                          {/* Total a pagar */}
+                          <div className={`flex justify-between items-center pt-4 border-t ${isLight ? 'border-stone-900/20' : 'border-white/20'} font-bold text-base lg:text-lg`}>
+                            <span>Total a pagar:</span>
+                            <span className="text-orange-400 text-lg lg:text-xl">
+                              ${cart.reduce((acc, item) => acc + (item.rawPrice * item.quantity), 0).toLocaleString('es-CL')}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Columna Derecha (PC): Formulario de Envío y Pago Holgado */}
+                        <div className="lg:col-span-7 flex flex-col space-y-4">
+                          <form onSubmit={handleCheckoutSubmit} className="space-y-4">
+                            <h4 className="text-xs font-bold uppercase tracking-wider opacity-90">Datos de Entrega & Pago (Santiago)</h4>
+                            
+                            <input 
+                              type="text" 
+                              placeholder="Nombre y Apellido *" 
+                              required
+                              value={formData.fullName}
+                              onChange={(e) => setFormData({...formData, fullName: e.target.value})}
+                              className={`w-full ${isLight ? 'bg-white/60 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/40 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-xl px-4 py-3 text-xs lg:text-sm outline-none focus:border-orange-500 transition`}
+                            />
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                              <input 
+                                type="text" 
+                                placeholder="Dirección exacta (Calle, N° de depto/casa) *" 
+                                required
+                                value={formData.address}
+                                onChange={(e) => setFormData({...formData, address: e.target.value})}
+                                className={`w-full ${isLight ? 'bg-white/60 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/40 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-xl px-4 py-3 text-xs lg:text-sm outline-none focus:border-orange-500 transition`}
+                              />
+
+                              {/* Selector de Comuna Personalizado (con altura muy holgada) */}
+                              <div className="relative" ref={comunaRef}>
+                                <div 
+                                  onClick={() => setComunaDropdownOpen(!comunaDropdownOpen)}
+                                  className={`w-full ${isLight ? 'bg-white/60 border-stone-900/20 text-stone-950' : 'bg-black/40 border-white/20 text-white'} backdrop-blur-md border rounded-xl px-4 py-3 text-xs lg:text-sm flex items-center justify-between cursor-pointer transition select-none`}
+                                >
+                                  <span className="truncate">{formData.comuna}</span>
+                                  <i className="fa-solid fa-chevron-down text-xs opacity-60"></i>
+                                </div>
+
+                                {comunaDropdownOpen && (
+                                  <div className={`absolute left-0 right-0 mt-2 ${isLight ? 'bg-white text-stone-950 border-stone-300' : 'bg-stone-900 text-white border-white/10'} rounded-2xl shadow-2xl border z-50 p-3`}>
+                                    <div className={`flex items-center gap-2.5 ${isLight ? 'bg-stone-100 border-stone-200 text-stone-900' : 'bg-stone-800 border-white/10 text-white'} px-3.5 py-2 rounded-xl border mb-2`}>
+                                      <i className="fa-solid fa-search text-xs opacity-50"></i>
+                                      <input 
+                                        type="text" 
+                                        placeholder="Buscar comuna..."
+                                        value={comunaSearch}
+                                        onChange={(e) => setComunaSearch(e.target.value)}
+                                        autoFocus
+                                        className="bg-transparent w-full text-xs lg:text-sm outline-none placeholder-current placeholder-opacity-50"
+                                      />
+                                    </div>
+                                    <div className="max-h-52 overflow-y-auto space-y-1 pr-1">
+                                      {filteredComunas.length > 0 ? (
+                                        filteredComunas.map((comuna) => (
+                                          <div 
+                                            key={comuna}
+                                            onClick={() => {
+                                              setFormData({...formData, comuna});
+                                              setComunaDropdownOpen(false);
+                                              setComunaSearch('');
+                                            }}
+                                            className={`px-3.5 py-2.5 rounded-xl text-xs lg:text-sm cursor-pointer transition ${
+                                              formData.comuna === comuna 
+                                                ? 'bg-orange-500 text-white font-bold' 
+                                                : `${isLight ? 'hover:bg-stone-100' : 'hover:bg-white/10'}`
+                                            }`}
+                                          >
+                                            {comuna}
+                                          </div>
+                                        ))
+                                      ) : (
+                                        <div className="p-3 text-center text-xs opacity-50">No hay resultados</div>
+                                      )}
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                              <input 
+                                type="tel" 
+                                placeholder="Teléfono / WhatsApp (+56 9...) *" 
+                                required
+                                value={formData.phone}
+                                onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                                className={`w-full ${isLight ? 'bg-white/60 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/40 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-xl px-4 py-3 text-xs lg:text-sm outline-none focus:border-orange-500 transition`}
+                              />
+
+                              {/* Selector de Método de Pago Estilizado */}
+                              <div className="relative" ref={paymentRef}>
+                                <div 
+                                  onClick={() => setPaymentDropdownOpen(!paymentDropdownOpen)}
+                                  className={`w-full ${isLight ? 'bg-white/60 border-stone-900/20 text-stone-950' : 'bg-black/40 border-white/20 text-white'} backdrop-blur-md border rounded-xl px-4 py-3 text-xs lg:text-sm flex items-center justify-between cursor-pointer transition select-none`}
+                                >
+                                  <span className="truncate">Pago: {formData.paymentMethod}</span>
+                                  <i className="fa-solid fa-chevron-down text-xs opacity-60"></i>
+                                </div>
+
+                                {paymentDropdownOpen && (
+                                  <div className={`absolute left-0 right-0 mt-2 ${isLight ? 'bg-white text-stone-950 border-stone-300' : 'bg-stone-900 text-white border-white/10'} rounded-2xl shadow-2xl border z-50 p-2.5 space-y-1`}>
+                                    {METODOS_PAGO.map((metodo) => (
+                                      <div 
+                                        key={metodo}
+                                        onClick={() => {
+                                          setFormData({...formData, paymentMethod: metodo});
+                                          setPaymentDropdownOpen(false);
+                                        }}
+                                        className={`px-3.5 py-2.5 rounded-xl text-xs lg:text-sm cursor-pointer transition ${
+                                          formData.paymentMethod === metodo 
+                                            ? 'bg-orange-500 text-white font-bold' 
+                                            : `${isLight ? 'hover:bg-stone-100' : 'hover:bg-white/10'}`
+                                        }`}
+                                      >
+                                        {metodo}
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Botón WhatsApp Elegante */}
+                            <button 
+                              type="submit"
+                              className="w-full bg-stone-950 hover:bg-black text-white border border-white/20 font-bold py-4 rounded-2xl transition shadow-xl text-xs lg:text-sm uppercase tracking-wider cursor-pointer mt-4 flex items-center justify-center gap-2.5"
+                            >
+                              <i className="fa-brands fa-whatsapp text-base text-emerald-400"></i>
+                              Enviar Pedido por WhatsApp
+                            </button>
+                          </form>
+                        </div>
+
+                      </div>
+                    )}
+
+                  </div>
+                </div>
+              )}
+
+            </div>
+          );
+        }
+
+        ReactDOM.render(<HofuLanding />, document.getElementById('root'));
+    </script>
+</body>
+</html>
