@@ -220,8 +220,7 @@
           const [animating, setAnimating] = useState(false);
           const [quantity, setQuantity] = useState(1);
 
-          // Estados para interactividad (Buscador limpio, Carrito y Modal Checkout)
-          const [searchOpen, setSearchOpen] = useState(false);
+          // Estados para interactividad (Buscador completo PC, Carrito y Modal Checkout)
           const [searchQuery, setSearchQuery] = useState('');
           const [cartOpen, setCartOpen] = useState(false);
           const [cart, setCart] = useState([]);
@@ -260,7 +259,7 @@
                 setPaymentDropdownOpen(false);
               }
               if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
-                setSearchOpen(false);
+                // Mantener contenedor cerrado si click fuera
               }
             }
             document.addEventListener("mousedown", handleClickOutside);
@@ -376,7 +375,6 @@
             setSelectedItem(item);
             setSelectedFlavor('Coca-Cola');
             setQuantity(1);
-            setSearchOpen(false);
             setSearchQuery('');
             setTimeout(() => setAnimating(false), 350);
           };
@@ -419,7 +417,7 @@
           const isLight = selectedItem.isLight;
           const filteredComunas = COMUNAS_SANTIAGO.filter(c => c.toLowerCase().includes(comunaSearch.toLowerCase()));
 
-          // Componente interno reutilizable para el contenido del Carrito / Checkout (Con los textos oscuros contrastados que ya arreglamos)
+          // Componente interno reutilizable para el contenido del Carrito / Checkout con contraste oscuro corregido
           const renderCartContent = () => (
             <div className="flex flex-col space-y-3">
               <div className="flex items-center justify-between border-b pb-2 border-stone-900/20 text-stone-950">
@@ -641,15 +639,17 @@
                 }
               `}</style>
 
-              {/* 1. Navbar Principal con Buscador y Carrito (Diseño Original PC) */}
+              {/* 1. Navbar Principal con Buscador Completo a la Derecha y Categorías Centradas */}
               <header className="w-full px-6 md:px-12 py-5 flex items-center justify-between z-30 max-w-7xl mx-auto relative">
+                
+                {/* Logo a la izquierda */}
                 <div className="flex items-center cursor-pointer">
                   <span className={`font-black tracking-[0.3em] text-2xl md:text-3xl uppercase drop-shadow-sm ${isLight ? 'text-stone-950' : 'text-white'}`}>
                     HŌFU
                   </span>
                 </div>
 
-                {/* Sistema de Pestañas de Categorías (Desktop) */}
+                {/* Categorías bien centradas en Desktop */}
                 <nav className={`hidden md:flex items-center gap-1 ${isLight ? 'bg-black/10 border-stone-900/20 text-stone-900' : 'bg-black/20 border-white/20 text-white'} backdrop-blur-md px-4 py-1.5 rounded-full border text-xs tracking-wider font-medium shadow-md`}>
                   {Object.keys(categoriesData).map((catKey) => {
                     const isActive = activeCategory === catKey;
@@ -669,41 +669,32 @@
                   })}
                 </nav>
 
+                {/* Controles de la derecha: Barra de búsqueda completa + Bolsa de compras */}
                 <div className="flex items-center gap-3" ref={searchContainerRef}>
-                  {/* Buscador Integrado No Invasivo */}
-                  <div className="flex items-center relative">
-                    {!searchOpen ? (
-                      <button 
-                        onClick={() => setSearchOpen(true)}
-                        className={`w-10 h-10 rounded-full ${isLight ? 'bg-black/10 border-stone-900/20 text-stone-900 hover:bg-black/20' : 'bg-black/20 border-white/20 text-white hover:bg-black/30'} backdrop-blur-md flex items-center justify-center border transition cursor-pointer shadow-md`}
-                        title="Buscar producto"
-                      >
-                        <i className="fa-solid fa-search text-xs"></i>
-                      </button>
-                    ) : (
-                      <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border ${isLight ? 'bg-white text-stone-950 border-stone-300' : 'bg-stone-900 text-white border-white/20'} shadow-lg transition-all duration-300 w-48 sm:w-64`}>
-                        <i className="fa-solid fa-search text-xs opacity-50 shrink-0"></i>
-                        <input 
-                          type="text" 
-                          placeholder="Buscar plato, bebida..." 
-                          value={searchQuery}
-                          onChange={(e) => setSearchQuery(e.target.value)}
-                          autoFocus
-                          className="bg-transparent w-full text-xs outline-none placeholder-current placeholder-opacity-50"
-                        />
+                  
+                  {/* Barra de búsqueda completa integrada (PC) */}
+                  <div className="hidden md:flex items-center relative">
+                    <div className={`flex items-center gap-2 px-3.5 py-2 rounded-full border ${isLight ? 'bg-white text-stone-950 border-stone-300' : 'bg-black/25 text-white border-white/20'} shadow-lg transition-all duration-300 w-56 lg:w-64`}>
+                      <i className="fa-solid fa-search text-xs opacity-50 shrink-0"></i>
+                      <input 
+                        type="text" 
+                        placeholder="Buscar plato, bebida..." 
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="bg-transparent w-full text-xs outline-none placeholder-current placeholder-opacity-50 font-medium"
+                      />
+                      {searchQuery.trim() !== '' && (
                         <button 
-                          onClick={() => {
-                            setSearchOpen(false);
-                            setSearchQuery('');
-                          }}
+                          onClick={() => setSearchQuery('')}
                           className="w-5 h-5 rounded-full flex items-center justify-center opacity-60 hover:opacity-100 transition cursor-pointer text-xs"
                         >
                           <i className="fa-solid fa-xmark text-xs"></i>
                         </button>
-                      </div>
-                    )}
+                      )}
+                    </div>
 
-                    {searchOpen && searchQuery.trim() !== '' && (
+                    {/* Resultados del buscador flotantes */}
+                    {searchQuery.trim() !== '' && (
                       <div className={`absolute right-0 top-12 w-72 sm:w-80 ${isLight ? 'bg-white text-stone-950 border-stone-300' : 'bg-stone-900 text-white border-white/10'} p-3 rounded-2xl shadow-2xl border z-40`}>
                         <div className="max-h-48 overflow-y-auto space-y-1">
                           {filteredProducts.length > 0 ? (
@@ -728,7 +719,17 @@
                     )}
                   </div>
 
-                  {/* Botón Carrito Flotante (Visible en PC y Móvil en el diseño original) */}
+                  {/* Buscador minimalista para Móvil */}
+                  <div className="flex md:hidden items-center relative">
+                    <button 
+                      onClick={() => setSearchQuery(searchQuery ? '' : 'open')}
+                      className={`w-10 h-10 rounded-full ${isLight ? 'bg-black/10 border-stone-900/20 text-stone-900' : 'bg-black/20 border-white/20 text-white'} backdrop-blur-md flex items-center justify-center border transition cursor-pointer shadow-md`}
+                    >
+                      <i className="fa-solid fa-search text-xs"></i>
+                    </button>
+                  </div>
+
+                  {/* Botón Carrito / Bolsa */}
                   <button 
                     ref={cartButtonRef}
                     onClick={() => setCartOpen(true)}
@@ -745,7 +746,7 @@
               </header>
 
               {/* Menú de categorías móvil */}
-              <div className={`flex md:hidden overflow-x-auto px-4 py-2 gap-2 scrollbar-none z-20 border-b ${isLight ? 'border-stone-900/10 bg-black/5 text-stone-900' : 'border-white/10 bg-black/15 text-white'} backdrop-blur-md justify-start sm:justify-center`}>
+              <div className={`flex md:hidden overflow-x-auto px-4 py-2 gap-2 scrollbar-none z-20 border-b ${isLight ? 'border-stone-900/10 bg-black/5 text-stone-900' : 'border-white/10 bg-black/15 text-white'} backdrop-blur-md justify-start`}>
                 {Object.keys(categoriesData).map((catKey) => {
                   const isActive = activeCategory === catKey;
                   return (
@@ -764,18 +765,18 @@
                 })}
               </div>
 
-              {/* 2. Main Hero Section (Diseño Original PC Centrado) */}
+              {/* 2. Main Hero Section con Distribución Requerida para PC */}
               <main className="flex-1 flex items-center justify-center px-4 md:px-8 py-8 z-10 w-full max-w-7xl mx-auto">
                 <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                   
-                  {/* Columna Izquierda (Desktop): Título, descripción, selector de sabor y controles */}
-                  <div className="lg:col-span-5 hidden lg:flex flex-col justify-center space-y-4 order-1 text-left">
+                  {/* Columna Izquierda (PC): Nombre del producto y descripción ordenados hacia la izquierda */}
+                  <div className="lg:col-span-4 hidden lg:flex flex-col justify-center space-y-4 order-1 text-left">
                     <div className={`space-y-4 transition-all duration-300 ease-out ${animating ? 'opacity-0 -translate-x-6 scale-95' : 'opacity-100 translate-x-0 scale-100'}`}>
-                      <h1 className="text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight whitespace-nowrap drop-shadow-sm">
+                      <h1 className="text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight drop-shadow-sm">
                         <span>{selectedItem.title}</span>
                       </h1>
                       
-                      <p className={`text-base leading-relaxed max-w-md font-medium ${isLight ? 'text-stone-900/90' : 'text-white/95'} drop-shadow`}>
+                      <p className={`text-base leading-relaxed max-w-sm font-medium ${isLight ? 'text-stone-900/90' : 'text-white/95'} drop-shadow`}>
                         {selectedItem.description}
                       </p>
 
@@ -831,8 +832,8 @@
                     </h1>
                   </div>
 
-                  {/* Columna Central: Visor de Producto Dinámico */}
-                  <div className="lg:col-span-4 relative flex flex-col items-center justify-center order-2">
+                  {/* Columna Central (PC): Foto principal del plato al centro */}
+                  <div className="lg:col-span-5 relative flex flex-col items-center justify-center order-2">
                     <div className="relative w-full h-[240px] sm:h-[300px] lg:h-[400px] flex items-center justify-center my-4">
                       <div className={`absolute w-56 h-56 sm:w-72 sm:h-72 ${isLight ? 'bg-white/60' : 'bg-white/20'} rounded-full blur-3xl pointer-events-none transition-all duration-500`}></div>
                       
@@ -898,27 +899,24 @@
                         </button>
                       </div>
                     </div>
-
-                    <div className="text-center mt-2 hidden lg:block">
-                      <p className={`font-serif italic text-xs tracking-wide ${isLight ? 'text-stone-950/80' : 'text-white/95'} drop-shadow`}>
-                        Calidad y sabor,<br /> frescos en cada bocado
-                      </p>
-                    </div>
                   </div>
 
-                  {/* Columna Derecha: Precio Actual y Miniaturas */}
-                  <div className="lg:col-span-3 flex flex-col justify-center items-center lg:items-end space-y-5 order-3 pb-8 lg:pb-0">
-                    <div className={`text-center lg:text-right space-y-1 transition-all duration-300 ease-out ${animating ? 'opacity-0 scale-90 translate-y-2' : 'opacity-100 scale-100 translate-y-0'}`}>
+                  {/* Columna Derecha (PC): Precio a la derecha del plato y miniaturas justo debajo */}
+                  <div className="lg:col-span-3 flex flex-col justify-center items-center lg:items-center space-y-6 order-3 pb-8 lg:pb-0">
+                    
+                    {/* Precio ubicado a la derecha del plato principal, centrado */}
+                    <div className={`text-center space-y-1 transition-all duration-300 ease-out ${animating ? 'opacity-0 scale-90 translate-y-2' : 'opacity-100 scale-100 translate-y-0'}`}>
                       <div className="text-4xl sm:text-5xl lg:text-5xl font-extrabold tracking-tight drop-shadow-sm">{selectedItem.price}</div>
                     </div>
 
-                    <div className="space-y-3 w-full flex flex-col items-center lg:items-end">
-                      <div className="flex gap-2 justify-center lg:justify-end flex-wrap max-w-xs">
+                    {/* Tres productos pequeños (miniaturas) colocados justo debajo del precio y perfectamente alineados */}
+                    <div className="space-y-2 w-full flex flex-col items-center">
+                      <div className="flex gap-2.5 justify-center flex-wrap max-w-xs">
                         {categoriesData[activeCategory].items.map((item) => (
                           <button
                             key={item.id}
                             onClick={() => handleItemChange(item)}
-                            className={`w-14 h-16 sm:w-14 sm:h-16 rounded-2xl overflow-hidden border-2 transition-all duration-300 relative cursor-pointer ${isLight ? 'bg-black/10' : 'bg-black/30'} shadow-md ${
+                            className={`w-14 h-16 rounded-2xl overflow-hidden border-2 transition-all duration-300 relative cursor-pointer ${isLight ? 'bg-black/10' : 'bg-black/30'} shadow-md ${
                               selectedItem.id === item.id
                                 ? `${isLight ? 'border-stone-950 ring-2 ring-stone-950/40' : 'border-white ring-2 ring-white/50'} scale-110 shadow-xl`
                                 : `${isLight ? 'border-stone-900/30 opacity-70 hover:opacity-100' : 'border-white/30 opacity-70 hover:opacity-100'}`
@@ -936,12 +934,13 @@
                         ))}
                       </div>
                     </div>
+
                   </div>
 
                 </div>
               </main>
 
-              {/* 3. Modal de Resumen de Pedido & Formulario WhatsApp (Diseño Original Modal) */}
+              {/* 3. Modal de Resumen de Pedido & Formulario WhatsApp */}
               {cartOpen && (
                 <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-3">
                   
