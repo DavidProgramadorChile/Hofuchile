@@ -205,10 +205,20 @@
           const [animating, setAnimating] = useState(false);
           const [quantity, setQuantity] = useState(1);
 
-          // Estados para interactividad (Buscador completo PC, Carrito y Modal Checkout)
+          // Estados para interactividad (Buscador completo PC, Carrito con LocalStorage y Modal Checkout)
           const [searchQuery, setSearchQuery] = useState('');
           const [cartOpen, setCartOpen] = useState(false);
-          const [cart, setCart] = useState([]);
+          
+          // Inicializar el carrito desde LocalStorage de manera segura
+          const [cart, setCart] = useState(() => {
+            try {
+              const savedCart = localStorage.getItem('hofu_cart');
+              return savedCart ? JSON.parse(savedCart) : [];
+            } catch (e) {
+              return [];
+            }
+          });
+
           const [orderSuccess, setOrderSuccess] = useState(false);
           const [badgePulsing, setBadgePulsing] = useState(false);
           
@@ -232,6 +242,15 @@
           const paymentRef = useRef(null);
           const cartButtonRef = useRef(null);
           const productImgRef = useRef(null);
+
+          // Guardar en LocalStorage cada vez que el carrito cambie
+          useEffect(() => {
+            try {
+              localStorage.setItem('hofu_cart', JSON.stringify(cart));
+            } catch (e) {
+              console.error("No se pudo guardar en localStorage", e);
+            }
+          }, [cart]);
 
           // Manejar clics fuera de los dropdowns para cerrarlos
           useEffect(() => {
@@ -379,7 +398,7 @@
             message += `• *Nombre:* ${formData.fullName}\n`;
             message += `• *Dirección:* ${formData.address}\n`;
             message += `• *Comuna:* ${formData.comuna}\n`;
-            message += `• *Teléfono:* ${formData.phone}\n`;
+            message += `• *Телефонo:* ${formData.phone}\n`;
 
             const encodedMessage = encodeURIComponent(message);
             const whatsappUrl = `https://wa.me/56920468336?text=${encodedMessage}`;
@@ -398,10 +417,9 @@
           const isLight = selectedItem.isLight;
           const filteredComunas = COMUNAS_SANTIAGO.filter(c => c.toLowerCase().includes(comunaSearch.toLowerCase()));
 
-          // Determinamos si el fondo dinámico actual es claro/luminoso para forzar textos oscuros/negros de alto contraste
+          // Determinamos si el fondo dinámico actual es claro/luminoso para forzar textos oscuros/negros de alto contraste inteligente
           const isCurrentBgLight = isLight || selectedItem.id === 'pollo';
           const textColorClass = isCurrentBgLight ? 'text-stone-950 font-black' : 'text-white';
-          const subTextColorClass = isCurrentBgLight ? 'text-stone-900 font-bold' : 'text-white/90';
           const borderBoxClass = isCurrentBgLight ? 'border-stone-900/30 bg-white/60' : 'border-white/20 bg-black/30';
 
           // Componente interno reutilizable para el contenido del Carrito / Checkout en formato horizontal amplio sin scroll
@@ -946,11 +964,11 @@
                 </div>
               </main>
 
-              {/* 3. Modal Horizontal Amplio, Altura Generosa sin Scroll y Contraste Inteligente */}
+              {/* 3. Modal Horizontal Amplio con Contraste Inteligente y LocalStorage */}
               {cartOpen && (
                 <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-4">
                   
-                  {/* Altura generosa sin scroll ("no-scrollbar") y adaptabilidad cromática inteligente para textos oscuros si el fondo es claro */}
+                  {/* Modal espacioso sin scroll y con contraste inteligente */}
                   <div className={`bg-gradient-to-br ${selectedItem.bgGradient} rounded-3xl max-w-3xl md:max-w-4xl w-full p-6 md:p-8 shadow-2xl border ${isCurrentBgLight ? 'border-stone-900/30' : 'border-white/30'} relative animate-in fade-in zoom-in duration-200 no-scrollbar`}>
                     
                     {/* Botón cerrar */}
