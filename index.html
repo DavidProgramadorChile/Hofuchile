@@ -40,7 +40,7 @@
             scrollbar-width: none;
         }
 
-        /* Bloqueo estricto de scroll vertical exclusivo para móviles (App nativa sin desborde) */
+        /* Bloqueo estricto de scroll vertical exclusivo para móviles (App nativa) */
         @media (max-width: 1023px) {
             html, body {
                 height: 100vh;
@@ -56,7 +56,7 @@
 </head>
 <body class="bg-amber-950 text-white selection:bg-orange-500 selection:text-white">
 
-    <div id="root" class="h-full w-full"></div>
+    <div id="root"></div>
 
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
@@ -512,7 +512,7 @@
           const filteredComunas = COMUNAS_SANTIAGO.filter(c => c.toLowerCase().includes(comunaSearch.toLowerCase()));
 
           return (
-            <div className={`h-full w-full bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-hidden select-none relative justify-between`}>
+            <div className={`h-full w-full bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-x-hidden select-none relative justify-between`}>
               
               {/* Elemento Volador para la Animación de Succión (Fly-to-Cart) */}
               {flyingItem && (
@@ -544,7 +544,7 @@
               `}</style>
 
               {/* 1. Navbar Principal con Buscador Integrado y No Invasivo */}
-              <header className="w-full px-5 md:px-12 py-2 lg:py-4 flex items-center justify-between z-30 max-w-7xl mx-auto relative shrink-0">
+              <header className="w-full px-6 md:px-12 py-2.5 lg:py-5 flex items-center justify-between z-30 max-w-7xl mx-auto relative shrink-0">
                 {/* Logo HŌFU */}
                 <div className="flex items-center cursor-pointer">
                   <span className={`font-black tracking-[0.3em] text-2xl md:text-3xl uppercase drop-shadow-sm ${isLight ? 'text-stone-950' : 'text-white'}`}>
@@ -580,7 +580,7 @@
                     {!searchOpen ? (
                       <button 
                         onClick={() => setSearchOpen(true)}
-                        className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full ${isLight ? 'bg-black/10 border-stone-900/20 text-stone-900 hover:bg-black/20' : 'bg-black/20 border-white/20 text-white hover:bg-black/30'} backdrop-blur-md flex items-center justify-center border transition cursor-pointer shadow-md`}
+                        className={`w-10 h-10 rounded-full ${isLight ? 'bg-black/10 border-stone-900/20 text-stone-900 hover:bg-black/20' : 'bg-black/20 border-white/20 text-white hover:bg-black/30'} backdrop-blur-md flex items-center justify-center border transition cursor-pointer shadow-md`}
                         title="Buscar producto"
                       >
                         <i className="fa-solid fa-search text-xs"></i>
@@ -638,7 +638,7 @@
                   <button 
                     ref={cartButtonRef}
                     onClick={() => setCartOpen(true)}
-                    className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full ${isLight ? 'bg-black/10 border-stone-900/20 text-stone-900 hover:bg-black/20' : 'bg-black/20 border-white/20 text-white hover:bg-black/30'} backdrop-blur-md flex items-center justify-center border transition relative cursor-pointer shadow-md`}
+                    className={`w-10 h-10 rounded-full ${isLight ? 'bg-black/10 border-stone-900/20 text-stone-900 hover:bg-black/20' : 'bg-black/20 border-white/20 text-white hover:bg-black/30'} backdrop-blur-md flex items-center justify-center border transition relative cursor-pointer shadow-md`}
                   >
                     <i className="fa-solid fa-bag-shopping text-xs"></i>
                     {cart.reduce((sum, item) => sum + item.quantity, 0) > 0 && (
@@ -652,14 +652,14 @@
               </header>
 
               {/* Menú de categorías móvil compacto y fijo */}
-              <div className={`flex md:hidden overflow-x-auto px-4 py-1 gap-2 scrollbar-none z-20 border-b ${isLight ? 'border-stone-900/10 bg-black/5 text-stone-900' : 'border-white/10 bg-black/15 text-white'} backdrop-blur-md justify-start shrink-0`}>
+              <div className={`flex md:hidden overflow-x-auto px-4 py-1.5 gap-2 scrollbar-none z-20 border-b ${isLight ? 'border-stone-900/10 bg-black/5 text-stone-900' : 'border-white/10 bg-black/15 text-white'} backdrop-blur-md justify-start shrink-0`}>
                 {Object.keys(categoriesData).map((catKey) => {
                   const isActive = activeCategory === catKey;
                   return (
                     <button
                       key={catKey}
                       onClick={() => handleCategoryChange(catKey)}
-                      className={`px-3 py-0.5 rounded-full text-[10px] tracking-wider whitespace-nowrap transition-all duration-300 cursor-pointer ${
+                      className={`px-3.5 py-1 rounded-full text-[10px] tracking-wider whitespace-nowrap transition-all duration-300 cursor-pointer ${
                         isActive 
                           ? `${isLight ? 'bg-stone-950 text-white font-bold' : 'bg-white/30 text-white font-bold'} scale-105` 
                           : `${isLight ? 'text-stone-900/80' : 'text-white/80'}`
@@ -671,9 +671,9 @@
                 })}
               </div>
 
-              {/* 2. Main Hero Section con Ajustes de Espacio y Imagen Principal Protagonista en Móvil */}
-              <main className="flex-1 flex items-center justify-center px-4 md:px-8 py-0.5 z-10 w-full overflow-hidden my-auto shrink-0">
-                <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-2 lg:gap-12 items-center mx-auto h-full">
+              {/* 2. Main Hero Section con Distribución Uniforme que llena toda la pantalla vertical */}
+              <main className="flex-1 flex items-center justify-center px-4 md:px-8 py-2 z-10 w-full overflow-hidden my-auto">
+                <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-12 items-center mx-auto h-full">
                   
                   {/* Columna Izquierda (Desktop): Título, descripción, selector de sabor y controles */}
                   <div className="lg:col-span-5 hidden lg:flex flex-col justify-center space-y-4 order-1 text-left pt-2">
@@ -733,24 +733,24 @@
                     </div>
                   </div>
 
-                  {/* Versión Móvil: Nombre del producto significativamente más grande y con protagonismo */}
-                  <div className={`flex lg:hidden flex-col items-center text-center order-1 mb-1 transition-all duration-300 ease-out ${animating ? 'opacity-0 scale-90' : 'opacity-100 scale-100'}`}>
-                    <h1 className="text-2xl sm:text-3xl font-black tracking-tight whitespace-nowrap drop-shadow-md text-white">
+                  {/* Versión Móvil: Nombre del producto optimizado para ocupar bien el espacio superior */}
+                  <div className={`flex lg:hidden flex-col items-center text-center order-1 mt-1 mb-1 transition-all duration-300 ease-out ${animating ? 'opacity-0 scale-90' : 'opacity-100 scale-100'}`}>
+                    <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight whitespace-nowrap drop-shadow-sm">
                       <span>{selectedItem.title}</span>
                     </h1>
                   </div>
 
-                  {/* Columna Central: Visor de Producto Dinámico (Imagen principal protagonista) */}
+                  {/* Columna Central: Visor de Producto Dinámico (Imagen protagonista con gran presencia central) */}
                   <div className="lg:col-span-4 relative flex flex-col items-center justify-center order-2 my-auto">
-                    <div className="relative w-full h-[200px] sm:h-[240px] lg:h-[420px] flex items-center justify-center my-0">
-                      <div className={`absolute w-52 h-52 sm:w-72 sm:h-72 ${isLight ? 'bg-white/70' : 'bg-white/25'} rounded-full blur-3xl pointer-events-none transition-all duration-500`}></div>
+                    <div className="relative w-full h-[210px] sm:h-[260px] lg:h-[420px] flex items-center justify-center my-1">
+                      <div className={`absolute w-52 h-52 sm:w-72 sm:h-72 ${isLight ? 'bg-white/60' : 'bg-white/20'} rounded-full blur-3xl pointer-events-none transition-all duration-500`}></div>
                       
                       <img 
                         ref={productImgRef}
                         src={selectedItem.image} 
                         alt={selectedItem.title}
-                        className={`max-h-full max-w-full object-contain drop-shadow-[0_25px_25px_rgba(0,0,0,0.6)] transition-all duration-400 ease-out scale-125 sm:scale-135 ${
-                          animating ? 'opacity-0 scale-75 rotate-3 translate-y-4' : 'opacity-100 scale-125 sm:scale-135 rotate-0 translate-y-0'
+                        className={`max-h-full max-w-full object-contain drop-shadow-[0_20px_20px_rgba(0,0,0,0.5)] transition-all duration-400 ease-out scale-115 sm:scale-130 ${
+                          animating ? 'opacity-0 scale-75 rotate-3 translate-y-4' : 'opacity-100 scale-115 sm:scale-130 rotate-0 translate-y-0'
                         }`}
                         onError={(e)=>{
                           e.target.src = "https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&q=80&w=800";
@@ -758,15 +758,15 @@
                       />
                     </div>
 
-                    {/* Contenido inferior en Móvil: Espaciado separado y limpio (mt-4) respecto a la imagen */}
-                    <div className={`flex lg:hidden flex-col items-center text-center space-y-1.5 w-full px-2 mt-3 mb-0 transition-all duration-300 ease-out ${animating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
-                      <p className={`text-[11px] font-medium leading-relaxed max-w-xs ${isLight ? 'text-stone-900/90' : 'text-white/95'} drop-shadow line-clamp-2`}>
+                    {/* Contenido inferior en Móvil: Distribuido uniformemente para ocupar el alto restante */}
+                    <div className={`flex lg:hidden flex-col items-center text-center space-y-2 w-full px-2 mt-2 mb-2 transition-all duration-300 ease-out ${animating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
+                      <p className={`text-[11px] sm:text-xs font-medium leading-tight max-w-xs ${isLight ? 'text-stone-900/90' : 'text-white/95'} drop-shadow line-clamp-2`}>
                         {selectedItem.description}
                       </p>
 
                       {/* Selector de Sabor Estilizado (Móvil) */}
                       {selectedItem.hasFlavorSelector && (
-                        <div className="space-y-0.5 w-full max-w-xs pt-0.5">
+                        <div className="space-y-0.5 w-full max-w-xs">
                           <label className="text-[9px] font-bold uppercase tracking-wider opacity-90 block text-center">Elige tu sabor:</label>
                           <div className="flex flex-wrap justify-center gap-1">
                             {SABORES_BEBIDAS.map((flavor) => (
@@ -788,38 +788,38 @@
 
                       {/* Selector de Salsas con texto exacto y restricciones aplicadas */}
                       {isSausageAllowed && (
-                        <div className="space-y-1 w-full max-w-xs bg-black/30 p-1.5 rounded-xl border border-white/15 shadow-md">
+                        <div className="space-y-1 w-full max-w-xs bg-black/25 p-2 rounded-2xl border border-white/15 shadow-md">
                           <div className="flex justify-between items-center px-1">
-                            <span className="text-[9px] font-semibold tracking-wide text-white/95 flex items-center gap-1">
-                              <i className="fa-solid fa-utensils text-[8px] text-orange-400"></i> Elige tu salsa favorita
+                            <span className="text-[10px] font-semibold tracking-wide text-white/95 flex items-center gap-1.5">
+                              <i className="fa-solid fa-utensils text-[9px] text-orange-400"></i> Elige tu salsa favorita
                             </span>
-                            <span className={`text-[9px] font-bold px-1.5 py-0 rounded-full ${soyaCount + teriyakiCount === quantity ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-orange-500/20 text-orange-300 border border-orange-500/30'}`}>
+                            <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${soyaCount + teriyakiCount === quantity ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-orange-500/20 text-orange-300 border border-orange-500/30'}`}>
                               {soyaCount + teriyakiCount} / {quantity}
                             </span>
                           </div>
-                          <div className="grid grid-cols-2 gap-1.5 pt-0.5">
+                          <div className="grid grid-cols-2 gap-2 pt-0.5">
                             {/* Soya */}
-                            <div className="flex items-center justify-between bg-black/30 px-2 py-1 rounded-lg border border-white/10">
-                              <span className="text-[9px] font-medium">Soya</span>
+                            <div className="flex items-center justify-between bg-black/30 px-2.5 py-1.5 rounded-xl border border-white/10">
+                              <span className="text-[10px] font-medium">Soya</span>
                               <div className="flex items-center gap-1.5">
-                                <button onClick={() => updateSoya(-1)} className="w-4 h-4 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[8px] font-bold cursor-pointer transition">
+                                <button onClick={() => updateSoya(-1)} className="w-5 h-5 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[9px] font-bold cursor-pointer transition">
                                   <i className="fa-solid fa-minus"></i>
                                 </button>
-                                <span className="text-[10px] font-bold w-3 text-center">{soyaCount}</span>
-                                <button onClick={() => updateSoya(1)} className="w-4 h-4 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[8px] font-bold cursor-pointer transition">
+                                <span className="text-xs font-bold w-3 text-center">{soyaCount}</span>
+                                <button onClick={() => updateSoya(1)} className="w-5 h-5 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[9px] font-bold cursor-pointer transition">
                                   <i className="fa-solid fa-plus"></i>
                                 </button>
                               </div>
                             </div>
                             {/* Teriyaki */}
-                            <div className="flex items-center justify-between bg-black/30 px-2 py-1 rounded-lg border border-white/10">
-                              <span className="text-[9px] font-medium">Teriyaki</span>
+                            <div className="flex items-center justify-between bg-black/30 px-2.5 py-1.5 rounded-xl border border-white/10">
+                              <span className="text-[10px] font-medium">Teriyaki</span>
                               <div className="flex items-center gap-1.5">
-                                <button onClick={() => updateTeriyaki(-1)} className="w-4 h-4 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[8px] font-bold cursor-pointer transition">
+                                <button onClick={() => updateTeriyaki(-1)} className="w-5 h-5 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[9px] font-bold cursor-pointer transition">
                                   <i className="fa-solid fa-minus"></i>
                                 </button>
-                                <span className="text-[10px] font-bold w-3 text-center">{teriyakiCount}</span>
-                                <button onClick={() => updateTeriyaki(1)} className="w-4 h-4 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[8px] font-bold cursor-pointer transition">
+                                <span className="text-xs font-bold w-3 text-center">{teriyakiCount}</span>
+                                <button onClick={() => updateTeriyaki(1)} className="w-5 h-5 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[9px] font-bold cursor-pointer transition">
                                   <i className="fa-solid fa-plus"></i>
                                 </button>
                               </div>
@@ -828,30 +828,30 @@
                         </div>
                       )}
 
-                      {/* Controles de Cantidad Principal y Botón */}
-                      <div className="flex items-center gap-2.5 pt-1 pb-0">
-                        <div className={`flex items-center rounded-full border px-2.5 py-1 ${isLight ? 'bg-black/5 border-stone-900/20' : 'bg-black/30 border-white/25'} backdrop-blur-md shadow-md`}>
-                          <button onClick={decreaseQty} className="w-5 h-5 flex items-center justify-center font-bold text-xs cursor-pointer">
-                            <i className="fa-solid fa-minus text-[8px]"></i>
+                      {/* Controles de Cantidad Principal y Botón con respiro equilibrado */}
+                      <div className="flex items-center gap-3 pt-1 pb-1">
+                        <div className={`flex items-center rounded-full border px-3 py-1.5 ${isLight ? 'bg-black/5 border-stone-900/20' : 'bg-black/30 border-white/25'} backdrop-blur-md shadow-md`}>
+                          <button onClick={decreaseQty} className="w-6 h-6 flex items-center justify-center font-bold text-xs cursor-pointer">
+                            <i className="fa-solid fa-minus text-[10px]"></i>
                           </button>
                           <span className="w-6 text-center font-bold text-xs">{quantity}</span>
-                          <button onClick={increaseQty} className="w-5 h-5 flex items-center justify-center font-bold text-xs cursor-pointer">
-                            <i className="fa-solid fa-plus text-[8px]"></i>
+                          <button onClick={increaseQty} className="w-6 h-6 flex items-center justify-center font-bold text-xs cursor-pointer">
+                            <i className="fa-solid fa-plus text-[10px]"></i>
                           </button>
                         </div>
 
                         <button 
                           onClick={addToCart}
                           disabled={isSausageAllowed && soyaCount + teriyakiCount !== quantity}
-                          className={`font-semibold px-5 py-2 rounded-full flex items-center gap-2 transition shadow-xl text-xs group cursor-pointer border ${
+                          className={`font-semibold px-6 py-3 rounded-full flex items-center gap-2 transition shadow-xl text-xs group cursor-pointer border ${
                             isSausageAllowed && soyaCount + teriyakiCount !== quantity 
                               ? 'opacity-50 cursor-not-allowed bg-stone-800 text-white/50 border-white/10' 
                               : isLight ? 'bg-stone-950 text-white border-black hover:bg-stone-900' : 'bg-stone-950 text-white border-white/20 hover:bg-black'
                           }`}
                         >
                           Añadir al carrito 
-                          <span className="w-4 h-4 bg-white text-stone-950 rounded-full flex items-center justify-center text-[8px] font-bold">
-                            <i className="fa-solid fa-plus text-[6px]"></i>
+                          <span className="w-4 h-4 bg-white text-stone-950 rounded-full flex items-center justify-center text-[9px] font-bold">
+                            <i className="fa-solid fa-plus text-[7px]"></i>
                           </span>
                         </button>
                       </div>
@@ -864,29 +864,29 @@
                     </div>
                   </div>
 
-                  {/* Columna Derecha: Precio Actual y Miniaturas (Totalmente seguras dentro del alto visible) */}
-                  <div className="lg:col-span-3 flex flex-col justify-center items-center lg:items-end space-y-1 lg:space-y-8 order-3 pb-1 lg:pb-0 shrink-0">
+                  {/* Columna Derecha: Precio Actual y Miniaturas */}
+                  <div className="lg:col-span-3 flex flex-col justify-center items-center lg:items-end space-y-4 lg:space-y-8 order-3 pb-3 lg:pb-0">
                     
                     {/* Precio actual (Desktop) */}
                     <div className={`hidden lg:block text-center lg:text-right space-y-1 transition-all duration-300 ease-out ${animating ? 'opacity-0 scale-90 translate-y-2' : 'opacity-100 scale-100 translate-y-0'}`}>
                       <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight drop-shadow-sm">{selectedItem.price}</div>
                     </div>
 
-                    {/* Precio exacto en móvil ubicado de forma compacta */}
-                    <div className={`flex lg:hidden text-xl sm:text-2xl font-black text-orange-400 drop-shadow-md my-0 transition-all duration-300 ease-out ${animating ? 'opacity-0' : 'opacity-100'}`}>
+                    {/* Precio exacto en móvil ubicado en medio (entre el botón de añadir al carrito y las miniaturas inferiores) */}
+                    <div className={`flex lg:hidden text-3xl font-extrabold text-white drop-shadow-md my-1 transition-all duration-300 ease-out ${animating ? 'opacity-0' : 'opacity-100'}`}>
                       {selectedItem.price}
                     </div>
 
-                    {/* Miniaturas interactivas inferiores perfectamente encajadas */}
-                    <div className="space-y-0.5 w-full flex flex-col items-center lg:items-end">
-                      <div className="flex gap-1.5 sm:gap-3 justify-center lg:justify-end flex-wrap max-w-xs">
+                    {/* Miniaturas interactivas inferiores que completan el espacio vertical */}
+                    <div className="space-y-2 w-full flex flex-col items-center lg:items-end mt-auto">
+                      <div className="flex gap-2.5 sm:gap-3 justify-center lg:justify-end flex-wrap max-w-xs">
                         {categoriesData[activeCategory].items.map((item) => (
                           <button
                             key={item.id}
                             onClick={() => handleItemChange(item)}
-                            className={`w-9 h-11 sm:w-14 sm:h-16 rounded-xl overflow-hidden border-2 transition-all duration-300 relative cursor-pointer ${isLight ? 'bg-black/10' : 'bg-black/30'} shadow-md ${
+                            className={`w-12 h-14 sm:w-14 sm:h-16 rounded-xl overflow-hidden border-2 transition-all duration-300 relative cursor-pointer ${isLight ? 'bg-black/10' : 'bg-black/30'} shadow-md ${
                               selectedItem.id === item.id
-                                ? `${isLight ? 'border-stone-950 ring-2 ring-stone-950/40' : 'border-white ring-2 ring-white/50'} scale-105 shadow-xl`
+                                ? `${isLight ? 'border-stone-950 ring-2 ring-stone-950/40' : 'border-white ring-2 ring-white/50'} scale-110 shadow-xl`
                                 : `${isLight ? 'border-stone-900/30 opacity-70 hover:opacity-100' : 'border-white/30 opacity-70 hover:opacity-100'}`
                             }`}
                           >
