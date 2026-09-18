@@ -18,11 +18,9 @@
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
-        /* Transiciones fluidas estilo app nativa */
         .native-transition {
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        /* Animación de pulso para el contador del carrito */
         @keyframes badgePop {
             0% { transform: scale(1); }
             50% { transform: scale(1.4); }
@@ -31,7 +29,6 @@
         .badge-bounce {
             animation: badgePop 0.3s ease-in-out;
         }
-        /* Ocultar barras de scroll para un diseño limpio y profesional */
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
@@ -39,8 +36,6 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
-
-        /* Bloqueo estricto de scroll vertical exclusivo para móviles (App nativa) */
         @media (max-width: 1023px) {
             html, body {
                 height: 100vh;
@@ -56,12 +51,11 @@
 </head>
 <body class="bg-amber-950 text-white selection:bg-orange-500 selection:text-white">
 
-    <div id="root"></div>
+    <div id="root" class="h-full w-full"></div>
 
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
-        // Estructura completa de categorías y productos
         const categoriesData = {
           gohan: {
             name: 'GOHAN',
@@ -198,7 +192,6 @@
         };
 
         const SABORES_BEBIDAS = ["Coca-Cola", "Coca-Cola Zero", "Fanta", "Sprite"];
-
         const COMUNAS_SANTIAGO = [
           "Cerrillos", "Cerro Navia", "Conchalí", "El Bosque", "Estación Central", 
           "Huechuraba", "Independencia", "La Cisterna", "La Florida", "La Granja", 
@@ -208,7 +201,6 @@
           "Recoleta", "Renca", "San Joaquín", "San Miguel", "San Ramón", 
           "Santiago", "Vitacura"
         ];
-
         const METODOS_PAGO = ["Efectivo", "Tarjeta"];
 
         function HofuLanding() {
@@ -218,12 +210,13 @@
           const [animating, setAnimating] = useState(false);
           const [quantity, setQuantity] = useState(1);
 
-          // Estados para interactividad (Buscador limpio, Carrito con localStorage y Modal Checkout)
+          const [soyaCount, setSoyaCount] = useState(1);
+          const [teriyakiCount, setTeriyakiCount] = useState(0);
+
           const [searchOpen, setSearchOpen] = useState(false);
           const [searchQuery, setSearchQuery] = useState('');
           const [cartOpen, setCartOpen] = useState(false);
           
-          // Inicializar el carrito recuperándolo de localStorage de forma segura
           const [cart, setCart] = useState(() => {
             try {
               const savedCart = localStorage.getItem('hofu_cart');
@@ -235,8 +228,6 @@
 
           const [orderSuccess, setOrderSuccess] = useState(false);
           const [badgePulsing, setBadgePulsing] = useState(false);
-          
-          // Estado para animación de succión (Fly-to-Cart)
           const [flyingItem, setFlyingItem] = useState(null);
 
           const [formData, setFormData] = useState({ 
@@ -247,7 +238,6 @@
             paymentMethod: 'Efectivo'
           });
 
-          // Estado para selectores personalizados
           const [comunaDropdownOpen, setComunaDropdownOpen] = useState(false);
           const [comunaSearch, setComunaSearch] = useState('');
           const [paymentDropdownOpen, setPaymentDropdownOpen] = useState(false);
@@ -258,16 +248,17 @@
           const cartButtonRef = useRef(null);
           const productImgRef = useRef(null);
 
-          // Sincronizar el carrito automáticamente con localStorage cada vez que cambie
+          useEffect(() => {
+            setSoyaCount(quantity);
+            setTeriyakiCount(0);
+          }, [quantity]);
+
           useEffect(() => {
             try {
               localStorage.setItem('hofu_cart', JSON.stringify(cart));
-            } catch (e) {
-              console.error("Error guardando carrito en localStorage", e);
-            }
+            } catch (e) {}
           }, [cart]);
 
-          // Manejar clics fuera de los dropdowns y buscador para cerrarlos
           useEffect(() => {
             function handleClickOutside(event) {
               if (comunaRef.current && !comunaRef.current.contains(event.target)) {
@@ -284,7 +275,6 @@
             return () => document.removeEventListener("mousedown", handleClickOutside);
           }, []);
 
-          // Cambiar de categoría con transición fluida
           const handleCategoryChange = (categoryKey) => {
             if (categoryKey === activeCategory) return;
             setAnimating(true);
@@ -293,24 +283,55 @@
             setSelectedItem(firstItem);
             setSelectedFlavor('Coca-Cola');
             setQuantity(1);
+            setSoyaCount(1);
+            setTeriyakiCount(0);
             setTimeout(() => setAnimating(false), 350);
           };
 
-          // Cambiar de producto con transición fluida tipo app nativa
           const handleItemChange = (item) => {
             if (item.id === selectedItem.id) return;
             setAnimating(true);
             setSelectedItem(item);
             setSelectedFlavor('Coca-Cola');
             setQuantity(1);
+            setSoyaCount(1);
+            setTeriyakiCount(0);
             setTimeout(() => setAnimating(false), 350);
           };
 
-          // Control de cantidad
-          const decreaseQty = () => setQuantity(prev => (prev > 1 ? prev - 1 : 1));
-          const increaseQty = () => setQuantity(prev => prev + 1);
+          const decreaseQty = () => {
+            if (quantity > 1) {
+              const newQty = quantity - 1;
+              setQuantity(newQty);
+              if (soyaCount + teriyakiCount > newQty) {
+                if (soyaCount > 0) setSoyaCount(prev => Math.max(0, prev - 1));
+                else if (teriyakiCount > 0) setTeriyakiCount(prev => Math.max(0, prev - 1));
+              }
+            }
+          };
 
-          // Añadir producto actual al carrito con Animación de Succión (Fly-to-Cart)
+          const increaseQty = () => {
+            const newQty = quantity + 1;
+            setQuantity(newQty);
+            setSoyaCount(prev => prev + 1);
+          };
+
+          const updateSoya = (delta) => {
+            if (delta > 0) {
+              if (soyaCount + teriyakiCount < quantity) setSoyaCount(prev => prev + 1);
+            } else {
+              if (soyaCount > 0) setSoyaCount(prev => prev - 1);
+            }
+          };
+
+          const updateTeriyaki = (delta) => {
+            if (delta > 0) {
+              if (soyaCount + teriyakiCount < quantity) setTeriyakiCount(prev => prev + 1);
+            } else {
+              if (teriyakiCount > 0) setTeriyakiCount(prev => prev - 1);
+            }
+          };
+
           const addToCart = () => {
             if (productImgRef.current && cartButtonRef.current) {
               const startRect = productImgRef.current.getBoundingClientRect();
@@ -332,8 +353,17 @@
             }
 
             const flavorSuffix = selectedItem.hasFlavorSelector ? ` (${selectedFlavor})` : '';
-            const cartItemId = `${selectedItem.id}${flavorSuffix}`;
-            const cartItemTitle = `${selectedItem.title}${flavorSuffix}`;
+            let saucesSuffix = '';
+            const isSausageAllowed = activeCategory === 'gohan' || activeCategory === 'rolls';
+            if (isSausageAllowed) {
+              let saucesParts = [];
+              if (soyaCount > 0) saucesParts.push(`${soyaCount} Soya`);
+              if (teriyakiCount > 0) saucesParts.push(`${teriyakiCount} Teriyaki`);
+              saucesSuffix = saucesParts.length > 0 ? ` [Salsas: ${saucesParts.join(', ')}]` : '';
+            }
+
+            const cartItemId = `${selectedItem.id}${flavorSuffix}|S${soyaCount}T${teriyakiCount}`;
+            const cartItemTitle = `${selectedItem.title}${flavorSuffix}${saucesSuffix}`;
 
             setCart(prevCart => {
               const existingIndex = prevCart.findIndex(item => item.cartItemId === cartItemId);
@@ -342,44 +372,33 @@
                 updated[existingIndex].quantity += quantity;
                 return updated;
               } else {
-                return [...prevCart, { 
-                  ...selectedItem, 
-                  cartItemId, 
-                  displayTitle: cartItemTitle, 
-                  quantity 
-                }];
+                return [...prevCart, { ...selectedItem, cartItemId, displayTitle: cartItemTitle, quantity }];
               }
             });
             setQuantity(1);
+            setSoyaCount(1);
+            setTeriyakiCount(0);
           };
 
-          // Modificar cantidad en carrito
           const updateCartItemQty = (cartItemId, delta) => {
-            setCart(prevCart => {
-              return prevCart.map(item => {
-                if (item.cartItemId === cartItemId) {
-                  const newQty = item.quantity + delta;
-                  return newQty > 0 ? { ...item, quantity: newQty } : null;
-                }
-                return item;
-              }).filter(Boolean);
-            });
+            setCart(prevCart => prev.map(item => {
+              if (item.cartItemId === cartItemId) {
+                const newQty = item.quantity + delta;
+                return newQty > 0 ? { ...item, quantity: newQty } : null;
+              }
+              return item;
+            }).filter(Boolean));
           };
 
-          // Eliminar un producto específico del carrito
           const removeCartItem = (cartItemId) => {
             setCart(prevCart => prevCart.filter(item => item.cartItemId !== cartItemId));
           };
 
-          // Vaciar todo el carrito
           const clearCart = () => {
             setCart([]);
-            try {
-              localStorage.removeItem('hofu_cart');
-            } catch (e) {}
+            try { localStorage.removeItem('hofu_cart'); } catch (e) {}
           };
 
-          // Filtrar productos para el buscador principal entre todas las categorías
           const allProducts = Object.values(categoriesData).flatMap(cat => cat.items);
           const filteredProducts = searchQuery.trim() === '' ? [] : allProducts.filter(p => 
             p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -396,181 +415,105 @@
             setSelectedItem(item);
             setSelectedFlavor('Coca-Cola');
             setQuantity(1);
+            setSoyaCount(1);
+            setTeriyakiCount(0);
             setSearchOpen(false);
             setSearchQuery('');
             setTimeout(() => setAnimating(false), 350);
           };
 
-          // Procesar formulario y enviar a WhatsApp (único momento en que se limpia el carrito)
           const handleCheckoutSubmit = (e) => {
             e.preventDefault();
             if (!formData.fullName || !formData.address || !formData.phone) return;
 
             const totalAmount = cart.reduce((acc, item) => acc + (item.rawPrice * item.quantity), 0);
-            
-            let message = `*¡Hola HŌFU! Quisiera realizar el siguiente pedido:*\n\n`;
-            message += `*📋 DETALLE DE LA ORDEN:*\n`;
+            let message = `*¡Hola HŌFU! Quisiera realizar el siguiente pedido:*\n\n*📋 DETALLE DE LA ORDEN:*\n`;
             cart.forEach((item, idx) => {
               message += `${idx + 1}. ${item.displayTitle} x${item.quantity} - $${(item.rawPrice * item.quantity).toLocaleString('es-CL')}\n`;
             });
             message += `\n*💰 Total a pagar:* $${totalAmount.toLocaleString('es-CL')}\n`;
             message += `*💳 Método de pago:* ${formData.paymentMethod}\n\n`;
-            
-            message += `*📍 DATOS DE ENTREGA:*\n`;
-            message += `• *Nombre:* ${formData.fullName}\n`;
-            message += `• *Dirección:* ${formData.address}\n`;
-            message += `• *Comuna:* ${formData.comuna}\n`;
-            message += `• *Teléfono:* ${formData.phone}\n`;
+            message += `*📍 DATOS DE ENTREGA:*\n• *Nombre:* ${formData.fullName}\n• *Dirección:* ${formData.address}\n• *Comuna:* ${formData.comuna}\n• *Teléfono:* ${formData.phone}\n`;
 
-            const encodedMessage = encodeURIComponent(message);
-            const whatsappUrl = `https://wa.me/56920468336?text=${encodedMessage}`;
-
+            const whatsappUrl = `https://wa.me/56920468336?text=${encodeURIComponent(message)}`;
             setOrderSuccess(true);
             
             setTimeout(() => {
               window.open(whatsappUrl, '_blank');
               setOrderSuccess(false);
               setCart([]);
-              try {
-                localStorage.removeItem('hofu_cart');
-              } catch (e) {}
+              try { localStorage.removeItem('hofu_cart'); } catch (e) {}
               setCartOpen(false);
               setFormData({ fullName: '', address: '', comuna: 'Santiago', phone: '', paymentMethod: 'Efectivo' });
             }, 2000);
           };
 
           const isLight = selectedItem.isLight;
+          const isSausageAllowed = activeCategory === 'gohan' || activeCategory === 'rolls';
           const filteredComunas = COMUNAS_SANTIAGO.filter(c => c.toLowerCase().includes(comunaSearch.toLowerCase()));
 
           return (
-            <div className={`min-h-screen w-full bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-x-hidden select-none relative`}>
+            <div className={`h-full w-full bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-hidden select-none relative justify-between`}>
               
-              {/* Elemento Volador para la Animación de Succión (Fly-to-Cart) */}
               {flyingItem && (
-                <div 
-                  style={{
-                    position: 'fixed',
-                    left: `${flyingItem.startX}px`,
-                    top: `${flyingItem.startY}px`,
-                    zIndex: 9999,
-                    pointerEvents: 'none',
-                    animation: 'flyToCart 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards'
-                  }}
-                >
+                <div style={{ position: 'fixed', left: `${flyingItem.startX}px`, top: `${flyingItem.startY}px`, zIndex: 9999, pointerEvents: 'none', animation: 'flyToCart 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards' }}>
                   <img src={flyingItem.image} alt="Flying item" className="w-14 h-14 object-contain drop-shadow-2xl rounded-full bg-black/40 p-1 border border-white/30" />
                 </div>
               )}
 
               <style>{`
                 @keyframes flyToCart {
-                  0% {
-                    transform: translate(0, 0) scale(1) rotate(0deg);
-                    opacity: 1;
-                  }
-                  100% {
-                    transform: translate(${flyingItem ? flyingItem.endX - flyingItem.startX : 0}px, ${flyingItem ? flyingItem.endY - flyingItem.startY : 0}px) scale(0.15) rotate(360deg);
-                    opacity: 0.2;
-                  }
+                  0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
+                  100% { transform: translate(${flyingItem ? flyingItem.endX - flyingItem.startX : 0}px, ${flyingItem ? flyingItem.endY - flyingItem.startY : 0}px) scale(0.15) rotate(360deg); opacity: 0.2; }
                 }
               `}</style>
 
-              {/* 1. Navbar Principal con Buscador Integrado y No Invasivo */}
-              <header className="w-full px-6 md:px-12 py-3 lg:py-5 flex items-center justify-between z-30 max-w-7xl mx-auto relative shrink-0">
-                {/* Logo HŌFU */}
+              {/* Navbar Principal */}
+              <header className="w-full px-5 md:px-12 py-2 flex items-center justify-between z-30 max-w-7xl mx-auto relative shrink-0">
                 <div className="flex items-center cursor-pointer">
-                  <span className={`font-black tracking-[0.3em] text-2xl md:text-3xl uppercase drop-shadow-sm ${isLight ? 'text-stone-950' : 'text-white'}`}>
-                    HŌFU
-                  </span>
+                  <span className={`font-black tracking-[0.3em] text-2xl uppercase ${isLight ? 'text-stone-950' : 'text-white'}`}>HŌFU</span>
                 </div>
 
-                {/* Sistema de Pestañas de Categorías (Desktop) */}
                 <nav className={`hidden md:flex items-center gap-1 ${isLight ? 'bg-black/10 border-stone-900/20 text-stone-900' : 'bg-black/20 border-white/20 text-white'} backdrop-blur-md px-4 py-1.5 rounded-full border text-xs tracking-wider font-medium shadow-md`}>
                   {Object.keys(categoriesData).map((catKey) => {
                     const isActive = activeCategory === catKey;
                     return (
-                      <button
-                        key={catKey}
-                        onClick={() => handleCategoryChange(catKey)}
-                        className={`px-4 py-2 rounded-full transition-all duration-300 cursor-pointer tracking-wider ${
-                          isActive 
-                            ? `${isLight ? 'bg-stone-950 text-white' : 'bg-white/25 text-white'} shadow-sm font-bold scale-105` 
-                            : `${isLight ? 'hover:text-stone-950 text-stone-900/80' : 'hover:text-white text-white/80'}`
-                        }`}
-                      >
+                      <button key={catKey} onClick={() => handleCategoryChange(catKey)} className={`px-4 py-2 rounded-full transition-all duration-300 cursor-pointer ${isActive ? `${isLight ? 'bg-stone-950 text-white' : 'bg-white/25 text-white'} shadow-sm font-bold scale-105` : ''}`}>
                         {categoriesData[catKey].name}
                       </button>
                     );
                   })}
                 </nav>
 
-                {/* Controles Derechos: Buscador & Carrito */}
                 <div className="flex items-center gap-3" ref={searchContainerRef}>
-                  
-                  {/* Buscador Integrado No Invasivo */}
                   <div className="flex items-center relative">
                     {!searchOpen ? (
-                      <button 
-                        onClick={() => setSearchOpen(true)}
-                        className={`w-10 h-10 rounded-full ${isLight ? 'bg-black/10 border-stone-900/20 text-stone-900 hover:bg-black/20' : 'bg-black/20 border-white/20 text-white hover:bg-black/30'} backdrop-blur-md flex items-center justify-center border transition cursor-pointer shadow-md`}
-                        title="Buscar producto"
-                      >
+                      <button onClick={() => setSearchOpen(true)} className={`w-9 h-9 rounded-full ${isLight ? 'bg-black/10 border-stone-900/20 text-stone-900' : 'bg-black/20 border-white/20 text-white'} backdrop-blur-md flex items-center justify-center border transition cursor-pointer`}>
                         <i className="fa-solid fa-search text-xs"></i>
                       </button>
                     ) : (
-                      <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border ${isLight ? 'bg-white text-stone-950 border-stone-300' : 'bg-stone-900 text-white border-white/20'} shadow-lg transition-all duration-300 w-48 sm:w-64`}>
+                      <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border ${isLight ? 'bg-white text-stone-950 border-stone-300' : 'bg-stone-900 text-white border-white/20'} shadow-lg w-48 sm:w-64`}>
                         <i className="fa-solid fa-search text-xs opacity-50 shrink-0"></i>
-                        <input 
-                          type="text" 
-                          placeholder="Buscar plato, bebida..." 
-                          value={searchQuery}
-                          onChange={(e) => setSearchQuery(e.target.value)}
-                          autoFocus
-                          className="bg-transparent w-full text-xs outline-none placeholder-current placeholder-opacity-50"
-                        />
-                        <button 
-                          onClick={() => {
-                            setSearchOpen(false);
-                            setSearchQuery('');
-                          }}
-                          className="w-5 h-5 rounded-full flex items-center justify-center opacity-60 hover:opacity-100 transition cursor-pointer text-xs"
-                        >
-                          <i className="fa-solid fa-xmark text-xs"></i>
-                        </button>
+                        <input type="text" placeholder="Buscar plato..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} autoFocus className="bg-transparent w-full text-xs outline-none" />
+                        <button onClick={() => { setSearchOpen(false); setSearchQuery(''); }} className="opacity-60 hover:opacity-100 text-xs"><i className="fa-solid fa-xmark"></i></button>
                       </div>
                     )}
 
-                    {/* Resultados del buscador */}
                     {searchOpen && searchQuery.trim() !== '' && (
                       <div className={`absolute right-0 top-12 w-72 sm:w-80 ${isLight ? 'bg-white text-stone-950 border-stone-300' : 'bg-stone-900 text-white border-white/10'} p-3 rounded-2xl shadow-2xl border z-40`}>
                         <div className="max-h-48 overflow-y-auto space-y-1">
-                          {filteredProducts.length > 0 ? (
-                            filteredProducts.map(prod => (
-                              <div 
-                                key={prod.id}
-                                onClick={() => selectSearchedItem(prod)}
-                                className={`flex items-center justify-between p-2 rounded-xl ${isLight ? 'hover:bg-stone-100' : 'hover:bg-white/10'} cursor-pointer transition text-xs`}
-                              >
-                                <div className="flex items-center gap-2">
-                                  <img src={prod.image} alt={prod.title} className="w-8 h-8 object-cover rounded-lg" />
-                                  <span className="font-semibold">{prod.title}</span>
-                                </div>
-                                <span className="font-bold text-orange-400">{prod.price}</span>
-                              </div>
-                            ))
-                          ) : (
-                            <div className="p-3 text-center text-xs opacity-50">No se encontraron resultados</div>
-                          )}
+                          {filteredProducts.length > 0 ? filteredProducts.map(prod => (
+                            <div key={prod.id} onClick={() => selectSearchedItem(prod)} className={`flex items-center justify-between p-2 rounded-xl ${isLight ? 'hover:bg-stone-100' : 'hover:bg-white/10'} cursor-pointer text-xs`}>
+                              <div className="flex items-center gap-2"><img src={prod.image} alt={prod.title} className="w-8 h-8 object-cover rounded-lg" /><span className="font-semibold">{prod.title}</span></div>
+                              <span className="font-bold text-orange-400">{prod.price}</span>
+                            </div>
+                          )) : <div className="p-3 text-center text-xs opacity-50">Sin resultados</div>}
                         </div>
                       </div>
                     )}
                   </div>
 
-                  {/* Botón Carrito con Ref para Animación Fly-to-Cart */}
-                  <button 
-                    ref={cartButtonRef}
-                    onClick={() => setCartOpen(true)}
-                    className={`w-10 h-10 rounded-full ${isLight ? 'bg-black/10 border-stone-900/20 text-stone-900 hover:bg-black/20' : 'bg-black/20 border-white/20 text-white hover:bg-black/30'} backdrop-blur-md flex items-center justify-center border transition relative cursor-pointer shadow-md`}
-                  >
+                  <button ref={cartButtonRef} onClick={() => setCartOpen(true)} className={`w-9 h-9 rounded-full ${isLight ? 'bg-black/10 border-stone-900/20 text-stone-900' : 'bg-black/20 border-white/20 text-white'} backdrop-blur-md flex items-center justify-center border transition relative cursor-pointer`}>
                     <i className="fa-solid fa-bag-shopping text-xs"></i>
                     {cart.reduce((sum, item) => sum + item.quantity, 0) > 0 && (
                       <span className={`absolute -top-1 -right-1 w-4 h-4 bg-orange-500 text-white rounded-full text-[10px] flex items-center justify-center font-bold ${badgePulsing ? 'badge-bounce' : ''}`}>
@@ -578,60 +521,37 @@
                       </span>
                     )}
                   </button>
-
                 </div>
               </header>
 
-              {/* Menú de categorías móvil compacto y fijo */}
-              <div className={`flex md:hidden overflow-x-auto px-4 py-1.5 gap-2 scrollbar-none z-20 border-b ${isLight ? 'border-stone-900/10 bg-black/5 text-stone-900' : 'border-white/10 bg-black/15 text-white'} backdrop-blur-md justify-start shrink-0`}>
+              {/* Menú de categorías móvil */}
+              <div className={`flex md:hidden overflow-x-auto px-4 py-1 gap-2 scrollbar-none z-20 border-b ${isLight ? 'border-stone-900/10 bg-black/5 text-stone-900' : 'border-white/10 bg-black/15 text-white'} backdrop-blur-md shrink-0`}>
                 {Object.keys(categoriesData).map((catKey) => {
                   const isActive = activeCategory === catKey;
                   return (
-                    <button
-                      key={catKey}
-                      onClick={() => handleCategoryChange(catKey)}
-                      className={`px-3.5 py-1 rounded-full text-[10px] tracking-wider whitespace-nowrap transition-all duration-300 cursor-pointer ${
-                        isActive 
-                          ? `${isLight ? 'bg-stone-950 text-white font-bold' : 'bg-white/30 text-white font-bold'} scale-105` 
-                          : `${isLight ? 'text-stone-900/80' : 'text-white/80'}`
-                      }`}
-                    >
+                    <button key={catKey} onClick={() => handleCategoryChange(catKey)} className={`px-3 py-0.5 rounded-full text-[10px] tracking-wider whitespace-nowrap transition-all duration-300 cursor-pointer ${isActive ? `${isLight ? 'bg-stone-950 text-white font-bold' : 'bg-white/30 text-white font-bold'} scale-105` : ''}`}>
                       {categoriesData[catKey].name}
                     </button>
                   );
                 })}
               </div>
 
-              {/* 2. Main Hero Section con Transición Fluida Estilo App Nativa */}
-              <main className="flex-1 flex items-center justify-center px-4 md:px-8 py-1 lg:py-2 z-10 w-full overflow-hidden">
-                <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-12 items-center mx-auto">
+              {/* Main Area */}
+              <main className="flex-1 flex items-center justify-center px-4 py-1 z-10 w-full overflow-hidden my-auto shrink-0">
+                <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-2 lg:gap-12 items-center mx-auto h-full">
                   
-                  {/* Columna Izquierda (Desktop): Título, descripción, selector de sabor y controles */}
+                  {/* Desktop Izquierda */}
                   <div className="lg:col-span-5 hidden lg:flex flex-col justify-center space-y-4 order-1 text-left pt-2">
-                    <div className={`space-y-3 lg:space-y-4 transition-all duration-300 ease-out ${animating ? 'opacity-0 -translate-x-6 scale-95' : 'opacity-100 translate-x-0 scale-100'}`}>
-                      <h1 className="text-4xl lg:text-6xl font-extrabold tracking-tight leading-tight whitespace-nowrap drop-shadow-sm">
-                        <span>{selectedItem.title}</span>
-                      </h1>
+                    <div className={`space-y-4 transition-all duration-300 ${animating ? 'opacity-0 -translate-x-6 scale-95' : 'opacity-100 translate-x-0 scale-100'}`}>
+                      <h1 className="text-4xl lg:text-6xl font-extrabold tracking-tight leading-tight whitespace-nowrap">{selectedItem.title}</h1>
+                      <p className={`text-base lg:text-lg leading-relaxed max-w-md font-medium ${isLight ? 'text-stone-900/90' : 'text-white/95'}`}>{selectedItem.description}</p>
                       
-                      <p className={`text-base lg:text-lg leading-relaxed max-w-md font-medium ${isLight ? 'text-stone-900/90' : 'text-white/95'} drop-shadow`}>
-                        {selectedItem.description}
-                      </p>
-
-                      {/* Selector de Sabor Estilizado (Solo en Bebidas) */}
                       {selectedItem.hasFlavorSelector && (
                         <div className="space-y-1.5 pt-1">
-                          <label className="text-xs font-bold uppercase tracking-wider opacity-90 block">Elige tu sabor:</label>
+                          <label className="text-xs font-bold uppercase tracking-wider block">Elige tu sabor:</label>
                           <div className="flex flex-wrap gap-2">
                             {SABORES_BEBIDAS.map((flavor) => (
-                              <button
-                                key={flavor}
-                                onClick={() => setSelectedFlavor(flavor)}
-                                className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
-                                  selectedFlavor === flavor
-                                    ? 'bg-orange-500 border-orange-400 text-white shadow-md scale-105'
-                                    : `${isLight ? 'bg-black/5 border-stone-900/20 text-stone-900 hover:bg-black/10' : 'bg-black/30 border-white/20 text-white/90 hover:bg-black/50'}`
-                                }`}
-                              >
+                              <button key={flavor} onClick={() => setSelectedFlavor(flavor)} className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${selectedFlavor === flavor ? 'bg-orange-500 border-orange-400 text-white shadow-md scale-105' : 'bg-black/30 border-white/20 text-white/90'}`}>
                                 {flavor}
                               </button>
                             ))}
@@ -639,378 +559,221 @@
                         </div>
                       )}
 
-                      {/* Control de Cantidad y Botón Añadir al Carrito */}
                       <div className="pt-2 flex items-center gap-4">
-                        <div className={`flex items-center rounded-full border px-3 py-1.5 ${isLight ? 'bg-black/5 border-stone-900/20' : 'bg-black/30 border-white/25'} backdrop-blur-md shadow-md`}>
-                          <button onClick={decreaseQty} className="w-7 h-7 flex items-center justify-center font-bold text-base hover:opacity-75 transition cursor-pointer">
-                            <i className="fa-solid fa-minus text-xs"></i>
-                          </button>
+                        <div className={`flex items-center rounded-full border px-3 py-1.5 ${isLight ? 'bg-black/5 border-stone-900/20' : 'bg-black/30 border-white/25'} backdrop-blur-md`}>
+                          <button onClick={decreaseQty} className="w-7 h-7 flex items-center justify-center font-bold text-base cursor-pointer"><i className="fa-solid fa-minus text-xs"></i></button>
                           <span className="w-8 text-center font-bold text-sm">{quantity}</span>
-                          <button onClick={increaseQty} className="w-7 h-7 flex items-center justify-center font-bold text-base hover:opacity-75 transition cursor-pointer">
-                            <i className="fa-solid fa-plus text-xs"></i>
-                          </button>
+                          <button onClick={increaseQty} className="w-7 h-7 flex items-center justify-center font-bold text-base cursor-pointer"><i className="fa-solid fa-plus text-xs"></i></button>
                         </div>
-
-                        <button 
-                          onClick={addToCart}
-                          className={`font-semibold px-8 py-3.5 rounded-full flex items-center gap-3 transition shadow-xl text-sm group cursor-pointer border ${isLight ? 'bg-stone-950 text-white border-black hover:bg-stone-900' : 'bg-stone-950 text-white border-white/20 hover:bg-black'}`}
-                        >
-                          Añadir al carrito 
-                          <span className="w-6 h-6 bg-white text-stone-950 rounded-full flex items-center justify-center text-xs font-bold group-hover:translate-x-1 transition">
-                            <i className="fa-solid fa-plus text-[10px]"></i>
-                          </span>
+                        <button onClick={addToCart} className="font-semibold px-8 py-3.5 rounded-full flex items-center gap-3 transition shadow-xl text-sm bg-stone-950 text-white border border-white/20 hover:bg-black cursor-pointer">
+                          Añadir al carrito <span className="w-6 h-6 bg-white text-stone-950 rounded-full flex items-center justify-center text-xs font-bold"><i className="fa-solid fa-plus text-[10px]"></i></span>
                         </button>
                       </div>
                     </div>
                   </div>
 
-                  {/* Versión Móvil: Título superior optimizado */}
-                  <div className={`flex lg:hidden flex-col items-center text-center order-1 pt-1 pb-0 transition-all duration-300 ease-out ${animating ? 'opacity-0 scale-90' : 'opacity-100 scale-100'}`}>
-                    <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight whitespace-nowrap drop-shadow-sm">
-                      <span>{selectedItem.title}</span>
-                    </h1>
+                  {/* Versión Móvil: Título */}
+                  <div className={`flex lg:hidden flex-col items-center text-center order-1 transition-all duration-300 ${animating ? 'opacity-0 scale-90' : 'opacity-100 scale-100'}`}>
+                    <h1 className="text-2xl font-black tracking-tight text-white drop-shadow-md">{selectedItem.title}</h1>
                   </div>
 
-                  {/* Columna Central: Visor de Producto Dinámico adaptado */}
-                  <div className="lg:col-span-4 relative flex flex-col items-center justify-center order-2">
-                    <div className="relative w-full h-[190px] sm:h-[260px] lg:h-[420px] flex items-center justify-center my-0">
-                      <div className={`absolute w-48 h-48 sm:w-64 sm:h-64 ${isLight ? 'bg-white/60' : 'bg-white/20'} rounded-full blur-3xl pointer-events-none transition-all duration-500`}></div>
-                      
+                  {/* Imagen y controles móviles optimizados para ocupar todo el espacio superior */}
+                  <div className="lg:col-span-4 relative flex flex-col items-center justify-center order-2 my-auto">
+                    <div className="relative w-full h-[220px] sm:h-[250px] lg:h-[420px] flex items-center justify-center my-1">
+                      <div className={`absolute w-56 h-56 ${isLight ? 'bg-white/70' : 'bg-white/25'} rounded-full blur-3xl pointer-events-none`}></div>
                       <img 
                         ref={productImgRef}
                         src={selectedItem.image} 
                         alt={selectedItem.title}
-                        className={`max-h-full max-w-full object-contain drop-shadow-[0_20px_20px_rgba(0,0,0,0.5)] transition-all duration-400 ease-out ${
-                          animating ? 'opacity-0 scale-75 rotate-3 translate-y-4' : 'opacity-100 scale-100 rotate-0 translate-y-0'
-                        }`}
-                        onError={(e)=>{
-                          e.target.src = "https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&q=80&w=800";
-                        }}
+                        className={`max-h-full max-w-full object-contain drop-shadow-[0_25px_25px_rgba(0,0,0,0.6)] transition-all duration-400 scale-[1.9] sm:scale-[2.0] ${animating ? 'opacity-0 scale-75 rotate-3 translate-y-4' : 'opacity-100 scale-[1.9] sm:scale-[2.0] rotate-0 translate-y-0'}`}
+                        onError={(e)=>{ e.target.src = "https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&q=80&w=800"; }}
                       />
                     </div>
 
-                    {/* Descripción, Selector de Sabor y Controles en Móvil (Perfectamente encajados sin scroll) */}
-                    <div className={`flex lg:hidden flex-col items-center text-center space-y-2 w-full px-2 mt-0 transition-all duration-300 ease-out ${animating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
-                      <p className={`text-[11px] sm:text-xs font-medium leading-tight max-w-xs ${isLight ? 'text-stone-900/90' : 'text-white/95'} drop-shadow line-clamp-2`}>
-                        {selectedItem.description}
-                      </p>
+                    {/* Descripción y Controles Móviles */}
+                    <div className={`flex lg:hidden flex-col items-center text-center space-y-1 w-full px-2 mt-1 transition-all duration-300 ${animating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
+                      <p className="text-[10px] font-medium leading-relaxed max-w-xs text-white/95 line-clamp-2">{selectedItem.description}</p>
 
-                      {/* Selector de Sabor Estilizado (Móvil) */}
                       {selectedItem.hasFlavorSelector && (
                         <div className="space-y-0.5 w-full max-w-xs">
-                          <label className="text-[9px] font-bold uppercase tracking-wider opacity-90 block text-center">Elige tu sabor:</label>
+                          <label className="text-[9px] font-bold uppercase tracking-wider block">Elige tu sabor:</label>
                           <div className="flex flex-wrap justify-center gap-1">
                             {SABORES_BEBIDAS.map((flavor) => (
-                              <button
-                                key={flavor}
-                                onClick={() => setSelectedFlavor(flavor)}
-                                className={`px-2 py-0.5 rounded-lg text-[9px] font-semibold border transition-all cursor-pointer ${
-                                  selectedFlavor === flavor
-                                    ? 'bg-orange-500 border-orange-400 text-white shadow-md scale-105'
-                                    : `${isLight ? 'bg-black/5 border-stone-900/20 text-stone-900' : 'bg-black/30 border-white/20 text-white/90'}`
-                                }`}
-                              >
+                              <button key={flavor} onClick={() => setSelectedFlavor(flavor)} className={`px-2 py-0.5 rounded-lg text-[9px] font-semibold border transition-all cursor-pointer ${selectedFlavor === flavor ? 'bg-orange-500 border-orange-400 text-white shadow-md' : 'bg-black/30 border-white/20 text-white/90'}`}>
                                 {flavor}
                               </button>
                             ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {isSausageAllowed && (
+                        <div className="space-y-0.5 w-full max-w-xs bg-black/30 p-1.5 rounded-xl border border-white/15 shadow-md">
+                          <div className="flex justify-between items-center px-1">
+                            <span className="text-[9px] font-semibold text-white/95 flex items-center gap-1"><i className="fa-solid fa-utensils text-[8px] text-orange-400"></i> Elige tu salsa favorita</span>
+                            <span className={`text-[9px] font-bold px-1.5 py-0 rounded-full ${soyaCount + teriyakiCount === quantity ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-orange-500/20 text-orange-300 border border-orange-500/30'}`}>
+                              {soyaCount + teriyakiCount} / {quantity}
+                            </span>
+                          </div>
+                          <div className="grid grid-cols-2 gap-1.5 pt-0.5">
+                            <div className="flex items-center justify-between bg-black/30 px-2 py-0.5 rounded-lg border border-white/10">
+                              <span className="text-[9px]">Soya</span>
+                              <div className="flex items-center gap-1.5">
+                                <button onClick={() => updateSoya(-1)} className="w-4 h-4 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[8px] font-bold cursor-pointer"><i className="fa-solid fa-minus"></i></button>
+                                <span className="text-[10px] font-bold w-3 text-center">{soyaCount}</span>
+                                <button onClick={() => updateSoya(1)} className="w-4 h-4 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[8px] font-bold cursor-pointer"><i className="fa-solid fa-plus"></i></button>
+                              </div>
+                            </div>
+                            <div className="flex items-center justify-between bg-black/30 px-2 py-0.5 rounded-lg border border-white/10">
+                              <span className="text-[9px]">Teriyaki</span>
+                              <div className="flex items-center gap-1.5">
+                                <button onClick={() => updateTeriyaki(-1)} className="w-4 h-4 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[8px] font-bold cursor-pointer"><i className="fa-solid fa-minus"></i></button>
+                                <span className="text-[10px] font-bold w-3 text-center">{teriyakiCount}</span>
+                                <button onClick={() => updateTeriyaki(1)} className="w-4 h-4 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[8px] font-bold cursor-pointer"><i className="fa-solid fa-plus"></i></button>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       )}
 
                       <div className="flex items-center gap-2 pt-0.5">
-                        <div className={`flex items-center rounded-full border px-2 py-0.5 ${isLight ? 'bg-black/5 border-stone-900/20' : 'bg-black/30 border-white/25'} backdrop-blur-md`}>
-                          <button onClick={decreaseQty} className="w-5 h-5 flex items-center justify-center font-bold text-xs">
-                            <i className="fa-solid fa-minus text-[9px]"></i>
-                          </button>
+                        <div className="flex items-center rounded-full border px-2 py-0.5 bg-black/30 border-white/25">
+                          <button onClick={decreaseQty} className="w-5 h-5 flex items-center justify-center font-bold text-xs cursor-pointer"><i className="fa-solid fa-minus text-[8px]"></i></button>
                           <span className="w-5 text-center font-bold text-xs">{quantity}</span>
-                          <button onClick={increaseQty} className="w-5 h-5 flex items-center justify-center font-bold text-xs">
-                            <i className="fa-solid fa-plus text-[9px]"></i>
-                          </button>
+                          <button onClick={increaseQty} className="w-5 h-5 flex items-center justify-center font-bold text-xs cursor-pointer"><i className="fa-solid fa-plus text-[8px]"></i></button>
                         </div>
-
                         <button 
                           onClick={addToCart}
-                          className={`font-semibold px-4 py-2 rounded-full flex items-center gap-1.5 transition shadow-xl text-xs group cursor-pointer border ${isLight ? 'bg-stone-950 text-white border-black hover:bg-stone-900' : 'bg-stone-950 text-white border-white/20 hover:bg-black'}`}
+                          disabled={isSausageAllowed && soyaCount + teriyakiCount !== quantity}
+                          className={`font-semibold px-4 py-1.5 rounded-full flex items-center gap-2 transition shadow-xl text-xs cursor-pointer border ${isSausageAllowed && soyaCount + teriyakiCount !== quantity ? 'opacity-50 bg-stone-800 text-white/50 border-white/10' : 'bg-stone-950 text-white border-white/20 hover:bg-black'}`}
                         >
-                          Añadir al carrito 
-                          <span className="w-4 h-4 bg-white text-stone-950 rounded-full flex items-center justify-center text-[9px] font-bold">
-                            <i className="fa-solid fa-plus text-[7px]"></i>
-                          </span>
+                          Añadir al carrito <span className="w-4 h-4 bg-white text-stone-950 rounded-full flex items-center justify-center text-[8px] font-bold"><i className="fa-solid fa-plus text-[6px]"></i></span>
                         </button>
                       </div>
                     </div>
-
-                    <div className="text-center mt-2 hidden lg:block">
-                      <p className={`font-serif italic text-xs sm:text-sm tracking-wide ${isLight ? 'text-stone-950/80' : 'text-white/95'} drop-shadow`}>
-                        Calidad y sabor,<br /> frescos en cada bocado
-                      </p>
-                    </div>
                   </div>
 
-                  {/* Columna Derecha: Precio Actual y Miniaturas */}
-                  <div className="lg:col-span-3 flex flex-col justify-center items-center lg:items-end space-y-4 lg:space-y-8 order-3 pb-2 lg:pb-0">
-                    
-                    {/* Precio actual */}
-                    <div className={`text-center lg:text-right space-y-1 transition-all duration-300 ease-out ${animating ? 'opacity-0 scale-90 translate-y-2' : 'opacity-100 scale-100 translate-y-0'}`}>
-                      <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight drop-shadow-sm">{selectedItem.price}</div>
+                  {/* Columna Derecha / Parte Inferior Móvil: Precio Grande y Miniaturas bien arriba */}
+                  <div className="lg:col-span-3 flex flex-col justify-end items-center lg:items-end space-y-1 order-3 pb-1 shrink-0">
+                    <div className="hidden lg:block text-center lg:text-right space-y-1">
+                      <div className="text-5xl font-extrabold tracking-tight">{selectedItem.price}</div>
                     </div>
 
-                    {/* Miniaturas interactivas */}
-                    <div className="space-y-2 w-full flex flex-col items-center lg:items-end">
-                      <div className="flex gap-2 sm:gap-3 justify-center lg:justify-end flex-wrap max-w-xs">
+                    <div className={`flex lg:hidden text-2xl sm:text-3xl font-black text-white drop-shadow-md mt-1 mb-0.5 transition-all ${animating ? 'opacity-0' : 'opacity-100'}`}>
+                      {selectedItem.price}
+                    </div>
+
+                    <div className="space-y-0.5 w-full flex flex-col items-center lg:items-end">
+                      <div className="flex gap-1.5 sm:gap-3 justify-center lg:justify-end flex-wrap max-w-xs">
                         {categoriesData[activeCategory].items.map((item) => (
                           <button
                             key={item.id}
                             onClick={() => handleItemChange(item)}
-                            className={`w-12 h-14 sm:w-14 sm:h-16 rounded-xl overflow-hidden border-2 transition-all duration-300 relative cursor-pointer ${isLight ? 'bg-black/10' : 'bg-black/30'} shadow-md ${
-                              selectedItem.id === item.id
-                                ? `${isLight ? 'border-stone-950 ring-2 ring-stone-950/40' : 'border-white ring-2 ring-white/50'} scale-110 shadow-xl`
-                                : `${isLight ? 'border-stone-900/30 opacity-70 hover:opacity-100' : 'border-white/30 opacity-70 hover:opacity-100'}`
-                            }`}
+                            className={`w-9 h-11 sm:w-14 sm:h-16 rounded-xl overflow-hidden border-2 transition-all duration-300 relative cursor-pointer bg-black/30 shadow-md ${selectedItem.id === item.id ? 'border-white ring-2 ring-white/50 scale-105 shadow-xl' : 'border-white/30 opacity-70 hover:opacity-100'}`}
                           >
-                            <img 
-                              src={item.image} 
-                              alt={item.title} 
-                              className="w-full h-full object-cover"
-                              onError={(e)=>{
-                                e.target.src = "https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&q=80&w=800";
-                              }}
-                            />
+                            <img src={item.image} alt={item.title} className="w-full h-full object-cover" onError={(e)=>{ e.target.src = "https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&q=80&w=800"; }} />
                           </button>
                         ))}
                       </div>
                     </div>
-
                   </div>
 
                 </div>
               </main>
 
-              {/* 3. Modal de Resumen de Pedido & Formulario WhatsApp */}
+              {/* Modal Carrito */}
               {cartOpen && (
                 <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-4">
-                  
-                  {/* Modal responsivo: Panel de control profesional ultra amplio y holgado en PC, diseño vertical intacto en móvil */}
-                  <div className={`bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} rounded-3xl max-w-md lg:max-w-6xl w-full p-6 lg:p-10 shadow-2xl border ${isLight ? 'border-stone-900/20' : 'border-white/20'} relative animate-in fade-in zoom-in duration-200 max-h-[92vh] lg:max-h-[90vh] overflow-y-auto lg:overflow-visible no-scrollbar`}>
-                    
-                    {/* Botón cerrar */}
-                    <button 
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setCartOpen(false);
-                      }}
-                      className={`absolute top-6 right-6 w-9 h-9 rounded-full ${isLight ? 'bg-black/10 hover:bg-black/20 text-stone-950' : 'bg-white/10 hover:bg-white/20 text-white'} flex items-center justify-center transition cursor-pointer z-20 font-bold text-sm`}
-                    >
+                  <div className={`bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} rounded-3xl max-w-md lg:max-w-6xl w-full p-5 lg:p-10 shadow-2xl border border-white/20 relative max-h-[92vh] overflow-y-auto no-scrollbar`}>
+                    <button type="button" onClick={() => setCartOpen(false)} className="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition cursor-pointer z-20 font-bold">
                       <i className="fa-solid fa-xmark text-xs"></i>
                     </button>
 
-                    <h3 className="text-2xl font-extrabold mb-6 tracking-wide drop-shadow-sm pr-12">Resumen de tu Pedido</h3>
+                    <h3 className="text-xl lg:text-2xl font-extrabold mb-4 pr-12">Resumen de tu Pedido</h3>
 
                     {orderSuccess ? (
                       <div className="py-16 text-center space-y-3">
-                        <div className="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto text-2xl font-bold">
-                          <i className="fa-solid fa-check text-xl"></i>
-                        </div>
+                        <div className="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto text-2xl font-bold"><i className="fa-solid fa-check"></i></div>
                         <h4 className="text-lg font-bold">¡Redirigiendo a WhatsApp!</h4>
-                        <p className="text-xs opacity-80">Se abrió tu chat con el pedido detallado. ¡Gracias por elegir HŌFU!</p>
                       </div>
                     ) : cart.length === 0 ? (
-                      <div className="py-16 text-center opacity-70 text-sm space-y-2">
-                        <i className="fa-solid fa-bag-shopping text-4xl opacity-40 block mb-2"></i>
-                        Tu bolsa de compras está vacía. ¡Añade tus platos favoritos!
-                      </div>
+                      <div className="py-16 text-center opacity-70 text-sm space-y-2"><i className="fa-solid fa-bag-shopping text-4xl opacity-40 block mb-2"></i>Tu bolsa está vacía.</div>
                     ) : (
-                      /* Layout de dos columnas ultra holgadas para PC, 1 columna en móvil */
-                      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-                        
-                        {/* Columna Izquierda (PC): Resumen de Bolsa, Ítems y Total */}
-                        <div className="lg:col-span-5 flex flex-col space-y-4">
-                          <div className="flex items-center justify-between border-b pb-2.5 border-white/15">
-                            <span className="text-xs uppercase tracking-wider font-bold opacity-90">Productos en tu bolsa</span>
-                            <button 
-                              onClick={clearCart}
-                              className="text-xs font-bold text-red-400 hover:text-red-300 transition flex items-center gap-1.5 cursor-pointer"
-                            >
-                              <i className="fa-solid fa-trash-can text-xs"></i> Vaciar carrito
-                            </button>
+                      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                        <div className="lg:col-span-5 flex flex-col space-y-3">
+                          <div className="flex items-center justify-between border-b pb-2 border-white/15">
+                            <span className="text-xs uppercase tracking-wider font-bold opacity-90">Productos</span>
+                            <button onClick={clearCart} className="text-xs font-bold text-red-400 hover:text-red-300 transition flex items-center gap-1.5 cursor-pointer"><i className="fa-solid fa-trash-can"></i> Vaciar</button>
                           </div>
-
-                          {/* Lista de productos muy holgada y sin scroll molesto */}
-                          <div className="space-y-3 max-h-56 lg:max-h-80 overflow-y-auto no-scrollbar pr-1">
+                          <div className="space-y-2.5 max-h-48 lg:max-h-80 overflow-y-auto no-scrollbar pr-1">
                             {cart.map((item) => (
-                              <div key={item.cartItemId} className={`flex items-center justify-between ${isLight ? 'bg-white/40 border-stone-900/10' : 'bg-black/40 border-white/10'} backdrop-blur-md p-3 rounded-2xl border`}>
-                                <div className="flex items-center gap-3">
-                                  <img src={item.image} alt={item.title} className="w-12 h-12 object-cover rounded-xl" />
-                                  <div>
-                                    <h4 className="font-bold text-xs lg:text-sm">{item.displayTitle}</h4>
-                                    <p className="text-[11px] text-orange-400 font-bold">{item.price} c/u</p>
-                                  </div>
+                              <div key={item.cartItemId} className="flex items-center justify-between bg-black/40 border border-white/10 backdrop-blur-md p-2.5 rounded-2xl gap-2">
+                                <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                                  <img src={item.image} alt={item.title} className="w-10 h-10 object-cover rounded-xl shrink-0" />
+                                  <div className="min-w-0 flex-1"><h4 className="font-bold text-xs truncate">{item.displayTitle}</h4><p className="text-[10px] text-orange-400 font-bold">{item.price} c/u</p></div>
                                 </div>
-                                <div className="flex items-center gap-3">
-                                  <div className={`flex items-center ${isLight ? 'bg-white/60 border-stone-900/20' : 'bg-stone-900 border-white/20'} border rounded-lg px-2 py-1`}>
-                                    <button onClick={() => updateCartItemQty(item.cartItemId, -1)} className="px-1 text-xs font-bold cursor-pointer">
-                                      <i className="fa-solid fa-minus text-[8px]"></i>
-                                    </button>
-                                    <span className="w-6 text-center text-xs font-bold">{item.quantity}</span>
-                                    <button onClick={() => updateCartItemQty(item.cartItemId, 1)} className="px-1 text-xs font-bold cursor-pointer">
-                                      <i className="fa-solid fa-plus text-[8px]"></i>
-                                    </button>
+                                <div className="flex items-center gap-2 shrink-0">
+                                  <div className="flex items-center bg-stone-900 border border-white/20 rounded-lg px-1.5 py-0.5">
+                                    <button onClick={() => updateCartItemQty(item.cartItemId, -1)} className="px-1 text-xs font-bold cursor-pointer"><i className="fa-solid fa-minus text-[7px]"></i></button>
+                                    <span className="w-5 text-center text-xs font-bold">{item.quantity}</span>
+                                    <button onClick={() => updateCartItemQty(item.cartItemId, 1)} className="px-1 text-xs font-bold cursor-pointer"><i className="fa-solid fa-plus text-[7px]"></i></button>
                                   </div>
-                                  <span className="font-bold text-xs lg:text-sm w-16 text-right">${(item.rawPrice * item.quantity).toLocaleString('es-CL')}</span>
-                                  <button 
-                                    onClick={() => removeCartItem(item.cartItemId)}
-                                    className="w-7 h-7 rounded-full bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white flex items-center justify-center transition cursor-pointer text-xs"
-                                    title="Eliminar producto"
-                                  >
-                                    <i className="fa-solid fa-trash-can text-[10px]"></i>
-                                  </button>
+                                  <span className="font-bold text-xs w-12 text-right">${(item.rawPrice * item.quantity).toLocaleString('es-CL')}</span>
+                                  <button onClick={() => removeCartItem(item.cartItemId)} className="w-6 h-6 rounded-full bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white flex items-center justify-center transition cursor-pointer text-xs"><i className="fa-solid fa-trash-can text-[9px]"></i></button>
                                 </div>
                               </div>
                             ))}
                           </div>
-
-                          {/* Total a pagar */}
-                          <div className={`flex justify-between items-center pt-4 border-t ${isLight ? 'border-stone-900/20' : 'border-white/20'} font-bold text-base lg:text-lg`}>
-                            <span>Total a pagar:</span>
-                            <span className="text-orange-400 text-lg lg:text-xl">
-                              ${cart.reduce((acc, item) => acc + (item.rawPrice * item.quantity), 0).toLocaleString('es-CL')}
-                            </span>
+                          <div className="flex justify-between items-center pt-3 border-t border-white/20 font-bold text-sm">
+                            <span>Total:</span>
+                            <span className="text-orange-400 text-lg">${cart.reduce((acc, item) => acc + (item.rawPrice * item.quantity), 0).toLocaleString('es-CL')}</span>
                           </div>
                         </div>
 
-                        {/* Columna Derecha (PC): Formulario de Envío y Pago Holgado */}
-                        <div className="lg:col-span-7 flex flex-col space-y-4">
-                          <form onSubmit={handleCheckoutSubmit} className="space-y-4">
-                            <h4 className="text-xs font-bold uppercase tracking-wider opacity-90">Datos de Entrega & Pago (Santiago)</h4>
-                            
-                            <input 
-                              type="text" 
-                              placeholder="Nombre y Apellido *" 
-                              required
-                              value={formData.fullName}
-                              onChange={(e) => setFormData({...formData, fullName: e.target.value})}
-                              className={`w-full ${isLight ? 'bg-white/60 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/40 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-xl px-4 py-3 text-xs lg:text-sm outline-none focus:border-orange-500 transition`}
-                            />
-
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                              <input 
-                                type="text" 
-                                placeholder="Dirección exacta (Calle, N° de depto/casa) *" 
-                                required
-                                value={formData.address}
-                                onChange={(e) => setFormData({...formData, address: e.target.value})}
-                                className={`w-full ${isLight ? 'bg-white/60 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/40 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-xl px-4 py-3 text-xs lg:text-sm outline-none focus:border-orange-500 transition`}
-                              />
-
-                              {/* Selector de Comuna Personalizado (con altura muy holgada) */}
+                        <div className="lg:col-span-7 flex flex-col space-y-3">
+                          <form onSubmit={handleCheckoutSubmit} className="space-y-3">
+                            <h4 className="text-xs font-bold uppercase tracking-wider opacity-90">Datos de Entrega (Santiago)</h4>
+                            <input type="text" placeholder="Nombre y Apellido *" required value={formData.fullName} onChange={(e) => setFormData({...formData, fullName: e.target.value})} className="w-full bg-black/40 border border-white/20 text-white placeholder-white/50 backdrop-blur-md rounded-xl px-3.5 py-2.5 text-xs outline-none focus:border-orange-500" />
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                              <input type="text" placeholder="Dirección exacta *" required value={formData.address} onChange={(e) => setFormData({...formData, address: e.target.value})} className="w-full bg-black/40 border border-white/20 text-white placeholder-white/50 backdrop-blur-md rounded-xl px-3.5 py-2.5 text-xs outline-none focus:border-orange-500" />
                               <div className="relative" ref={comunaRef}>
-                                <div 
-                                  onClick={() => setComunaDropdownOpen(!comunaDropdownOpen)}
-                                  className={`w-full ${isLight ? 'bg-white/60 border-stone-900/20 text-stone-950' : 'bg-black/40 border-white/20 text-white'} backdrop-blur-md border rounded-xl px-4 py-3 text-xs lg:text-sm flex items-center justify-between cursor-pointer transition select-none`}
-                                >
-                                  <span className="truncate">{formData.comuna}</span>
-                                  <i className="fa-solid fa-chevron-down text-xs opacity-60"></i>
+                                <div onClick={() => setComunaDropdownOpen(!comunaDropdownOpen)} className="w-full bg-black/40 border border-white/20 text-white backdrop-blur-md rounded-xl px-3.5 py-2.5 text-xs flex items-center justify-between cursor-pointer">
+                                  <span className="truncate">{formData.comuna}</span><i className="fa-solid fa-chevron-down text-xs opacity-60"></i>
                                 </div>
-
                                 {comunaDropdownOpen && (
-                                  <div className={`absolute left-0 right-0 mt-2 ${isLight ? 'bg-white text-stone-950 border-stone-300' : 'bg-stone-900 text-white border-white/10'} rounded-2xl shadow-2xl border z-50 p-3`}>
-                                    <div className={`flex items-center gap-2.5 ${isLight ? 'bg-stone-100 border-stone-200 text-stone-900' : 'bg-stone-800 border-white/10 text-white'} px-3.5 py-2 rounded-xl border mb-2`}>
-                                      <i className="fa-solid fa-search text-xs opacity-50"></i>
-                                      <input 
-                                        type="text" 
-                                        placeholder="Buscar comuna..."
-                                        value={comunaSearch}
-                                        onChange={(e) => setComunaSearch(e.target.value)}
-                                        autoFocus
-                                        className="bg-transparent w-full text-xs lg:text-sm outline-none placeholder-current placeholder-opacity-50"
-                                      />
-                                    </div>
-                                    <div className="max-h-52 overflow-y-auto space-y-1 pr-1">
-                                      {filteredComunas.length > 0 ? (
-                                        filteredComunas.map((comuna) => (
-                                          <div 
-                                            key={comuna}
-                                            onClick={() => {
-                                              setFormData({...formData, comuna});
-                                              setComunaDropdownOpen(false);
-                                              setComunaSearch('');
-                                            }}
-                                            className={`px-3.5 py-2.5 rounded-xl text-xs lg:text-sm cursor-pointer transition ${
-                                              formData.comuna === comuna 
-                                                ? 'bg-orange-500 text-white font-bold' 
-                                                : `${isLight ? 'hover:bg-stone-100' : 'hover:bg-white/10'}`
-                                            }`}
-                                          >
-                                            {comuna}
-                                          </div>
-                                        ))
-                                      ) : (
-                                        <div className="p-3 text-center text-xs opacity-50">No hay resultados</div>
-                                      )}
+                                  <div className="absolute left-0 right-0 mt-2 bg-stone-900 text-white border border-white/10 rounded-2xl shadow-2xl z-50 p-3">
+                                    <input type="text" placeholder="Buscar comuna..." value={comunaSearch} onChange={(e) => setComunaSearch(e.target.value)} autoFocus className="bg-stone-800 border border-white/10 px-3 py-1.5 rounded-xl text-xs w-full mb-2 outline-none" />
+                                    <div className="max-h-40 overflow-y-auto space-y-1">
+                                      {filteredComunas.map((c) => (
+                                        <div key={c} onClick={() => { setFormData({...formData, comuna: c}); setComunaDropdownOpen(false); setComunaSearch(''); }} className={`px-3 py-2 rounded-xl text-xs cursor-pointer ${formData.comuna === c ? 'bg-orange-500 font-bold' : 'hover:bg-white/10'}`}>{c}</div>
+                                      ))}
                                     </div>
                                   </div>
                                 )}
                               </div>
                             </div>
-
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                              <input 
-                                type="tel" 
-                                placeholder="Teléfono / WhatsApp (+56 9...) *" 
-                                required
-                                value={formData.phone}
-                                onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                                className={`w-full ${isLight ? 'bg-white/60 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/40 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-xl px-4 py-3 text-xs lg:text-sm outline-none focus:border-orange-500 transition`}
-                              />
-
-                              {/* Selector de Método de Pago Estilizado */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                              <input type="tel" placeholder="Teléfono (+56 9...) *" required value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} className="w-full bg-black/40 border border-white/20 text-white placeholder-white/50 backdrop-blur-md rounded-xl px-3.5 py-2.5 text-xs outline-none focus:border-orange-500" />
                               <div className="relative" ref={paymentRef}>
-                                <div 
-                                  onClick={() => setPaymentDropdownOpen(!paymentDropdownOpen)}
-                                  className={`w-full ${isLight ? 'bg-white/60 border-stone-900/20 text-stone-950' : 'bg-black/40 border-white/20 text-white'} backdrop-blur-md border rounded-xl px-4 py-3 text-xs lg:text-sm flex items-center justify-between cursor-pointer transition select-none`}
-                                >
-                                  <span className="truncate">Pago: {formData.paymentMethod}</span>
-                                  <i className="fa-solid fa-chevron-down text-xs opacity-60"></i>
+                                <div onClick={() => setPaymentDropdownOpen(!paymentDropdownOpen)} className="w-full bg-black/40 border border-white/20 text-white backdrop-blur-md rounded-xl px-3.5 py-2.5 text-xs flex items-center justify-between cursor-pointer">
+                                  <span className="truncate">Pago: {formData.paymentMethod}</span><i className="fa-solid fa-chevron-down text-xs opacity-60"></i>
                                 </div>
-
                                 {paymentDropdownOpen && (
-                                  <div className={`absolute left-0 right-0 mt-2 ${isLight ? 'bg-white text-stone-950 border-stone-300' : 'bg-stone-900 text-white border-white/10'} rounded-2xl shadow-2xl border z-50 p-2.5 space-y-1`}>
-                                    {METODOS_PAGO.map((metodo) => (
-                                      <div 
-                                        key={metodo}
-                                        onClick={() => {
-                                          setFormData({...formData, paymentMethod: metodo});
-                                          setPaymentDropdownOpen(false);
-                                        }}
-                                        className={`px-3.5 py-2.5 rounded-xl text-xs lg:text-sm cursor-pointer transition ${
-                                          formData.paymentMethod === metodo 
-                                            ? 'bg-orange-500 text-white font-bold' 
-                                            : `${isLight ? 'hover:bg-stone-100' : 'hover:bg-white/10'}`
-                                        }`}
-                                      >
-                                        {metodo}
-                                      </div>
+                                  <div className="absolute left-0 right-0 mt-2 bg-stone-900 text-white border border-white/10 rounded-2xl shadow-2xl z-50 p-2 space-y-1">
+                                    {METODOS_PAGO.map((m) => (
+                                      <div key={m} onClick={() => { setFormData({...formData, paymentMethod: m}); setPaymentDropdownOpen(false); }} className={`px-3 py-2 rounded-xl text-xs cursor-pointer ${formData.paymentMethod === m ? 'bg-orange-500 font-bold' : 'hover:bg-white/10'}`}>{m}</div>
                                     ))}
                                   </div>
                                 )}
                               </div>
                             </div>
-
-                            {/* Botón WhatsApp Elegante */}
-                            <button 
-                              type="submit"
-                              className="w-full bg-stone-950 hover:bg-black text-white border border-white/20 font-bold py-4 rounded-2xl transition shadow-xl text-xs lg:text-sm uppercase tracking-wider cursor-pointer mt-4 flex items-center justify-center gap-2.5"
-                            >
-                              <i className="fa-brands fa-whatsapp text-base text-emerald-400"></i>
-                              Enviar Pedido por WhatsApp
+                            <button type="submit" className="w-full bg-stone-950 hover:bg-black text-white border border-white/20 font-bold py-3.5 rounded-2xl transition shadow-xl text-xs uppercase tracking-wider cursor-pointer mt-2 flex items-center justify-center gap-2.5">
+                              <i className="fa-brands fa-whatsapp text-base text-emerald-400"></i> Enviar Pedido por WhatsApp
                             </button>
                           </form>
                         </div>
-
                       </div>
                     )}
-
                   </div>
                 </div>
               )}
