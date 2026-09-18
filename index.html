@@ -380,7 +380,6 @@
             setSelectedItem(item);
             setSelectedFlavor('Coca-Cola');
             setQuantity(1);
-            setSearchOpen(false);
             setSearchQuery('');
             setTimeout(() => setAnimating(false), 350);
           };
@@ -603,7 +602,7 @@
 
                       <button 
                         type="submit"
-                        className={`w-full font-bold py-2.5 rounded-xl transition shadow-xl text-xs uppercase tracking-wider cursor-pointer mt-1.5 flex items-center justify-center gap-2 ${isLight ? 'bg-stone-950 hover:bg-stone-900 text-white border border-stone-900' : 'bg-stone-950 hover:bg-black text-white border border-white/20'}`}
+                        className={`w-full font-bold py-2 rounded-xl transition shadow-xl text-xs uppercase tracking-wider cursor-pointer mt-1 flex items-center justify-center gap-2 ${isLight ? 'bg-stone-950 hover:bg-stone-900 text-white border border-stone-900' : 'bg-stone-950 hover:bg-black text-white border border-white/20'}`}
                       >
                         <i className="fa-brands fa-whatsapp text-sm text-emerald-400"></i>
                         Enviar Pedido por WhatsApp
@@ -647,26 +646,26 @@
                 }
               `}</style>
 
-              {/* 1. Navbar Principal con Alineación Perfecta en PC */}
-              <header className="w-full px-6 md:px-10 py-3 grid grid-cols-1 md:grid-cols-12 items-center z-30 max-w-full shrink-0 gap-4">
+              {/* 1. Navbar Principal con Logo Más Grande y Desplazado a la Izquierda */}
+              <header className="w-full px-6 md:px-12 py-3 flex items-center justify-between z-30 max-w-full shrink-0">
                 
-                {/* Izquierda PC: Logo HŌFU y Pestañas de Categorías alineados a la izquierda */}
-                <div className="md:col-span-8 flex items-center gap-6 justify-between md:justify-start">
+                {/* Izquierda: Logo HŌFU más grande y Categorías alineadas */}
+                <div className="flex items-center gap-10">
                   <div className="flex items-center cursor-pointer">
-                    <span className={`font-black tracking-[0.3em] text-xl md:text-2xl uppercase drop-shadow-sm ${isLight ? 'text-stone-950' : 'text-white'}`}>
+                    <span className={`font-black tracking-[0.3em] text-2xl md:text-3xl uppercase drop-shadow-sm ${isLight ? 'text-stone-950' : 'text-white'}`}>
                       HŌFU
                     </span>
                   </div>
 
                   {/* Sistema de Pestañas de Categorías (Desktop) */}
-                  <nav className={`hidden md:flex items-center gap-1 ${isLight ? 'bg-black/10 border-stone-900/20 text-stone-900' : 'bg-black/20 border-white/20 text-white'} backdrop-blur-md px-3 py-1 rounded-full border text-xs tracking-wider font-medium shadow-md`}>
+                  <nav className={`hidden md:flex items-center gap-1.5 ${isLight ? 'bg-black/10 border-stone-900/20 text-stone-900' : 'bg-black/20 border-white/20 text-white'} backdrop-blur-md px-3.5 py-1.5 rounded-full border text-xs tracking-wider font-medium shadow-md`}>
                     {Object.keys(categoriesData).map((catKey) => {
                       const isActive = activeCategory === catKey;
                       return (
                         <button
                           key={catKey}
                           onClick={() => handleCategoryChange(catKey)}
-                          className={`px-3 py-1.5 rounded-full transition-all duration-300 cursor-pointer tracking-wider ${
+                          className={`px-3.5 py-1.5 rounded-full transition-all duration-300 cursor-pointer tracking-wider ${
                             isActive 
                               ? `${isLight ? 'bg-stone-950 text-white' : 'bg-white/25 text-white'} shadow-sm font-bold scale-105` 
                               : `${isLight ? 'hover:text-stone-950 text-stone-900/80' : 'hover:text-white text-white/80'}`
@@ -679,69 +678,8 @@
                   </nav>
                 </div>
 
-                {/* Derecha PC: Buscador y Carrito alineados exactamente con el panel de pedido */}
-                <div className="md:col-span-4 flex items-center justify-end gap-3" ref={searchContainerRef}>
-                  
-                  {/* Buscador Integrado No Invasivo */}
-                  <div className="flex items-center relative">
-                    {!searchOpen ? (
-                      <button 
-                        onClick={() => setSearchOpen(true)}
-                        className={`w-9 h-9 rounded-full ${isLight ? 'bg-black/10 border-stone-900/20 text-stone-900 hover:bg-black/20' : 'bg-black/20 border-white/20 text-white hover:bg-black/30'} backdrop-blur-md flex items-center justify-center border transition cursor-pointer shadow-md`}
-                        title="Buscar producto"
-                      >
-                        <i className="fa-solid fa-search text-xs"></i>
-                      </button>
-                    ) : (
-                      <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border ${isLight ? 'bg-white text-stone-950 border-stone-300' : 'bg-stone-900 text-white border-white/20'} shadow-lg transition-all duration-300 w-48 sm:w-64`}>
-                        <i className="fa-solid fa-search text-xs opacity-50 shrink-0"></i>
-                        <input 
-                          type="text" 
-                          placeholder="Buscar plato, bebida..." 
-                          value={searchQuery}
-                          onChange={(e) => setSearchQuery(e.target.value)}
-                          autoFocus
-                          className="bg-transparent w-full text-xs outline-none placeholder-current placeholder-opacity-50"
-                        />
-                        <button 
-                          onClick={() => {
-                            setSearchOpen(false);
-                            setSearchQuery('');
-                          }}
-                          className="w-5 h-5 rounded-full flex items-center justify-center opacity-60 hover:opacity-100 transition cursor-pointer text-xs"
-                        >
-                          <i className="fa-solid fa-xmark text-xs"></i>
-                        </button>
-                      </div>
-                    )}
-
-                    {/* Resultados del buscador */}
-                    {searchOpen && searchQuery.trim() !== '' && (
-                      <div className={`absolute right-0 top-12 w-72 sm:w-80 ${isLight ? 'bg-white text-stone-950 border-stone-300' : 'bg-stone-900 text-white border-white/10'} p-3 rounded-2xl shadow-2xl border z-40`}>
-                        <div className="max-h-48 overflow-y-auto space-y-1">
-                          {filteredProducts.length > 0 ? (
-                            filteredProducts.map(prod => (
-                              <div 
-                                key={prod.id}
-                                onClick={() => selectSearchedItem(prod)}
-                                className={`flex items-center justify-between p-2 rounded-xl ${isLight ? 'hover:bg-stone-100' : 'hover:bg-white/10'} cursor-pointer transition text-xs`}
-                              >
-                                <div className="flex items-center gap-2">
-                                  <img src={prod.image} alt={prod.title} className="w-8 h-8 object-cover rounded-lg" />
-                                  <span className="font-semibold">{prod.title}</span>
-                                </div>
-                                <span className="font-bold text-orange-400">{prod.price}</span>
-                              </div>
-                            ))
-                          ) : (
-                            <div className="p-3 text-center text-xs opacity-50">No se encontraron resultados</div>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Botón Carrito Flotante (Solo visible en dispositivos móviles / tablets) */}
+                {/* Control Derecho Móvil: Botón Carrito */}
+                <div className="flex items-center gap-3">
                   <button 
                     ref={cartButtonRef}
                     onClick={() => setCartOpen(true)}
@@ -754,7 +692,6 @@
                       </span>
                     )}
                   </button>
-
                 </div>
               </header>
 
@@ -778,34 +715,34 @@
                 })}
               </div>
 
-              {/* 2. Main Hero Section con Dos Columnas Profesionales en PC */}
-              <main className="flex-1 flex items-center px-4 md:px-10 py-1 z-10 w-full overflow-hidden">
-                <div className="w-full h-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+              {/* 2. Main Hero Section con Distribución Profesional en PC */}
+              <main className="flex-1 flex items-center px-4 md:px-12 py-0 z-10 w-full overflow-hidden">
+                <div className="w-full h-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                   
-                  {/* Columna Izquierda (Productos, Visor y Controles Subidos) */}
-                  <div className="lg:col-span-8 h-full flex flex-col justify-center items-center lg:grid lg:grid-cols-12 lg:gap-6 lg:items-center">
+                  {/* Columna Izquierda (Productos, Visor Ampliado y Controles hacia el Centro) */}
+                  <div className="lg:col-span-8 h-full flex flex-col justify-center items-center lg:grid lg:grid-cols-12 lg:gap-6 lg:items-center lg:pl-4">
                     
                     {/* Columna Izquierda (Desktop): Título, descripción, selector de sabor y controles */}
-                    <div className="lg:col-span-5 hidden lg:flex flex-col justify-center space-y-3 order-1 text-left">
-                      <div className={`space-y-3 transition-all duration-300 ease-out ${animating ? 'opacity-0 -translate-x-6 scale-95' : 'opacity-100 translate-x-0 scale-100'}`}>
-                        <h1 className="text-3xl lg:text-5xl font-extrabold tracking-tight leading-tight whitespace-nowrap drop-shadow-sm">
+                    <div className="lg:col-span-6 hidden lg:flex flex-col justify-center space-y-4 order-1 text-left lg:pl-4">
+                      <div className={`space-y-4 transition-all duration-300 ease-out ${animating ? 'opacity-0 -translate-x-6 scale-95' : 'opacity-100 translate-x-0 scale-100'}`}>
+                        <h1 className="text-3xl lg:text-5xl font-extrabold tracking-tight leading-tight drop-shadow-sm">
                           <span>{selectedItem.title}</span>
                         </h1>
                         
-                        <p className={`text-sm lg:text-base leading-relaxed max-w-md font-medium ${isLight ? 'text-stone-900/90' : 'text-white/95'} drop-shadow`}>
+                        <p className={`text-base lg:text-lg leading-relaxed max-w-lg font-medium ${isLight ? 'text-stone-900/90' : 'text-white/95'} drop-shadow`}>
                           {selectedItem.description}
                         </p>
 
                         {/* Selector de Sabor Estilizado (Solo en Bebidas) */}
                         {selectedItem.hasFlavorSelector && (
-                          <div className="space-y-1.5 pt-1">
+                          <div className="space-y-2 pt-1">
                             <label className="text-xs font-bold uppercase tracking-wider opacity-90 block">Elige tu sabor:</label>
                             <div className="flex flex-wrap gap-2">
                               {SABORES_BEBIDAS.map((flavor) => (
                                 <button
                                   key={flavor}
                                   onClick={() => setSelectedFlavor(flavor)}
-                                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+                                  className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
                                     selectedFlavor === flavor
                                       ? 'bg-orange-500 border-orange-400 text-white shadow-md scale-105'
                                       : `${isLight ? 'bg-black/5 border-stone-900/20 text-stone-900 hover:bg-black/10' : 'bg-black/30 border-white/20 text-white/90 hover:bg-black/50'}`
@@ -820,11 +757,11 @@
 
                         {/* Control de Cantidad y Botón Añadir al Carrito */}
                         <div className="pt-2 flex items-center gap-4">
-                          <div className={`flex items-center rounded-full border px-3 py-1.5 ${isLight ? 'bg-black/5 border-stone-900/20' : 'bg-black/30 border-white/25'} backdrop-blur-md shadow-md`}>
+                          <div className={`flex items-center rounded-full border px-3.5 py-2 ${isLight ? 'bg-black/5 border-stone-900/20' : 'bg-black/30 border-white/25'} backdrop-blur-md shadow-md`}>
                             <button onClick={decreaseQty} className="w-7 h-7 flex items-center justify-center font-bold text-base hover:opacity-75 transition cursor-pointer">
                               <i className="fa-solid fa-minus text-xs"></i>
                             </button>
-                            <span className="w-8 text-center font-bold text-sm">{quantity}</span>
+                            <span className="w-8 text-center font-bold text-base">{quantity}</span>
                             <button onClick={increaseQty} className="w-7 h-7 flex items-center justify-center font-bold text-base hover:opacity-75 transition cursor-pointer">
                               <i className="fa-solid fa-plus text-xs"></i>
                             </button>
@@ -832,7 +769,7 @@
 
                           <button 
                             onClick={addToCart}
-                            className={`font-semibold px-6 py-3 rounded-full flex items-center gap-3 transition shadow-xl text-xs group cursor-pointer border ${isLight ? 'bg-stone-950 text-white border-black hover:bg-stone-900' : 'bg-stone-950 text-white border-white/20 hover:bg-black'}`}
+                            className={`font-semibold px-7 py-3.5 rounded-full flex items-center gap-3 transition shadow-xl text-sm group cursor-pointer border ${isLight ? 'bg-stone-950 text-white border-black hover:bg-stone-900' : 'bg-stone-950 text-white border-white/20 hover:bg-black'}`}
                           >
                             Añadir al carrito 
                             <span className="w-5 h-5 bg-white text-stone-950 rounded-full flex items-center justify-center text-xs font-bold group-hover:translate-x-1 transition">
@@ -850,16 +787,16 @@
                       </h1>
                     </div>
 
-                    {/* Columna Central: Visor de Producto Dinámico */}
-                    <div className="lg:col-span-4 relative flex flex-col items-center justify-center order-2">
-                      <div className="relative w-full h-[200px] sm:h-[260px] lg:h-[320px] flex items-center justify-center my-0">
-                        <div className={`absolute w-48 h-48 sm:w-60 sm:h-60 ${isLight ? 'bg-white/60' : 'bg-white/20'} rounded-full blur-3xl pointer-events-none transition-all duration-500`}></div>
+                    {/* Columna Central: Visor de Producto Ampliado en PC */}
+                    <div className="lg:col-span-3 relative flex flex-col items-center justify-center order-2">
+                      <div className="relative w-full h-[200px] sm:h-[260px] lg:h-[360px] flex items-center justify-center my-0">
+                        <div className={`absolute w-56 h-56 sm:w-72 sm:h-72 ${isLight ? 'bg-white/60' : 'bg-white/20'} rounded-full blur-3xl pointer-events-none transition-all duration-500`}></div>
                         
                         <img 
                           ref={productImgRef}
                           src={selectedItem.image} 
                           alt={selectedItem.title}
-                          className={`max-h-full max-w-full object-contain drop-shadow-[0_30px_30px_rgba(0,0,0,0.5)] transition-all duration-400 ease-out ${
+                          className={`max-h-full max-w-full object-contain drop-shadow-[0_35px_35px_rgba(0,0,0,0.5)] transition-all duration-400 ease-out ${
                             animating ? 'opacity-0 scale-75 rotate-3 translate-y-6' : 'opacity-100 scale-100 rotate-0 translate-y-0'
                           }`}
                           onError={(e)=>{
@@ -919,29 +856,29 @@
                         </div>
                       </div>
 
-                      <div className="text-center mt-1 hidden lg:block">
+                      <div className="text-center mt-2 hidden lg:block">
                         <p className={`font-serif italic text-xs tracking-wide ${isLight ? 'text-stone-950/80' : 'text-white/95'} drop-shadow`}>
-                          Calidad y sabor,<br /> frescos en cada bocado
+                          Calidad y sabor, frescos en cada bocado
                         </p>
                       </div>
                     </div>
 
-                    {/* Columna Derecha: Precio Actual y Miniaturas */}
-                    <div className="lg:col-span-3 flex flex-col justify-center items-center lg:items-end space-y-4 order-3 pb-4 lg:pb-0">
+                    {/* Columna Derecha: Precio Actual y Miniaturas Ampliadas en PC */}
+                    <div className="lg:col-span-3 flex flex-col justify-center items-center lg:items-end space-y-5 order-3 pb-4 lg:pb-0">
                       
                       {/* Precio actual */}
                       <div className={`text-center lg:text-right space-y-1 transition-all duration-300 ease-out ${animating ? 'opacity-0 scale-90 translate-y-2' : 'opacity-100 scale-100 translate-y-0'}`}>
-                        <div className="text-3xl sm:text-4xl lg:text-4xl font-extrabold tracking-tight drop-shadow-sm">{selectedItem.price}</div>
+                        <div className="text-4xl sm:text-5xl lg:text-5xl font-extrabold tracking-tight drop-shadow-sm">{selectedItem.price}</div>
                       </div>
 
-                      {/* Miniaturas interactivas */}
+                      {/* Miniaturas interactivas ampliadas */}
                       <div className="space-y-2 w-full flex flex-col items-center lg:items-end">
-                        <div className="flex gap-2 justify-center lg:justify-end flex-wrap max-w-xs">
+                        <div className="flex gap-2.5 justify-center lg:justify-end flex-wrap max-w-xs">
                           {categoriesData[activeCategory].items.map((item) => (
                             <button
                               key={item.id}
                               onClick={() => handleItemChange(item)}
-                              className={`w-11 h-13 sm:w-12 sm:h-12 rounded-xl overflow-hidden border-2 transition-all duration-300 relative cursor-pointer ${isLight ? 'bg-black/10' : 'bg-black/30'} shadow-md ${
+                              className={`w-13 h-15 sm:w-14 sm:h-16 rounded-2xl overflow-hidden border-2 transition-all duration-300 relative cursor-pointer ${isLight ? 'bg-black/10' : 'bg-black/30'} shadow-md ${
                                 selectedItem.id === item.id
                                   ? `${isLight ? 'border-stone-950 ring-2 ring-stone-950/40' : 'border-white ring-2 ring-white/50'} scale-110 shadow-xl`
                                   : `${isLight ? 'border-stone-900/30 opacity-70 hover:opacity-100' : 'border-white/30 opacity-70 hover:opacity-100'}`
@@ -964,8 +901,56 @@
 
                   </div>
 
-                  {/* Barra Lateral Fija (Sidebar POS Real) Anclada Perfectamente al Margen Derecho en PC */}
-                  <div className="hidden lg:flex lg:col-span-4 flex-col bg-black/25 backdrop-blur-xl border-l border-white/15 h-[calc(100vh-5rem)] p-5 shadow-2xl justify-self-end w-full">
+                  {/* Barra Lateral Fija Derecha (Sidebar POS Completo desde Arriba del Todo) */}
+                  <div className="hidden lg:flex lg:col-span-4 flex-col bg-black/25 backdrop-blur-xl border-l border-white/15 h-screen pt-4 pb-5 px-5 shadow-2xl justify-self-end w-full" ref={searchContainerRef}>
+                    
+                    {/* Buscador Integrado Arriba del Panel */}
+                    <div className="mb-4 relative">
+                      <div className={`flex items-center gap-2 px-3.5 py-2 rounded-xl border ${isLight ? 'bg-white text-stone-950 border-stone-300' : 'bg-stone-900 text-white border-white/20'} shadow-md transition-all duration-300 w-full`}>
+                        <i className="fa-solid fa-search text-xs opacity-50 shrink-0"></i>
+                        <input 
+                          type="text" 
+                          placeholder="Buscar plato, bebida..." 
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          className="bg-transparent w-full text-xs outline-none placeholder-current placeholder-opacity-50"
+                        />
+                        {searchQuery.trim() !== '' && (
+                          <button 
+                            onClick={() => setSearchQuery('')}
+                            className="w-5 h-5 rounded-full flex items-center justify-center opacity-60 hover:opacity-100 transition cursor-pointer text-xs"
+                          >
+                            <i className="fa-solid fa-xmark text-xs"></i>
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Resultados del buscador flotantes en el panel */}
+                      {searchQuery.trim() !== '' && (
+                        <div className={`absolute left-0 right-0 top-12 ${isLight ? 'bg-white text-stone-950 border-stone-300' : 'bg-stone-900 text-white border-white/10'} p-2 rounded-2xl shadow-2xl border z-40`}>
+                          <div className="max-h-48 overflow-y-auto space-y-1">
+                            {filteredProducts.length > 0 ? (
+                              filteredProducts.map(prod => (
+                                <div 
+                                  key={prod.id}
+                                  onClick={() => selectSearchedItem(prod)}
+                                  className={`flex items-center justify-between p-2 rounded-xl ${isLight ? 'hover:bg-stone-100' : 'hover:bg-white/10'} cursor-pointer transition text-xs`}
+                                >
+                                  <div className="flex items-center gap-2">
+                                    <img src={prod.image} alt={prod.title} className="w-8 h-8 object-cover rounded-lg" />
+                                    <span className="font-semibold">{prod.title}</span>
+                                  </div>
+                                  <span className="font-bold text-orange-400">{prod.price}</span>
+                                </div>
+                              ))
+                            ) : (
+                              <div className="p-3 text-center text-xs opacity-50">No se encontraron resultados</div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
                     <h3 className={`text-base font-extrabold mb-3 tracking-wide drop-shadow-sm ${isLight ? 'text-stone-950' : 'text-white'}`}>Tu Pedido</h3>
                     {renderCartContent()}
                   </div>
