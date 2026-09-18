@@ -54,6 +54,17 @@
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
             background: rgba(0, 0, 0, 0.4);
         }
+        /* Scrollbar oscuro específico para el contenido desplegable interno */
+        .dark-custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
+        }
+        .dark-custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        .dark-custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 9999px;
+        }
     </style>
 </head>
 <body class="bg-amber-950 text-white selection:bg-orange-500 selection:text-white">
@@ -413,7 +424,7 @@
           const isLight = selectedItem.isLight;
           const filteredComunas = COMUNAS_SANTIAGO.filter(c => c.toLowerCase().includes(comunaSearch.toLowerCase()));
 
-          // Componente interno reutilizable para el contenido del Carrito / Checkout en formato horizontal ancho
+          // Componente interno reutilizable para el contenido del Carrito / Checkout en formato horizontal amplio
           const renderCartContent = () => (
             <div className="flex flex-col space-y-4">
               <div className="flex items-center justify-between border-b pb-2.5 border-black/15 text-black">
@@ -438,14 +449,13 @@
                   
                   {/* Columna Izquierda del Modal: Lista de productos en bolsa */}
                   <div className="md:col-span-6 space-y-3 flex flex-col">
-                    <div className="space-y-2.5 max-h-60 overflow-y-auto custom-scrollbar pr-2">
+                    <div className="space-y-2.5 max-h-56 md:max-h-72 overflow-y-auto custom-scrollbar pr-2">
                       {cart.map((item) => (
                         <div key={item.cartItemId} className="flex items-center justify-between gap-3 bg-white/90 border-black/20 text-black shadow-sm backdrop-blur-md p-3 rounded-xl border">
                           <div className="flex items-center gap-2.5 min-w-0">
                             <img src={item.image} alt={item.title} className="w-10 h-10 object-cover rounded-lg shrink-0" />
                             <div className="min-w-0">
                               <h4 className="font-black text-xs truncate text-black">{item.displayTitle}</h4>
-                              {/* Precio debajo de cada producto cambiado a color negro sólido */}
                               <p className="text-xs font-black text-black">{item.price} c/u</p>
                             </div>
                           </div>
@@ -466,7 +476,6 @@
                               className="w-6 h-6 rounded-full flex items-center justify-center transition cursor-pointer text-xs shrink-0 bg-black text-white hover:bg-stone-800 font-bold"
                               title="Eliminar"
                             >
-                              {/* Icono de la papelera en color negro sólido / blanco sobre fondo negro para máxima visibilidad */}
                               <i className="fa-solid fa-trash-can text-[9px] text-white"></i>
                             </button>
                           </div>
@@ -482,9 +491,9 @@
                     </div>
                   </div>
 
-                  {/* Columna Derecha del Modal: Formulario de Datos de Entrega */}
+                  {/* Columna Derecha del Modal: Formulario con campos de fondo oscuro integrado */}
                   <div className="md:col-span-6">
-                    <form onSubmit={handleCheckoutSubmit} className="space-y-2.5">
+                    <form onSubmit={handleCheckoutSubmit} className="space-y-3">
                       <h4 className="text-xs md:text-sm font-black uppercase tracking-wider text-black">Datos de Entrega</h4>
                       
                       <input 
@@ -493,7 +502,7 @@
                         required
                         value={formData.fullName}
                         onChange={(e) => setFormData({...formData, fullName: e.target.value})}
-                        className="w-full bg-white/95 border-black/30 text-black placeholder-black/60 font-bold backdrop-blur-md border rounded-xl px-3 py-2 text-xs outline-none focus:border-black transition"
+                        className="w-full bg-black/40 border-white/25 text-white placeholder-white/60 font-bold backdrop-blur-md border rounded-xl px-3.5 py-2.5 text-xs md:text-sm outline-none focus:border-white transition shadow-inner"
                       />
 
                       <input 
@@ -502,34 +511,34 @@
                         required
                         value={formData.address}
                         onChange={(e) => setFormData({...formData, address: e.target.value})}
-                        className="w-full bg-white/95 border-black/30 text-black placeholder-black/60 font-bold backdrop-blur-md border rounded-xl px-3 py-2 text-xs outline-none focus:border-black transition"
+                        className="w-full bg-black/40 border-white/25 text-white placeholder-white/60 font-bold backdrop-blur-md border rounded-xl px-3.5 py-2.5 text-xs md:text-sm outline-none focus:border-white transition shadow-inner"
                       />
 
-                      <div className="grid grid-cols-2 gap-2">
+                      <div className="grid grid-cols-2 gap-2.5">
                         {/* Selector de Comuna Personalizado */}
                         <div className="relative" ref={comunaRef}>
                           <div 
                             onClick={() => setComunaDropdownOpen(!comunaDropdownOpen)}
-                            className="w-full bg-white/95 border-black/30 text-black font-black backdrop-blur-md border rounded-xl px-3 py-2 text-xs flex items-center justify-between cursor-pointer transition select-none"
+                            className="w-full bg-black/40 border-white/25 text-white font-black backdrop-blur-md border rounded-xl px-3.5 py-2.5 text-xs md:text-sm flex items-center justify-between cursor-pointer transition select-none shadow-inner"
                           >
                             <span className="truncate">{formData.comuna}</span>
-                            <i className="fa-solid fa-chevron-down text-[10px] text-black"></i>
+                            <i className="fa-solid fa-chevron-down text-[10px] text-white"></i>
                           </div>
 
                           {comunaDropdownOpen && (
-                            <div className="absolute left-0 right-0 mt-1 bg-white text-black border-stone-300 shadow-2xl rounded-2xl border z-50 p-2">
-                              <div className="flex items-center gap-1.5 bg-stone-100 border-stone-300 text-black px-2 py-1 rounded-xl border mb-1.5">
-                                <i className="fa-solid fa-search text-xs text-black"></i>
+                            <div className="absolute left-0 right-0 mt-1 bg-stone-900 text-white border-white/20 shadow-2xl rounded-2xl border z-50 p-2.5">
+                              <div className="flex items-center gap-2 bg-black/50 border-white/15 text-white px-2.5 py-1.5 rounded-xl border mb-2">
+                                <i className="fa-solid fa-search text-xs text-white opacity-70"></i>
                                 <input 
                                   type="text" 
-                                  placeholder="Buscar..."
+                                  placeholder="Buscar comuna..."
                                   value={comunaSearch}
                                   onChange={(e) => setComunaSearch(e.target.value)}
                                   autoFocus
-                                  className="bg-transparent w-full text-xs outline-none placeholder-stone-500 font-bold text-black"
+                                  className="bg-transparent w-full text-xs md:text-sm outline-none placeholder-white/50 font-bold text-white"
                                 />
                               </div>
-                              <div className="max-h-36 overflow-y-auto custom-scrollbar space-y-0.5 pr-1">
+                              <div className="max-h-48 overflow-y-auto dark-custom-scrollbar space-y-1 pr-1">
                                 {filteredComunas.length > 0 ? (
                                   filteredComunas.map((comuna) => (
                                     <div 
@@ -539,17 +548,17 @@
                                         setComunaDropdownOpen(false);
                                         setComunaSearch('');
                                       }}
-                                      className={`px-2.5 py-1.5 rounded-xl text-xs cursor-pointer transition font-bold ${
+                                      className={`px-3 py-2 rounded-xl text-xs md:text-sm cursor-pointer transition font-bold ${
                                         formData.comuna === comuna 
-                                          ? 'bg-black text-white font-black' 
-                                          : 'hover:bg-stone-100 text-black'
+                                          ? 'bg-white text-stone-950 font-black' 
+                                          : 'hover:bg-white/10 text-white'
                                       }`}
                                     >
                                       {comuna}
                                     </div>
                                   ))
                                 ) : (
-                                  <div className="p-2 text-center text-xs text-stone-600 font-bold">Sin resultados</div>
+                                  <div className="p-2 text-center text-xs text-white/60 font-bold">Sin resultados</div>
                                 )}
                               </div>
                             </div>
@@ -560,14 +569,14 @@
                         <div className="relative" ref={paymentRef}>
                           <div 
                             onClick={() => setPaymentDropdownOpen(!paymentDropdownOpen)}
-                            className="w-full bg-white/95 border-black/30 text-black font-black backdrop-blur-md border rounded-xl px-3 py-2 text-xs flex items-center justify-between cursor-pointer transition select-none"
+                            className="w-full bg-black/40 border-white/25 text-white font-black backdrop-blur-md border rounded-xl px-3.5 py-2.5 text-xs md:text-sm flex items-center justify-between cursor-pointer transition select-none shadow-inner"
                           >
                             <span className="truncate">{formData.paymentMethod}</span>
-                            <i className="fa-solid fa-chevron-down text-[10px] text-black"></i>
+                            <i className="fa-solid fa-chevron-down text-[10px] text-white"></i>
                           </div>
 
                           {paymentDropdownOpen && (
-                            <div className="absolute left-0 right-0 mt-1 bg-white text-black border-stone-300 shadow-2xl rounded-2xl border z-50 p-2 space-y-1">
+                            <div className="absolute left-0 right-0 mt-1 bg-stone-900 text-white border-white/20 shadow-2xl rounded-2xl border z-50 p-2.5 space-y-1">
                               {METODOS_PAGO.map((metodo) => (
                                 <div 
                                   key={metodo}
@@ -575,10 +584,10 @@
                                     setFormData({...formData, paymentMethod: metodo});
                                     setPaymentDropdownOpen(false);
                                   }}
-                                  className={`px-2.5 py-1.5 rounded-xl text-xs cursor-pointer transition font-bold ${
+                                  className={`px-3 py-2 rounded-xl text-xs md:text-sm cursor-pointer transition font-bold ${
                                     formData.paymentMethod === metodo 
-                                      ? 'bg-black text-white font-black' 
-                                      : 'hover:bg-stone-100 text-black'
+                                      ? 'bg-white text-stone-950 font-black' 
+                                      : 'hover:bg-white/10 text-white'
                                   }`}
                                 >
                                   {metodo}
@@ -595,14 +604,14 @@
                         required
                         value={formData.phone}
                         onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                        className="w-full bg-white/95 border-black/30 text-black placeholder-black/60 font-bold backdrop-blur-md border rounded-xl px-3 py-2 text-xs outline-none focus:border-black transition"
+                        className="w-full bg-black/40 border-white/25 text-white placeholder-white/60 font-bold backdrop-blur-md border rounded-xl px-3.5 py-2.5 text-xs md:text-sm outline-none focus:border-white transition shadow-inner"
                       />
 
                       <button 
                         type="submit"
-                        className="w-full font-black py-2.5 rounded-xl transition shadow-xl text-xs uppercase tracking-wider cursor-pointer mt-1 flex items-center justify-center gap-2 bg-black hover:bg-stone-900 text-white border border-black"
+                        className="w-full font-black py-3 rounded-xl transition shadow-xl text-xs md:text-sm uppercase tracking-wider cursor-pointer mt-1 flex items-center justify-center gap-2.5 bg-black hover:bg-stone-900 text-white border border-black"
                       >
-                        <i className="fa-brands fa-whatsapp text-sm text-emerald-400"></i>
+                        <i className="fa-brands fa-whatsapp text-lg text-emerald-400"></i>
                         Enviar Pedido por WhatsApp
                       </button>
                     </form>
@@ -933,12 +942,12 @@
                 </div>
               </main>
 
-              {/* 3. Modal Horizontal Amplio con Color Dinámico y Textos Negros */}
+              {/* 3. Modal Horizontal Amplio, Mayor Altura Vertical y Campos Oscuros Integrados */}
               {cartOpen && (
                 <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-4">
                   
-                  {/* El modal recupera su fondo dinámico automático (gradient del producto actual) pero con un formato horizontal ancho */}
-                  <div className={`bg-gradient-to-br ${selectedItem.bgGradient} rounded-3xl max-w-3xl md:max-w-4xl w-full p-6 md:p-8 shadow-2xl border border-white/30 relative animate-in fade-in zoom-in duration-200 max-h-[94vh] overflow-y-auto custom-scrollbar`}>
+                  {/* Se incrementó max-h a [88vh] y se otorgó mayor altura y soltura vertical general */}
+                  <div className={`bg-gradient-to-br ${selectedItem.bgGradient} rounded-3xl max-w-3xl md:max-w-4xl w-full p-6 md:p-8 shadow-2xl border border-white/30 relative animate-in fade-in zoom-in duration-200 max-h-[88vh] overflow-y-auto custom-scrollbar`}>
                     
                     {/* Botón cerrar */}
                     <button 
