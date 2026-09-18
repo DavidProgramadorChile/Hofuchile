@@ -218,10 +218,6 @@
           const [animating, setAnimating] = useState(false);
           const [quantity, setQuantity] = useState(1);
 
-          // Estados para Salsas Inteligentes en Móvil (Soya vs Teriyaki)
-          const [soyaCount, setSoyaCount] = useState(1);
-          const [teriyakiCount, setTeriyakiCount] = useState(0);
-
           // Estados para interactividad (Buscador limpio, Carrito con localStorage y Modal Checkout)
           const [searchOpen, setSearchOpen] = useState(false);
           const [searchQuery, setSearchQuery] = useState('');
@@ -262,12 +258,6 @@
           const cartButtonRef = useRef(null);
           const productImgRef = useRef(null);
 
-          // Sincronizar automáticamente las salsas cuando cambia la cantidad principal
-          useEffect(() => {
-            setSoyaCount(quantity);
-            setTeriyakiCount(0);
-          }, [quantity]);
-
           // Sincronizar el carrito automáticamente con localStorage cada vez que cambie
           useEffect(() => {
             try {
@@ -303,8 +293,6 @@
             setSelectedItem(firstItem);
             setSelectedFlavor('Coca-Cola');
             setQuantity(1);
-            setSoyaCount(1);
-            setTeriyakiCount(0);
             setTimeout(() => setAnimating(false), 350);
           };
 
@@ -315,53 +303,12 @@
             setSelectedItem(item);
             setSelectedFlavor('Coca-Cola');
             setQuantity(1);
-            setSoyaCount(1);
-            setTeriyakiCount(0);
             setTimeout(() => setAnimating(false), 350);
           };
 
-          // Control de cantidad principal y redistribución de salsas
-          const decreaseQty = () => {
-            if (quantity > 1) {
-              const newQty = quantity - 1;
-              setQuantity(newQty);
-              if (soyaCount + teriyakiCount > newQty) {
-                if (soyaCount > 0) setSoyaCount(prev => Math.max(0, prev - 1));
-                else if (teriyakiCount > 0) setTeriyakiCount(prev => Math.max(0, prev - 1));
-              }
-            }
-          };
-
-          const increaseQty = () => {
-            const newQty = quantity + 1;
-            setQuantity(newQty);
-            setSoyaCount(prev => prev + 1);
-          };
-
-          // Controles para las salsas inteligentes
-          const updateSoya = (delta) => {
-            if (delta > 0) {
-              if (soyaCount + teriyakiCount < quantity) {
-                setSoyaCount(prev => prev + 1);
-              }
-            } else {
-              if (soyaCount > 0) {
-                setSoyaCount(prev => prev - 1);
-              }
-            }
-          };
-
-          const updateTeriyaki = (delta) => {
-            if (delta > 0) {
-              if (soyaCount + teriyakiCount < quantity) {
-                setTeriyakiCount(prev => prev + 1);
-              }
-            } else {
-              if (teriyakiCount > 0) {
-                setTeriyakiCount(prev => prev - 1);
-              }
-            }
-          };
+          // Control de cantidad
+          const decreaseQty = () => setQuantity(prev => (prev > 1 ? prev - 1 : 1));
+          const increaseQty = () => setQuantity(prev => prev + 1);
 
           // Añadir producto actual al carrito con Animación de Succión (Fly-to-Cart)
           const addToCart = () => {
@@ -385,19 +332,8 @@
             }
 
             const flavorSuffix = selectedItem.hasFlavorSelector ? ` (${selectedFlavor})` : '';
-            
-            // Texto detallado de salsas (excluido para bebidas y extras)
-            let saucesSuffix = '';
-            const isSausageAllowed = activeCategory === 'gohan' || activeCategory === 'rolls';
-            if (isSausageAllowed) {
-              let saucesParts = [];
-              if (soyaCount > 0) saucesParts.push(`${soyaCount} Soya`);
-              if (teriyakiCount > 0) saucesParts.push(`${teriyakiCount} Teriyaki`);
-              saucesSuffix = saucesParts.length > 0 ? ` [Salsas: ${saucesParts.join(', ')}]` : '';
-            }
-
-            const cartItemId = `${selectedItem.id}${flavorSuffix}|S${soyaCount}T${teriyakiCount}`;
-            const cartItemTitle = `${selectedItem.title}${flavorSuffix}${saucesSuffix}`;
+            const cartItemId = `${selectedItem.id}${flavorSuffix}`;
+            const cartItemTitle = `${selectedItem.title}${flavorSuffix}`;
 
             setCart(prevCart => {
               const existingIndex = prevCart.findIndex(item => item.cartItemId === cartItemId);
@@ -415,8 +351,6 @@
               }
             });
             setQuantity(1);
-            setSoyaCount(1);
-            setTeriyakiCount(0);
           };
 
           // Modificar cantidad en carrito
@@ -462,14 +396,12 @@
             setSelectedItem(item);
             setSelectedFlavor('Coca-Cola');
             setQuantity(1);
-            setSoyaCount(1);
-            setTeriyakiCount(0);
             setSearchOpen(false);
             setSearchQuery('');
             setTimeout(() => setAnimating(false), 350);
           };
 
-          // Procesar formulario y enviar a WhatsApp
+          // Procesar formulario y enviar a WhatsApp (único momento en que se limpia el carrito)
           const handleCheckoutSubmit = (e) => {
             e.preventDefault();
             if (!formData.fullName || !formData.address || !formData.phone) return;
@@ -508,11 +440,10 @@
           };
 
           const isLight = selectedItem.isLight;
-          const isSausageAllowed = activeCategory === 'gohan' || activeCategory === 'rolls';
           const filteredComunas = COMUNAS_SANTIAGO.filter(c => c.toLowerCase().includes(comunaSearch.toLowerCase()));
 
           return (
-            <div className={`h-full w-full bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-x-hidden select-none relative justify-between`}>
+            <div className={`min-h-screen w-full bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-x-hidden select-none relative`}>
               
               {/* Elemento Volador para la Animación de Succión (Fly-to-Cart) */}
               {flyingItem && (
@@ -544,7 +475,7 @@
               `}</style>
 
               {/* 1. Navbar Principal con Buscador Integrado y No Invasivo */}
-              <header className="w-full px-6 md:px-12 py-2.5 lg:py-5 flex items-center justify-between z-30 max-w-7xl mx-auto relative shrink-0">
+              <header className="w-full px-6 md:px-12 py-3 lg:py-5 flex items-center justify-between z-30 max-w-7xl mx-auto relative shrink-0">
                 {/* Logo HŌFU */}
                 <div className="flex items-center cursor-pointer">
                   <span className={`font-black tracking-[0.3em] text-2xl md:text-3xl uppercase drop-shadow-sm ${isLight ? 'text-stone-950' : 'text-white'}`}>
@@ -671,9 +602,9 @@
                 })}
               </div>
 
-              {/* 2. Main Hero Section con Distribución Uniforme que llena toda la pantalla vertical */}
-              <main className="flex-1 flex items-center justify-center px-4 md:px-8 py-2 z-10 w-full overflow-hidden my-auto">
-                <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-12 items-center mx-auto h-full">
+              {/* 2. Main Hero Section con Transición Fluida Estilo App Nativa */}
+              <main className="flex-1 flex items-center justify-center px-4 md:px-8 py-1 lg:py-2 z-10 w-full overflow-hidden">
+                <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-12 items-center mx-auto">
                   
                   {/* Columna Izquierda (Desktop): Título, descripción, selector de sabor y controles */}
                   <div className="lg:col-span-5 hidden lg:flex flex-col justify-center space-y-4 order-1 text-left pt-2">
@@ -733,24 +664,24 @@
                     </div>
                   </div>
 
-                  {/* Versión Móvil: Nombre del producto optimizado para ocupar bien el espacio superior */}
-                  <div className={`flex lg:hidden flex-col items-center text-center order-1 mt-1 mb-1 transition-all duration-300 ease-out ${animating ? 'opacity-0 scale-90' : 'opacity-100 scale-100'}`}>
+                  {/* Versión Móvil: Título superior optimizado */}
+                  <div className={`flex lg:hidden flex-col items-center text-center order-1 pt-1 pb-0 transition-all duration-300 ease-out ${animating ? 'opacity-0 scale-90' : 'opacity-100 scale-100'}`}>
                     <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight whitespace-nowrap drop-shadow-sm">
                       <span>{selectedItem.title}</span>
                     </h1>
                   </div>
 
-                  {/* Columna Central: Visor de Producto Dinámico (Imagen protagonista con gran presencia central) */}
-                  <div className="lg:col-span-4 relative flex flex-col items-center justify-center order-2 my-auto">
-                    <div className="relative w-full h-[210px] sm:h-[260px] lg:h-[420px] flex items-center justify-center my-1">
-                      <div className={`absolute w-52 h-52 sm:w-72 sm:h-72 ${isLight ? 'bg-white/60' : 'bg-white/20'} rounded-full blur-3xl pointer-events-none transition-all duration-500`}></div>
+                  {/* Columna Central: Visor de Producto Dinámico adaptado */}
+                  <div className="lg:col-span-4 relative flex flex-col items-center justify-center order-2">
+                    <div className="relative w-full h-[190px] sm:h-[260px] lg:h-[420px] flex items-center justify-center my-0">
+                      <div className={`absolute w-48 h-48 sm:w-64 sm:h-64 ${isLight ? 'bg-white/60' : 'bg-white/20'} rounded-full blur-3xl pointer-events-none transition-all duration-500`}></div>
                       
                       <img 
                         ref={productImgRef}
                         src={selectedItem.image} 
                         alt={selectedItem.title}
-                        className={`max-h-full max-w-full object-contain drop-shadow-[0_20px_20px_rgba(0,0,0,0.5)] transition-all duration-400 ease-out scale-115 sm:scale-130 ${
-                          animating ? 'opacity-0 scale-75 rotate-3 translate-y-4' : 'opacity-100 scale-115 sm:scale-130 rotate-0 translate-y-0'
+                        className={`max-h-full max-w-full object-contain drop-shadow-[0_20px_20px_rgba(0,0,0,0.5)] transition-all duration-400 ease-out ${
+                          animating ? 'opacity-0 scale-75 rotate-3 translate-y-4' : 'opacity-100 scale-100 rotate-0 translate-y-0'
                         }`}
                         onError={(e)=>{
                           e.target.src = "https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&q=80&w=800";
@@ -758,8 +689,8 @@
                       />
                     </div>
 
-                    {/* Contenido inferior en Móvil: Distribuido uniformemente para ocupar el alto restante */}
-                    <div className={`flex lg:hidden flex-col items-center text-center space-y-2 w-full px-2 mt-2 mb-2 transition-all duration-300 ease-out ${animating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
+                    {/* Descripción, Selector de Sabor y Controles en Móvil (Perfectamente encajados sin scroll) */}
+                    <div className={`flex lg:hidden flex-col items-center text-center space-y-2 w-full px-2 mt-0 transition-all duration-300 ease-out ${animating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
                       <p className={`text-[11px] sm:text-xs font-medium leading-tight max-w-xs ${isLight ? 'text-stone-900/90' : 'text-white/95'} drop-shadow line-clamp-2`}>
                         {selectedItem.description}
                       </p>
@@ -786,68 +717,20 @@
                         </div>
                       )}
 
-                      {/* Selector de Salsas con texto exacto y restricciones aplicadas */}
-                      {isSausageAllowed && (
-                        <div className="space-y-1 w-full max-w-xs bg-black/25 p-2 rounded-2xl border border-white/15 shadow-md">
-                          <div className="flex justify-between items-center px-1">
-                            <span className="text-[10px] font-semibold tracking-wide text-white/95 flex items-center gap-1.5">
-                              <i className="fa-solid fa-utensils text-[9px] text-orange-400"></i> Elige tu salsa favorita
-                            </span>
-                            <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${soyaCount + teriyakiCount === quantity ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-orange-500/20 text-orange-300 border border-orange-500/30'}`}>
-                              {soyaCount + teriyakiCount} / {quantity}
-                            </span>
-                          </div>
-                          <div className="grid grid-cols-2 gap-2 pt-0.5">
-                            {/* Soya */}
-                            <div className="flex items-center justify-between bg-black/30 px-2.5 py-1.5 rounded-xl border border-white/10">
-                              <span className="text-[10px] font-medium">Soya</span>
-                              <div className="flex items-center gap-1.5">
-                                <button onClick={() => updateSoya(-1)} className="w-5 h-5 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[9px] font-bold cursor-pointer transition">
-                                  <i className="fa-solid fa-minus"></i>
-                                </button>
-                                <span className="text-xs font-bold w-3 text-center">{soyaCount}</span>
-                                <button onClick={() => updateSoya(1)} className="w-5 h-5 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[9px] font-bold cursor-pointer transition">
-                                  <i className="fa-solid fa-plus"></i>
-                                </button>
-                              </div>
-                            </div>
-                            {/* Teriyaki */}
-                            <div className="flex items-center justify-between bg-black/30 px-2.5 py-1.5 rounded-xl border border-white/10">
-                              <span className="text-[10px] font-medium">Teriyaki</span>
-                              <div className="flex items-center gap-1.5">
-                                <button onClick={() => updateTeriyaki(-1)} className="w-5 h-5 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[9px] font-bold cursor-pointer transition">
-                                  <i className="fa-solid fa-minus"></i>
-                                </button>
-                                <span className="text-xs font-bold w-3 text-center">{teriyakiCount}</span>
-                                <button onClick={() => updateTeriyaki(1)} className="w-5 h-5 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[9px] font-bold cursor-pointer transition">
-                                  <i className="fa-solid fa-plus"></i>
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Controles de Cantidad Principal y Botón con respiro equilibrado */}
-                      <div className="flex items-center gap-3 pt-1 pb-1">
-                        <div className={`flex items-center rounded-full border px-3 py-1.5 ${isLight ? 'bg-black/5 border-stone-900/20' : 'bg-black/30 border-white/25'} backdrop-blur-md shadow-md`}>
-                          <button onClick={decreaseQty} className="w-6 h-6 flex items-center justify-center font-bold text-xs cursor-pointer">
-                            <i className="fa-solid fa-minus text-[10px]"></i>
+                      <div className="flex items-center gap-2 pt-0.5">
+                        <div className={`flex items-center rounded-full border px-2 py-0.5 ${isLight ? 'bg-black/5 border-stone-900/20' : 'bg-black/30 border-white/25'} backdrop-blur-md`}>
+                          <button onClick={decreaseQty} className="w-5 h-5 flex items-center justify-center font-bold text-xs">
+                            <i className="fa-solid fa-minus text-[9px]"></i>
                           </button>
-                          <span className="w-6 text-center font-bold text-xs">{quantity}</span>
-                          <button onClick={increaseQty} className="w-6 h-6 flex items-center justify-center font-bold text-xs cursor-pointer">
-                            <i className="fa-solid fa-plus text-[10px]"></i>
+                          <span className="w-5 text-center font-bold text-xs">{quantity}</span>
+                          <button onClick={increaseQty} className="w-5 h-5 flex items-center justify-center font-bold text-xs">
+                            <i className="fa-solid fa-plus text-[9px]"></i>
                           </button>
                         </div>
 
                         <button 
                           onClick={addToCart}
-                          disabled={isSausageAllowed && soyaCount + teriyakiCount !== quantity}
-                          className={`font-semibold px-6 py-3 rounded-full flex items-center gap-2 transition shadow-xl text-xs group cursor-pointer border ${
-                            isSausageAllowed && soyaCount + teriyakiCount !== quantity 
-                              ? 'opacity-50 cursor-not-allowed bg-stone-800 text-white/50 border-white/10' 
-                              : isLight ? 'bg-stone-950 text-white border-black hover:bg-stone-900' : 'bg-stone-950 text-white border-white/20 hover:bg-black'
-                          }`}
+                          className={`font-semibold px-4 py-2 rounded-full flex items-center gap-1.5 transition shadow-xl text-xs group cursor-pointer border ${isLight ? 'bg-stone-950 text-white border-black hover:bg-stone-900' : 'bg-stone-950 text-white border-white/20 hover:bg-black'}`}
                         >
                           Añadir al carrito 
                           <span className="w-4 h-4 bg-white text-stone-950 rounded-full flex items-center justify-center text-[9px] font-bold">
@@ -865,21 +748,21 @@
                   </div>
 
                   {/* Columna Derecha: Precio Actual y Miniaturas */}
-                  <div className="lg:col-span-3 flex flex-col justify-center items-center lg:items-end space-y-4 lg:space-y-8 order-3 pb-3 lg:pb-0">
+                  <div className="lg:col-span-3 flex flex-col justify-center items-center lg:items-end space-y-4 lg:space-y-8 order-3 pb-2 lg:pb-0">
                     
                     {/* Precio actual (Desktop) */}
                     <div className={`hidden lg:block text-center lg:text-right space-y-1 transition-all duration-300 ease-out ${animating ? 'opacity-0 scale-90 translate-y-2' : 'opacity-100 scale-100 translate-y-0'}`}>
                       <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight drop-shadow-sm">{selectedItem.price}</div>
                     </div>
 
-                    {/* Precio exacto en móvil ubicado en medio (entre el botón de añadir al carrito y las miniaturas inferiores) */}
+                    {/* Precio exacto en móvil ubicado exactamente en medio (entre el botón de añadir al carrito y las miniaturas inferiores) */}
                     <div className={`flex lg:hidden text-3xl font-extrabold text-white drop-shadow-md my-1 transition-all duration-300 ease-out ${animating ? 'opacity-0' : 'opacity-100'}`}>
                       {selectedItem.price}
                     </div>
 
-                    {/* Miniaturas interactivas inferiores que completan el espacio vertical */}
-                    <div className="space-y-2 w-full flex flex-col items-center lg:items-end mt-auto">
-                      <div className="flex gap-2.5 sm:gap-3 justify-center lg:justify-end flex-wrap max-w-xs">
+                    {/* Miniaturas interactivas */}
+                    <div className="space-y-2 w-full flex flex-col items-center lg:items-end">
+                      <div className="flex gap-2 sm:gap-3 justify-center lg:justify-end flex-wrap max-w-xs">
                         {categoriesData[activeCategory].items.map((item) => (
                           <button
                             key={item.id}
@@ -912,8 +795,8 @@
               {cartOpen && (
                 <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-4">
                   
-                  {/* Modal responsivo optimizado para evitar amontonamiento interno */}
-                  <div className={`bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} rounded-3xl max-w-md lg:max-w-6xl w-full p-5 lg:p-10 shadow-2xl border ${isLight ? 'border-stone-900/20' : 'border-white/20'} relative animate-in fade-in zoom-in duration-200 max-h-[92vh] lg:max-h-[90vh] overflow-y-auto no-scrollbar`}>
+                  {/* Modal responsivo: Panel de control profesional ultra amplio y holgado en PC, diseño vertical intacto en móvil */}
+                  <div className={`bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} rounded-3xl max-w-md lg:max-w-6xl w-full p-6 lg:p-10 shadow-2xl border ${isLight ? 'border-stone-900/20' : 'border-white/20'} relative animate-in fade-in zoom-in duration-200 max-h-[92vh] lg:max-h-[90vh] overflow-y-auto lg:overflow-visible no-scrollbar`}>
                     
                     {/* Botón cerrar */}
                     <button 
@@ -922,12 +805,12 @@
                         e.stopPropagation();
                         setCartOpen(false);
                       }}
-                      className={`absolute top-5 right-5 w-8 h-8 rounded-full ${isLight ? 'bg-black/10 hover:bg-black/20 text-stone-950' : 'bg-white/10 hover:bg-white/20 text-white'} flex items-center justify-center transition cursor-pointer z-20 font-bold text-sm`}
+                      className={`absolute top-6 right-6 w-9 h-9 rounded-full ${isLight ? 'bg-black/10 hover:bg-black/20 text-stone-950' : 'bg-white/10 hover:bg-white/20 text-white'} flex items-center justify-center transition cursor-pointer z-20 font-bold text-sm`}
                     >
                       <i className="fa-solid fa-xmark text-xs"></i>
                     </button>
 
-                    <h3 className="text-xl lg:text-2xl font-extrabold mb-4 lg:mb-6 tracking-wide drop-shadow-sm pr-12">Resumen de tu Pedido</h3>
+                    <h3 className="text-2xl font-extrabold mb-6 tracking-wide drop-shadow-sm pr-12">Resumen de tu Pedido</h3>
 
                     {orderSuccess ? (
                       <div className="py-16 text-center space-y-3">
@@ -943,12 +826,12 @@
                         Tu bolsa de compras está vacía. ¡Añade tus platos favoritos!
                       </div>
                     ) : (
-                      /* Layout de dos columnas para PC, 1 columna con buen respiro en móvil */
-                      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-start">
+                      /* Layout de dos columnas ultra holgadas para PC, 1 columna en móvil */
+                      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
                         
-                        {/* Columna Izquierda: Resumen de Bolsa */}
-                        <div className="lg:col-span-5 flex flex-col space-y-3">
-                          <div className="flex items-center justify-between border-b pb-2 border-white/15">
+                        {/* Columna Izquierda (PC): Resumen de Bolsa, Ítems y Total */}
+                        <div className="lg:col-span-5 flex flex-col space-y-4">
+                          <div className="flex items-center justify-between border-b pb-2.5 border-white/15">
                             <span className="text-xs uppercase tracking-wider font-bold opacity-90">Productos en tu bolsa</span>
                             <button 
                               onClick={clearCart}
@@ -958,34 +841,34 @@
                             </button>
                           </div>
 
-                          {/* Lista de productos sin amontonamiento */}
-                          <div className="space-y-2.5 max-h-48 lg:max-h-80 overflow-y-auto no-scrollbar pr-1">
+                          {/* Lista de productos muy holgada y sin scroll molesto */}
+                          <div className="space-y-3 max-h-56 lg:max-h-80 overflow-y-auto no-scrollbar pr-1">
                             {cart.map((item) => (
-                              <div key={item.cartItemId} className={`flex items-center justify-between ${isLight ? 'bg-white/40 border-stone-900/10' : 'bg-black/40 border-white/10'} backdrop-blur-md p-2.5 rounded-2xl border gap-2`}>
-                                <div className="flex items-center gap-2.5 min-w-0 flex-1">
-                                  <img src={item.image} alt={item.title} className="w-10 h-10 object-cover rounded-xl shrink-0" />
-                                  <div className="min-w-0 flex-1">
-                                    <h4 className="font-bold text-xs leading-tight truncate">{item.displayTitle}</h4>
-                                    <p className="text-[10px] text-orange-400 font-bold">{item.price} c/u</p>
+                              <div key={item.cartItemId} className={`flex items-center justify-between ${isLight ? 'bg-white/40 border-stone-900/10' : 'bg-black/40 border-white/10'} backdrop-blur-md p-3 rounded-2xl border`}>
+                                <div className="flex items-center gap-3">
+                                  <img src={item.image} alt={item.title} className="w-12 h-12 object-cover rounded-xl" />
+                                  <div>
+                                    <h4 className="font-bold text-xs lg:text-sm">{item.displayTitle}</h4>
+                                    <p className="text-[11px] text-orange-400 font-bold">{item.price} c/u</p>
                                   </div>
                                 </div>
-                                <div className="flex items-center gap-2 shrink-0">
-                                  <div className={`flex items-center ${isLight ? 'bg-white/60 border-stone-900/20' : 'bg-stone-900 border-white/20'} border rounded-lg px-1.5 py-0.5`}>
+                                <div className="flex items-center gap-3">
+                                  <div className={`flex items-center ${isLight ? 'bg-white/60 border-stone-900/20' : 'bg-stone-900 border-white/20'} border rounded-lg px-2 py-1`}>
                                     <button onClick={() => updateCartItemQty(item.cartItemId, -1)} className="px-1 text-xs font-bold cursor-pointer">
-                                      <i className="fa-solid fa-minus text-[7px]"></i>
+                                      <i className="fa-solid fa-minus text-[8px]"></i>
                                     </button>
-                                    <span className="w-5 text-center text-xs font-bold">{item.quantity}</span>
+                                    <span className="w-6 text-center text-xs font-bold">{item.quantity}</span>
                                     <button onClick={() => updateCartItemQty(item.cartItemId, 1)} className="px-1 text-xs font-bold cursor-pointer">
-                                      <i className="fa-solid fa-plus text-[7px]"></i>
+                                      <i className="fa-solid fa-plus text-[8px]"></i>
                                     </button>
                                   </div>
-                                  <span className="font-bold text-xs w-12 text-right">${(item.rawPrice * item.quantity).toLocaleString('es-CL')}</span>
+                                  <span className="font-bold text-xs lg:text-sm w-16 text-right">${(item.rawPrice * item.quantity).toLocaleString('es-CL')}</span>
                                   <button 
                                     onClick={() => removeCartItem(item.cartItemId)}
-                                    className="w-6 h-6 rounded-full bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white flex items-center justify-center transition cursor-pointer text-xs"
+                                    className="w-7 h-7 rounded-full bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white flex items-center justify-center transition cursor-pointer text-xs"
                                     title="Eliminar producto"
                                   >
-                                    <i className="fa-solid fa-trash-can text-[9px]"></i>
+                                    <i className="fa-solid fa-trash-can text-[10px]"></i>
                                   </button>
                                 </div>
                               </div>
@@ -993,17 +876,17 @@
                           </div>
 
                           {/* Total a pagar */}
-                          <div className={`flex justify-between items-center pt-3 border-t ${isLight ? 'border-stone-900/20' : 'border-white/20'} font-bold text-sm lg:text-lg`}>
+                          <div className={`flex justify-between items-center pt-4 border-t ${isLight ? 'border-stone-900/20' : 'border-white/20'} font-bold text-base lg:text-lg`}>
                             <span>Total a pagar:</span>
-                            <span className="text-orange-400 text-base lg:text-xl">
+                            <span className="text-orange-400 text-lg lg:text-xl">
                               ${cart.reduce((acc, item) => acc + (item.rawPrice * item.quantity), 0).toLocaleString('es-CL')}
                             </span>
                           </div>
                         </div>
 
-                        {/* Columna Derecha: Formulario de Envío y Pago */}
-                        <div className="lg:col-span-7 flex flex-col space-y-3">
-                          <form onSubmit={handleCheckoutSubmit} className="space-y-3">
+                        {/* Columna Derecha (PC): Formulario de Envío y Pago Holgado */}
+                        <div className="lg:col-span-7 flex flex-col space-y-4">
+                          <form onSubmit={handleCheckoutSubmit} className="space-y-4">
                             <h4 className="text-xs font-bold uppercase tracking-wider opacity-90">Datos de Entrega & Pago (Santiago)</h4>
                             
                             <input 
@@ -1012,24 +895,24 @@
                               required
                               value={formData.fullName}
                               onChange={(e) => setFormData({...formData, fullName: e.target.value})}
-                              className={`w-full ${isLight ? 'bg-white/60 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/40 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-xl px-3.5 py-2.5 text-xs lg:text-sm outline-none focus:border-orange-500 transition`}
+                              className={`w-full ${isLight ? 'bg-white/60 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/40 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-xl px-4 py-3 text-xs lg:text-sm outline-none focus:border-orange-500 transition`}
                             />
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                               <input 
                                 type="text" 
                                 placeholder="Dirección exacta (Calle, N° de depto/casa) *" 
                                 required
                                 value={formData.address}
                                 onChange={(e) => setFormData({...formData, address: e.target.value})}
-                                className={`w-full ${isLight ? 'bg-white/60 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/40 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-xl px-3.5 py-2.5 text-xs lg:text-sm outline-none focus:border-orange-500 transition`}
+                                className={`w-full ${isLight ? 'bg-white/60 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/40 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-xl px-4 py-3 text-xs lg:text-sm outline-none focus:border-orange-500 transition`}
                               />
 
-                              {/* Selector de Comuna Personalizado */}
+                              {/* Selector de Comuna Personalizado (con altura muy holgada) */}
                               <div className="relative" ref={comunaRef}>
                                 <div 
                                   onClick={() => setComunaDropdownOpen(!comunaDropdownOpen)}
-                                  className={`w-full ${isLight ? 'bg-white/60 border-stone-900/20 text-stone-950' : 'bg-black/40 border-white/20 text-white'} backdrop-blur-md border rounded-xl px-3.5 py-2.5 text-xs lg:text-sm flex items-center justify-between cursor-pointer transition select-none`}
+                                  className={`w-full ${isLight ? 'bg-white/60 border-stone-900/20 text-stone-950' : 'bg-black/40 border-white/20 text-white'} backdrop-blur-md border rounded-xl px-4 py-3 text-xs lg:text-sm flex items-center justify-between cursor-pointer transition select-none`}
                                 >
                                   <span className="truncate">{formData.comuna}</span>
                                   <i className="fa-solid fa-chevron-down text-xs opacity-60"></i>
@@ -1037,7 +920,7 @@
 
                                 {comunaDropdownOpen && (
                                   <div className={`absolute left-0 right-0 mt-2 ${isLight ? 'bg-white text-stone-950 border-stone-300' : 'bg-stone-900 text-white border-white/10'} rounded-2xl shadow-2xl border z-50 p-3`}>
-                                    <div className={`flex items-center gap-2 ${isLight ? 'bg-stone-100 border-stone-200 text-stone-900' : 'bg-stone-800 border-white/10 text-white'} px-3 py-1.5 rounded-xl border mb-2`}>
+                                    <div className={`flex items-center gap-2.5 ${isLight ? 'bg-stone-100 border-stone-200 text-stone-900' : 'bg-stone-800 border-white/10 text-white'} px-3.5 py-2 rounded-xl border mb-2`}>
                                       <i className="fa-solid fa-search text-xs opacity-50"></i>
                                       <input 
                                         type="text" 
@@ -1048,7 +931,7 @@
                                         className="bg-transparent w-full text-xs lg:text-sm outline-none placeholder-current placeholder-opacity-50"
                                       />
                                     </div>
-                                    <div className="max-h-40 overflow-y-auto space-y-1 pr-1">
+                                    <div className="max-h-52 overflow-y-auto space-y-1 pr-1">
                                       {filteredComunas.length > 0 ? (
                                         filteredComunas.map((comuna) => (
                                           <div 
@@ -1058,7 +941,7 @@
                                               setComunaDropdownOpen(false);
                                               setComunaSearch('');
                                             }}
-                                            className={`px-3 py-2 rounded-xl text-xs lg:text-sm cursor-pointer transition ${
+                                            className={`px-3.5 py-2.5 rounded-xl text-xs lg:text-sm cursor-pointer transition ${
                                               formData.comuna === comuna 
                                                 ? 'bg-orange-500 text-white font-bold' 
                                                 : `${isLight ? 'hover:bg-stone-100' : 'hover:bg-white/10'}`
@@ -1076,28 +959,28 @@
                               </div>
                             </div>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                               <input 
                                 type="tel" 
                                 placeholder="Teléfono / WhatsApp (+56 9...) *" 
                                 required
                                 value={formData.phone}
                                 onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                                className={`w-full ${isLight ? 'bg-white/60 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/40 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-xl px-3.5 py-2.5 text-xs lg:text-sm outline-none focus:border-orange-500 transition`}
+                                className={`w-full ${isLight ? 'bg-white/60 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/40 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-xl px-4 py-3 text-xs lg:text-sm outline-none focus:border-orange-500 transition`}
                               />
 
                               {/* Selector de Método de Pago Estilizado */}
                               <div className="relative" ref={paymentRef}>
                                 <div 
                                   onClick={() => setPaymentDropdownOpen(!paymentDropdownOpen)}
-                                  className={`w-full ${isLight ? 'bg-white/60 border-stone-900/20 text-stone-950' : 'bg-black/40 border-white/20 text-white'} backdrop-blur-md border rounded-xl px-3.5 py-2.5 text-xs lg:text-sm flex items-center justify-between cursor-pointer transition select-none`}
+                                  className={`w-full ${isLight ? 'bg-white/60 border-stone-900/20 text-stone-950' : 'bg-black/40 border-white/20 text-white'} backdrop-blur-md border rounded-xl px-4 py-3 text-xs lg:text-sm flex items-center justify-between cursor-pointer transition select-none`}
                                 >
                                   <span className="truncate">Pago: {formData.paymentMethod}</span>
                                   <i className="fa-solid fa-chevron-down text-xs opacity-60"></i>
                                 </div>
 
                                 {paymentDropdownOpen && (
-                                  <div className={`absolute left-0 right-0 mt-2 ${isLight ? 'bg-white text-stone-950 border-stone-300' : 'bg-stone-900 text-white border-white/10'} rounded-2xl shadow-2xl border z-50 p-2 space-y-1`}>
+                                  <div className={`absolute left-0 right-0 mt-2 ${isLight ? 'bg-white text-stone-950 border-stone-300' : 'bg-stone-900 text-white border-white/10'} rounded-2xl shadow-2xl border z-50 p-2.5 space-y-1`}>
                                     {METODOS_PAGO.map((metodo) => (
                                       <div 
                                         key={metodo}
@@ -1105,7 +988,7 @@
                                           setFormData({...formData, paymentMethod: metodo});
                                           setPaymentDropdownOpen(false);
                                         }}
-                                        className={`px-3 py-2 rounded-xl text-xs lg:text-sm cursor-pointer transition ${
+                                        className={`px-3.5 py-2.5 rounded-xl text-xs lg:text-sm cursor-pointer transition ${
                                           formData.paymentMethod === metodo 
                                             ? 'bg-orange-500 text-white font-bold' 
                                             : `${isLight ? 'hover:bg-stone-100' : 'hover:bg-white/10'}`
@@ -1122,7 +1005,7 @@
                             {/* Botón WhatsApp Elegante */}
                             <button 
                               type="submit"
-                              className="w-full bg-stone-950 hover:bg-black text-white border border-white/20 font-bold py-3.5 rounded-2xl transition shadow-xl text-xs lg:text-sm uppercase tracking-wider cursor-pointer mt-2 flex items-center justify-center gap-2.5"
+                              className="w-full bg-stone-950 hover:bg-black text-white border border-white/20 font-bold py-4 rounded-2xl transition shadow-xl text-xs lg:text-sm uppercase tracking-wider cursor-pointer mt-4 flex items-center justify-center gap-2.5"
                             >
                               <i className="fa-brands fa-whatsapp text-base text-emerald-400"></i>
                               Enviar Pedido por WhatsApp
