@@ -765,10 +765,10 @@
 
               {/* 3. Modal de Resumen de Pedido & Formulario WhatsApp */}
               {cartOpen && (
-                <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-4">
+                <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-3 sm:p-4">
                   
-                  {/* Modal responsivo con soporte de alto contraste garantizado para textos secundarios */}
-                  <div className={`bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} rounded-3xl max-w-md lg:max-w-6xl w-full p-6 lg:p-10 shadow-2xl border ${isLight ? 'border-stone-900/20' : 'border-white/20'} relative animate-in fade-in zoom-in duration-200 max-h-[92vh] lg:max-h-[90vh] overflow-y-auto lg:overflow-visible no-scrollbar`}>
+                  {/* Modal responsivo con diseño reorganizado para móviles (evitando superposiciones y mejorando alto contraste) */}
+                  <div className={`bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} rounded-3xl max-w-md lg:max-w-6xl w-full p-4 sm:p-6 lg:p-10 shadow-2xl border ${isLight ? 'border-stone-900/20' : 'border-white/20'} relative animate-in fade-in zoom-in duration-200 max-h-[92vh] lg:max-h-[90vh] overflow-y-auto lg:overflow-visible no-scrollbar`}>
                     
                     {/* Botón cerrar */}
                     <button 
@@ -777,15 +777,15 @@
                         e.stopPropagation();
                         setCartOpen(false);
                       }}
-                      className={`absolute top-6 right-6 w-9 h-9 rounded-full ${isLight ? 'bg-black/10 hover:bg-black/20 text-stone-950' : 'bg-white/10 hover:bg-white/20 text-white'} flex items-center justify-center transition cursor-pointer z-20 font-bold text-sm`}
+                      className={`absolute top-4 right-4 sm:top-6 sm:right-6 w-8 h-8 sm:w-9 sm:h-9 rounded-full ${isLight ? 'bg-black/10 hover:bg-black/20 text-stone-950' : 'bg-white/10 hover:bg-white/20 text-white'} flex items-center justify-center transition cursor-pointer z-20 font-bold text-sm`}
                     >
                       <i className="fa-solid fa-xmark text-xs"></i>
                     </button>
 
-                    <h3 className={`text-2xl font-extrabold mb-6 tracking-wide drop-shadow-sm pr-12 ${isLight ? 'text-stone-950' : 'text-white'}`}>Resumen de tu Pedido</h3>
+                    <h3 className={`text-xl sm:text-2xl font-extrabold mb-4 sm:mb-6 tracking-wide drop-shadow-sm pr-12 ${isLight ? 'text-stone-950' : 'text-white'}`}>Resumen de tu Pedido</h3>
 
                     {orderSuccess ? (
-                      <div className="py-16 text-center space-y-3">
+                      <div className="py-12 sm:py-16 text-center space-y-3">
                         <div className="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto text-2xl font-bold">
                           <i className="fa-solid fa-check text-xl"></i>
                         </div>
@@ -793,16 +793,16 @@
                         <p className={`text-xs ${isLight ? 'text-stone-800' : 'opacity-80'}`}>Se abrió tu chat con el pedido detallado. ¡Gracias por elegir HŌFU!</p>
                       </div>
                     ) : cart.length === 0 ? (
-                      <div className={`py-16 text-center text-sm space-y-2 ${isLight ? 'text-stone-900 opacity-90' : 'opacity-70'}`}>
+                      <div className={`py-12 sm:py-16 text-center text-sm space-y-2 ${isLight ? 'text-stone-900 opacity-90' : 'opacity-70'}`}>
                         <i className="fa-solid fa-bag-shopping text-4xl opacity-40 block mb-2"></i>
                         Tu bolsa de compras está vacía. ¡Añade tus platos favoritos!
                       </div>
                     ) : (
                       /* Layout de dos columnas ultra holgadas para PC, 1 columna en móvil */
-                      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+                      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-start">
                         
-                        {/* Columna Izquierda (PC): Resumen de Bolsa, Ítems y Total */}
-                        <div className="lg:col-span-5 flex flex-col space-y-4">
+                        {/* Columna Izquierda (PC/Móvil): Resumen de Bolsa, Ítems y Total */}
+                        <div className="lg:col-span-5 flex flex-col space-y-3 sm:space-y-4">
                           <div className={`flex items-center justify-between border-b pb-2.5 ${isLight ? 'border-stone-900/20 text-stone-900' : 'border-white/15 text-white'}`}>
                             <span className={`text-xs uppercase tracking-wider font-bold ${isLight ? 'text-stone-900' : 'opacity-90'}`}>Productos en tu bolsa</span>
                             <button 
@@ -813,20 +813,24 @@
                             </button>
                           </div>
 
-                          {/* Lista de productos muy holgada y con alto contraste garantizado */}
+                          {/* Lista de productos con diseño en filas para evitar superposiciones en móvil */}
                           <div className="space-y-3 max-h-56 lg:max-h-80 overflow-y-auto no-scrollbar pr-1">
                             {cart.map((item) => (
-                              <div key={item.cartItemId} className={`flex items-center justify-between ${isLight ? 'bg-white/70 border-stone-900/20 text-stone-950 shadow-sm' : 'bg-black/40 border-white/10 text-white'} backdrop-blur-md p-3 rounded-2xl border`}>
+                              <div key={item.cartItemId} className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${isLight ? 'bg-white/80 border-stone-900/20 text-stone-950 shadow-sm' : 'bg-black/50 border-white/15 text-white'} backdrop-blur-md p-3.5 rounded-2xl border`}>
+                                
+                                {/* Fila superior en móvil / Columna izquierda en PC: Imagen y Títulos */}
                                 <div className="flex items-center gap-3">
-                                  <img src={item.image} alt={item.title} className="w-12 h-12 object-cover rounded-xl" />
-                                  <div>
-                                    <h4 className={`font-bold text-xs lg:text-sm ${isLight ? 'text-stone-950' : 'text-white'}`}>{item.displayTitle}</h4>
+                                  <img src={item.image} alt={item.title} className="w-12 h-12 object-cover rounded-xl shrink-0" />
+                                  <div className="min-w-0">
+                                    <h4 className={`font-extrabold text-xs sm:text-sm truncate ${isLight ? 'text-stone-950' : 'text-white'}`}>{item.displayTitle}</h4>
                                     {/* Precio unitario con contraste perfecto independiente del fondo */}
-                                    <p className={`text-[11px] font-extrabold ${isLight ? 'text-orange-700' : 'text-orange-400'}`}>{item.price} c/u</p>
+                                    <p className={`text-[11px] font-bold ${isLight ? 'text-amber-800' : 'text-orange-300'}`}>{item.price} c/u</p>
                                   </div>
                                 </div>
-                                <div className="flex items-center gap-3">
-                                  <div className={`flex items-center ${isLight ? 'bg-white border-stone-900/30 text-stone-950' : 'bg-stone-900 border-white/20 text-white'} border rounded-lg px-2 py-1`}>
+
+                                {/* Fila inferior en móvil / Columna derecha en PC: Controles, Subtotal y Papelera */}
+                                <div className="flex items-center justify-between sm:justify-end gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-white/10">
+                                  <div className={`flex items-center ${isLight ? 'bg-white border-stone-900/30 text-stone-950' : 'bg-stone-900 border-white/25 text-white'} border rounded-lg px-2 py-1`}>
                                     <button onClick={() => updateCartItemQty(item.cartItemId, -1)} className="px-1 text-xs font-bold cursor-pointer">
                                       <i className="fa-solid fa-minus text-[8px]"></i>
                                     </button>
@@ -835,31 +839,32 @@
                                       <i className="fa-solid fa-plus text-[8px]"></i>
                                     </button>
                                   </div>
-                                  <span className={`font-bold text-xs lg:text-sm w-16 text-right ${isLight ? 'text-stone-950' : 'text-white'}`}>${(item.rawPrice * item.quantity).toLocaleString('es-CL')}</span>
+                                  <span className={`font-extrabold text-xs sm:text-sm w-16 text-right ${isLight ? 'text-stone-950' : 'text-white'}`}>${(item.rawPrice * item.quantity).toLocaleString('es-CL')}</span>
                                   <button 
                                     onClick={() => removeCartItem(item.cartItemId)}
-                                    className={`w-7 h-7 rounded-full flex items-center justify-center transition cursor-pointer text-xs ${isLight ? 'bg-red-500/15 text-red-700 hover:bg-red-600 hover:text-white' : 'bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white'}`}
+                                    className={`w-7 h-7 rounded-full flex items-center justify-center transition cursor-pointer text-xs shrink-0 ${isLight ? 'bg-red-500/15 text-red-700 hover:bg-red-600 hover:text-white' : 'bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white'}`}
                                     title="Eliminar producto"
                                   >
                                     <i className="fa-solid fa-trash-can text-[10px]"></i>
                                   </button>
                                 </div>
+
                               </div>
                             ))}
                           </div>
 
                           {/* Total a pagar */}
-                          <div className={`flex justify-between items-center pt-4 border-t ${isLight ? 'border-stone-900/20 text-stone-950' : 'border-white/20 text-white'} font-bold text-base lg:text-lg`}>
+                          <div className={`flex justify-between items-center pt-3 border-t ${isLight ? 'border-stone-900/20 text-stone-950' : 'border-white/20 text-white'} font-bold text-base lg:text-lg`}>
                             <span>Total a pagar:</span>
-                            <span className={`text-lg lg:text-xl font-extrabold ${isLight ? 'text-orange-700' : 'text-orange-400'}`}>
+                            <span className={`text-lg lg:text-xl font-extrabold ${isLight ? 'text-amber-900' : 'text-orange-400'}`}>
                               ${cart.reduce((acc, item) => acc + (item.rawPrice * item.quantity), 0).toLocaleString('es-CL')}
                             </span>
                           </div>
                         </div>
 
-                        {/* Columna Derecha (PC): Formulario de Envío y Pago Holgado */}
+                        {/* Columna Derecha (PC/Móvil): Formulario de Envío y Pago Holgado */}
                         <div className="lg:col-span-7 flex flex-col space-y-4">
-                          <form onSubmit={handleCheckoutSubmit} className="space-y-4">
+                          <form onSubmit={handleCheckoutSubmit} className="space-y-3 sm:space-y-4">
                             <h4 className={`text-xs font-bold uppercase tracking-wider ${isLight ? 'text-stone-900' : 'opacity-90'}`}>Datos de Entrega & Pago (Santiago)</h4>
                             
                             <input 
@@ -868,40 +873,40 @@
                               required
                               value={formData.fullName}
                               onChange={(e) => setFormData({...formData, fullName: e.target.value})}
-                              className={`w-full ${isLight ? 'bg-white/80 border-stone-900/30 text-stone-950 placeholder-stone-900/60' : 'bg-black/40 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-xl px-4 py-3 text-xs lg:text-sm font-medium outline-none focus:border-orange-500 transition`}
+                              className={`w-full ${isLight ? 'bg-white/90 border-stone-900/30 text-stone-950 placeholder-stone-900/60 font-semibold' : 'bg-black/40 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-xl px-4 py-3 text-xs lg:text-sm outline-none focus:border-orange-500 transition`}
                             />
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                               <input 
                                 type="text" 
                                 placeholder="Dirección exacta (Calle, N° de depto/casa) *" 
                                 required
                                 value={formData.address}
                                 onChange={(e) => setFormData({...formData, address: e.target.value})}
-                                className={`w-full ${isLight ? 'bg-white/80 border-stone-900/30 text-stone-950 placeholder-stone-900/60' : 'bg-black/40 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-xl px-4 py-3 text-xs lg:text-sm font-medium outline-none focus:border-orange-500 transition`}
+                                className={`w-full ${isLight ? 'bg-white/90 border-stone-900/30 text-stone-950 placeholder-stone-900/60 font-semibold' : 'bg-black/40 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-xl px-4 py-3 text-xs lg:text-sm outline-none focus:border-orange-500 transition`}
                               />
 
                               {/* Selector de Comuna Personalizado con Alto Contraste */}
                               <div className="relative" ref={comunaRef}>
                                 <div 
                                   onClick={() => setComunaDropdownOpen(!comunaDropdownOpen)}
-                                  className={`w-full ${isLight ? 'bg-white/80 border-stone-900/30 text-stone-950 font-medium' : 'bg-black/40 border-white/20 text-white'} backdrop-blur-md border rounded-xl px-4 py-3 text-xs lg:text-sm flex items-center justify-between cursor-pointer transition select-none`}
+                                  className={`w-full ${isLight ? 'bg-white/90 border-stone-900/30 text-stone-950 font-bold' : 'bg-black/40 border-white/20 text-white font-semibold'} backdrop-blur-md border rounded-xl px-4 py-3 text-xs lg:text-sm flex items-center justify-between cursor-pointer transition select-none`}
                                 >
                                   <span className="truncate">{formData.comuna}</span>
-                                  <i className={`fa-solid fa-chevron-down text-xs ${isLight ? 'text-stone-700' : 'opacity-60'}`}></i>
+                                  <i className={`fa-solid fa-chevron-down text-xs ${isLight ? 'text-stone-800' : 'opacity-60'}`}></i>
                                 </div>
 
                                 {comunaDropdownOpen && (
                                   <div className={`absolute left-0 right-0 mt-2 ${isLight ? 'bg-white text-stone-950 border-stone-300 shadow-2xl' : 'bg-stone-900 text-white border-white/10 shadow-2xl'} rounded-2xl border z-50 p-3`}>
                                     <div className={`flex items-center gap-2.5 ${isLight ? 'bg-stone-100 border-stone-300 text-stone-900' : 'bg-stone-800 border-white/10 text-white'} px-3.5 py-2 rounded-xl border mb-2`}>
-                                      <i className={`fa-solid fa-search text-xs ${isLight ? 'text-stone-600' : 'opacity-50'}`}></i>
+                                      <i className={`fa-solid fa-search text-xs ${isLight ? 'text-stone-700' : 'opacity-50'}`}></i>
                                       <input 
                                         type="text" 
                                         placeholder="Buscar comuna..."
                                         value={comunaSearch}
                                         onChange={(e) => setComunaSearch(e.target.value)}
                                         autoFocus
-                                        className="bg-transparent w-full text-xs lg:text-sm outline-none placeholder-current placeholder-opacity-60"
+                                        className="bg-transparent w-full text-xs lg:text-sm outline-none placeholder-current placeholder-opacity-60 font-semibold"
                                       />
                                     </div>
                                     <div className="max-h-52 overflow-y-auto custom-scrollbar space-y-1 pr-1.5">
@@ -914,7 +919,7 @@
                                               setComunaDropdownOpen(false);
                                               setComunaSearch('');
                                             }}
-                                            className={`px-3.5 py-2.5 rounded-xl text-xs lg:text-sm cursor-pointer transition ${
+                                            className={`px-3.5 py-2.5 rounded-xl text-xs lg:text-sm cursor-pointer transition font-semibold ${
                                               formData.comuna === comuna 
                                                 ? 'bg-orange-500 text-white font-bold' 
                                                 : `${isLight ? 'hover:bg-stone-100 text-stone-900' : 'hover:bg-white/10 text-white'}`
@@ -924,7 +929,7 @@
                                           </div>
                                         ))
                                       ) : (
-                                        <div className={`p-3 text-center text-xs ${isLight ? 'text-stone-600' : 'opacity-50'}`}>No hay resultados</div>
+                                        <div className={`p-3 text-center text-xs ${isLight ? 'text-stone-700' : 'opacity-50'}`}>No hay resultados</div>
                                       )}
                                     </div>
                                   </div>
@@ -932,24 +937,24 @@
                               </div>
                             </div>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                               <input 
                                 type="tel" 
                                 placeholder="Teléfono / WhatsApp (+56 9...) *" 
                                 required
                                 value={formData.phone}
                                 onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                                className={`w-full ${isLight ? 'bg-white/80 border-stone-900/30 text-stone-950 placeholder-stone-900/60' : 'bg-black/40 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-xl px-4 py-3 text-xs lg:text-sm font-medium outline-none focus:border-orange-500 transition`}
+                                className={`w-full ${isLight ? 'bg-white/90 border-stone-900/30 text-stone-950 placeholder-stone-900/60 font-semibold' : 'bg-black/40 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-xl px-4 py-3 text-xs lg:text-sm outline-none focus:border-orange-500 transition`}
                               />
 
                               {/* Selector de Método de Pago Estilizado */}
                               <div className="relative" ref={paymentRef}>
                                 <div 
                                   onClick={() => setPaymentDropdownOpen(!paymentDropdownOpen)}
-                                  className={`w-full ${isLight ? 'bg-white/80 border-stone-900/30 text-stone-950 font-medium' : 'bg-black/40 border-white/20 text-white'} backdrop-blur-md border rounded-xl px-4 py-3 text-xs lg:text-sm flex items-center justify-between cursor-pointer transition select-none`}
+                                  className={`w-full ${isLight ? 'bg-white/90 border-stone-900/30 text-stone-950 font-bold' : 'bg-black/40 border-white/20 text-white font-semibold'} backdrop-blur-md border rounded-xl px-4 py-3 text-xs lg:text-sm flex items-center justify-between cursor-pointer transition select-none`}
                                 >
                                   <span className="truncate">Pago: {formData.paymentMethod}</span>
-                                  <i className={`fa-solid fa-chevron-down text-xs ${isLight ? 'text-stone-700' : 'opacity-60'}`}></i>
+                                  <i className={`fa-solid fa-chevron-down text-xs ${isLight ? 'text-stone-800' : 'opacity-60'}`}></i>
                                 </div>
 
                                 {paymentDropdownOpen && (
@@ -961,7 +966,7 @@
                                           setFormData({...formData, paymentMethod: metodo});
                                           setPaymentDropdownOpen(false);
                                         }}
-                                        className={`px-3.5 py-2.5 rounded-xl text-xs lg:text-sm cursor-pointer transition ${
+                                        className={`px-3.5 py-2.5 rounded-xl text-xs lg:text-sm cursor-pointer transition font-semibold ${
                                           formData.paymentMethod === metodo 
                                             ? 'bg-orange-500 text-white font-bold' 
                                             : `${isLight ? 'hover:bg-stone-100 text-stone-900' : 'hover:bg-white/10 text-white'}`
@@ -978,7 +983,7 @@
                             {/* Botón WhatsApp Elegante */}
                             <button 
                               type="submit"
-                              className={`w-full font-bold py-4 rounded-2xl transition shadow-xl text-xs lg:text-sm uppercase tracking-wider cursor-pointer mt-4 flex items-center justify-center gap-2.5 ${isLight ? 'bg-stone-950 hover:bg-stone-900 text-white border border-stone-900' : 'bg-stone-950 hover:bg-black text-white border border-white/20'}`}
+                              className={`w-full font-bold py-3.5 sm:py-4 rounded-2xl transition shadow-xl text-xs lg:text-sm uppercase tracking-wider cursor-pointer mt-3 sm:mt-4 flex items-center justify-center gap-2.5 ${isLight ? 'bg-stone-950 hover:bg-stone-900 text-white border border-stone-900' : 'bg-stone-950 hover:bg-black text-white border border-white/20'}`}
                             >
                               <i className="fa-brands fa-whatsapp text-base text-emerald-400"></i>
                               Enviar Pedido por WhatsApp
