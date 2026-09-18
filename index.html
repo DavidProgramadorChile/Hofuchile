@@ -31,6 +31,14 @@
         .badge-bounce {
             animation: badgePop 0.3s ease-in-out;
         }
+        /* Animación suave para la sugerencia dinámica */
+        @keyframes subtlePulse {
+            0%, 100% { opacity: 0.9; transform: translateY(0); }
+            50% { opacity: 1; transform: translateY(-2px); }
+        }
+        .sugges-pulse {
+            animation: subtlePulse 3s ease-in-out infinite;
+        }
         /* Ocultar barras de scroll generales */
         .no-scrollbar::-webkit-scrollbar {
             display: none;
@@ -418,15 +426,15 @@
           const filteredComunas = COMUNAS_SANTIAGO.filter(c => c.toLowerCase().includes(comunaSearch.toLowerCase()));
           const totalCartItemsCount = cart.reduce((acc, item) => acc + item.quantity, 0);
 
-          // Componente interno reutilizable para el contenido del Carrito / Checkout en tamaño fijo y estático
+          // Componente interno reutilizable para el contenido del Carrito / Checkout en tamaño fijo y espacioso
           const renderCartContent = () => (
             <div className="flex flex-col justify-between h-full">
-              <div className="flex items-center justify-between border-b pb-2 border-stone-950/20 text-stone-950">
-                <span className="text-xs md:text-sm uppercase tracking-wider font-black text-stone-950">Productos en tu bolsa</span>
+              <div className="flex items-center justify-between border-b pb-2 border-white/20 text-white">
+                <span className="text-xs md:text-sm uppercase tracking-wider font-black text-white">Productos en tu bolsa</span>
                 {cart.length > 0 && (
                   <button 
                     onClick={clearCart}
-                    className="text-xs md:text-sm font-black transition flex items-center gap-1.5 cursor-pointer text-stone-950 hover:opacity-75"
+                    className="text-xs md:text-sm font-black transition flex items-center gap-1.5 cursor-pointer text-orange-200 hover:text-white"
                   >
                     <i className="fa-solid fa-trash-can text-xs"></i> Vaciar
                   </button>
@@ -434,28 +442,28 @@
               </div>
 
               {cart.length === 0 ? (
-                <div className="py-12 text-center text-xs md:text-sm space-y-2 font-bold text-stone-950 opacity-80 my-auto">
+                <div className="py-12 text-center text-xs md:text-sm space-y-2 font-bold text-white/80 my-auto">
                   <i className="fa-solid fa-bag-shopping text-4xl opacity-50 block mb-1"></i>
                   Tu bolsa está vacía. ¡Añade platos!
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-start my-auto">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start my-auto">
                   
-                  {/* Columna Izquierda del Modal: Lista de productos con precios obligatoriamente en negro */}
-                  <div className="md:col-span-6 space-y-2.5 flex flex-col">
-                    <div className="space-y-2 max-h-56 overflow-y-auto no-scrollbar pr-1">
+                  {/* Columna Izquierda del Modal: Lista de productos */}
+                  <div className="md:col-span-6 space-y-3 flex flex-col">
+                    <div className="space-y-2.5 max-h-60 overflow-y-auto no-scrollbar pr-1">
                       {cart.map((item) => (
-                        <div key={item.cartItemId} className="flex items-center justify-between gap-2.5 shadow-sm backdrop-blur-md p-2.5 rounded-xl border border-stone-950/25 bg-white/70 text-stone-950">
+                        <div key={item.cartItemId} className="flex items-center justify-between gap-2.5 shadow-md backdrop-blur-md p-2.5 rounded-xl border border-white/20 bg-black/30 text-white">
                           <div className="flex items-center gap-2 min-w-0">
-                            <img src={item.image} alt={item.title} className="w-9 h-9 object-cover rounded-lg shrink-0 border border-stone-950/20" />
+                            <img src={item.image} alt={item.title} className="w-9 h-9 object-cover rounded-lg shrink-0 border border-white/20" />
                             <div className="min-w-0">
-                              <h4 className="font-black text-xs truncate text-stone-950">{item.displayTitle}</h4>
-                              <p className="text-xs font-black text-stone-950">{item.price} c/u</p>
+                              <h4 className="font-black text-xs truncate text-white">{item.displayTitle}</h4>
+                              <p className="text-xs font-black text-orange-300">{item.price} c/u</p>
                             </div>
                           </div>
 
                           <div className="flex items-center gap-2 shrink-0">
-                            <div className="flex items-center border border-stone-950/30 bg-white text-stone-950 rounded-lg px-1.5 py-0.5">
+                            <div className="flex items-center border border-white/20 bg-black/40 text-white rounded-lg px-1.5 py-0.5">
                               <button onClick={() => updateCartItemQty(item.cartItemId, -1)} className="px-1 text-xs font-black cursor-pointer">
                                 <i className="fa-solid fa-minus text-[7px]"></i>
                               </button>
@@ -464,31 +472,31 @@
                                 <i className="fa-solid fa-plus text-[7px]"></i>
                               </button>
                             </div>
-                            <span className="font-black text-xs w-12 text-right text-stone-950">${(item.rawPrice * item.quantity).toLocaleString('es-CL')}</span>
+                            <span className="font-black text-xs w-12 text-right text-white">${(item.rawPrice * item.quantity).toLocaleString('es-CL')}</span>
                             <button 
                               onClick={() => removeCartItem(item.cartItemId)}
-                              className="w-6 h-6 rounded-full flex items-center justify-center transition cursor-pointer text-xs shrink-0 font-bold bg-stone-950 text-white hover:bg-stone-800"
+                              className="w-6 h-6 rounded-full flex items-center justify-center transition cursor-pointer text-xs shrink-0 font-bold bg-white/20 text-white hover:bg-red-500 border border-white/30"
                               title="Eliminar"
                             >
-                              <i className="fa-solid fa-trash-can text-[9px] text-white"></i>
+                              <i className="fa-solid fa-trash-can text-[9px]"></i>
                             </button>
                           </div>
                         </div>
                       ))}
                     </div>
 
-                    <div className="flex justify-between items-center pt-2 border-t border-stone-950/20 text-stone-950 font-black text-sm">
+                    <div className="flex justify-between items-center pt-2 border-t border-white/20 text-white font-black text-sm">
                       <span>Total a pagar:</span>
-                      <span className="text-base font-black text-stone-950">
+                      <span className="text-base font-black text-orange-300">
                         ${cart.reduce((acc, item) => acc + (item.rawPrice * item.quantity), 0).toLocaleString('es-CL')}
                       </span>
                     </div>
 
                     {totalCartItemsCount < 3 && (
-                      <div className="mt-2 p-2.5 rounded-xl bg-stone-950/10 border border-stone-950/20 flex items-center gap-2.5 sugges-pulse">
-                        <i className="fa-solid fa-wand-magic-sparkles text-amber-900 text-sm shrink-0"></i>
-                        <p className="text-[11px] font-black text-stone-950 leading-tight">
-                          ¡Tip Hōfu! Añade una <span className="underline decoration-orange-600">Bebida de 1.5L</span> o un extra para completar el pedido perfecto.
+                      <div className="mt-2 p-3 rounded-xl bg-black/30 border border-white/20 flex items-center gap-2.5 sugges-pulse">
+                        <i className="fa-solid fa-wand-magic-sparkles text-orange-300 text-sm shrink-0"></i>
+                        <p className="text-[11px] font-bold text-white leading-tight">
+                          ¡Tip Hōfu! Añade una <span className="underline decoration-orange-400 text-orange-200">Bebida de 1.5L</span> o un extra para completar tu pedido perfecto.
                         </p>
                       </div>
                     )}
@@ -496,8 +504,8 @@
 
                   {/* Columna Derecha del Modal: Formulario */}
                   <div className="md:col-span-6">
-                    <form onSubmit={handleCheckoutSubmit} className="space-y-2">
-                      <h4 className="text-xs md:text-sm font-black uppercase tracking-wider text-stone-950">Datos de Entrega</h4>
+                    <form onSubmit={handleCheckoutSubmit} className="space-y-2.5">
+                      <h4 className="text-xs md:text-sm font-black uppercase tracking-wider text-white">Datos de Entrega</h4>
                       
                       <input 
                         type="text" 
@@ -505,7 +513,7 @@
                         required
                         value={formData.fullName}
                         onChange={(e) => setFormData({...formData, fullName: e.target.value})}
-                        className="w-full font-black backdrop-blur-md border rounded-xl px-3 py-2 text-xs md:text-sm outline-none transition shadow-inner bg-white/90 border-stone-950/30 text-stone-950 placeholder-stone-900/60 focus:border-stone-950"
+                        className="w-full font-bold backdrop-blur-md border rounded-xl px-3 py-2 text-xs md:text-sm outline-none transition shadow-inner bg-black/40 border-white/25 text-white placeholder-white/50 focus:border-orange-400"
                       />
 
                       <input 
@@ -514,23 +522,23 @@
                         required
                         value={formData.address}
                         onChange={(e) => setFormData({...formData, address: e.target.value})}
-                        className="w-full font-black backdrop-blur-md border rounded-xl px-3 py-2 text-xs md:text-sm outline-none transition shadow-inner bg-white/90 border-stone-950/30 text-stone-950 placeholder-stone-900/60 focus:border-stone-950"
+                        className="w-full font-bold backdrop-blur-md border rounded-xl px-3 py-2 text-xs md:text-sm outline-none transition shadow-inner bg-black/40 border-white/25 text-white placeholder-white/50 focus:border-orange-400"
                       />
 
-                      <div className="grid grid-cols-2 gap-2">
-                        {/* Selector de Comuna Personalizado */}
+                      <div className="grid grid-cols-2 gap-2.5">
+                        {/* Selector de Comuna Personalizado (Despliegue hacia arriba para evitar desbordes) */}
                         <div className="relative" ref={comunaRef}>
                           <div 
                             onClick={() => setComunaDropdownOpen(!comunaDropdownOpen)}
-                            className="w-full font-black backdrop-blur-md border rounded-xl px-3 py-2 text-xs md:text-sm flex items-center justify-between cursor-pointer transition select-none shadow-inner bg-white/90 border-stone-950/30 text-stone-950"
+                            className="w-full font-bold backdrop-blur-md border rounded-xl px-3 py-2 text-xs md:text-sm flex items-center justify-between cursor-pointer transition select-none shadow-inner bg-black/40 border-white/25 text-white"
                           >
                             <span className="truncate">{formData.comuna}</span>
-                            <i className="fa-solid fa-chevron-down text-[10px] text-stone-950"></i>
+                            <i className="fa-solid fa-chevron-up text-[10px] opacity-70"></i>
                           </div>
 
                           {comunaDropdownOpen && (
-                            <div className="absolute left-0 right-0 mt-1 bg-stone-900 text-white border-white/20 shadow-2xl rounded-2xl border z-50 p-2">
-                              <div className="flex items-center gap-1.5 bg-black/50 border-white/15 text-white px-2.5 py-1 rounded-xl border mb-1.5">
+                            <div className="absolute left-0 right-0 bottom-full mb-1.5 bg-stone-900 text-white border-white/20 shadow-2xl rounded-2xl border z-50 p-2">
+                              <div className="flex items-center gap-1.5 bg-black/60 border-white/15 text-white px-2.5 py-1 rounded-xl border mb-1.5">
                                 <i className="fa-solid fa-search text-xs text-white opacity-70"></i>
                                 <input 
                                   type="text" 
@@ -568,18 +576,18 @@
                           )}
                         </div>
 
-                        {/* Selector de Método de Pago */}
+                        {/* Selector de Método de Pago (Despliegue hacia arriba) */}
                         <div className="relative" ref={paymentRef}>
                           <div 
                             onClick={() => setPaymentDropdownOpen(!paymentDropdownOpen)}
-                            className="w-full font-black backdrop-blur-md border rounded-xl px-3 py-2 text-xs md:text-sm flex items-center justify-between cursor-pointer transition select-none shadow-inner bg-white/90 border-stone-950/30 text-stone-950"
+                            className="w-full font-bold backdrop-blur-md border rounded-xl px-3 py-2 text-xs md:text-sm flex items-center justify-between cursor-pointer transition select-none shadow-inner bg-black/40 border-white/25 text-white"
                           >
                             <span className="truncate">{formData.paymentMethod}</span>
-                            <i className="fa-solid fa-chevron-down text-[10px] text-stone-950"></i>
+                            <i className="fa-solid fa-chevron-up text-[10px] opacity-70"></i>
                           </div>
 
                           {paymentDropdownOpen && (
-                            <div className="absolute left-0 right-0 mt-1 bg-stone-900 text-white border-white/20 shadow-2xl rounded-2xl border z-50 p-2 space-y-1">
+                            <div className="absolute left-0 right-0 bottom-full mb-1.5 bg-stone-900 text-white border-white/20 shadow-2xl rounded-2xl border z-50 p-2 space-y-1">
                               {METODOS_PAGO.map((metodo) => (
                                 <div 
                                   key={metodo}
@@ -607,12 +615,12 @@
                         required
                         value={formData.phone}
                         onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                        className="w-full font-black backdrop-blur-md border rounded-xl px-3 py-2 text-xs md:text-sm outline-none transition shadow-inner bg-white/90 border-stone-950/30 text-stone-950 placeholder-stone-900/60 focus:border-stone-950"
+                        className="w-full font-bold backdrop-blur-md border rounded-xl px-3 py-2 text-xs md:text-sm outline-none transition shadow-inner bg-black/40 border-white/25 text-white placeholder-white/50 focus:border-orange-400"
                       />
 
                       <button 
                         type="submit"
-                        className="w-full font-black py-2.5 rounded-xl transition shadow-xl text-xs uppercase tracking-wider cursor-pointer mt-1 flex items-center justify-center gap-2 bg-stone-950 text-white hover:bg-stone-800 border border-stone-950"
+                        className="w-full font-black py-2.5 rounded-xl transition shadow-xl text-xs uppercase tracking-wider cursor-pointer mt-1 flex items-center justify-center gap-2 bg-stone-950 text-white hover:bg-black border border-white/20"
                       >
                         <i className="fa-brands fa-whatsapp text-sm text-emerald-400"></i>
                         Enviar Pedido por WhatsApp
@@ -945,12 +953,12 @@
                 </div>
               </main>
 
-              {/* 3. Modal Horizontal con Tamaño Fijo, Estático y Contraste Total */}
+              {/* 3. Modal Horizontal con Fondo Fijo de Gohan, Espacioso y Contraste Perfecto */}
               {cartOpen && (
                 <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-4">
                   
-                  {/* Caja rectangular con dimensiones fijas y estáticas en PC (w-[850px] h-[520px]) */}
-                  <div className={`bg-gradient-to-br ${selectedItem.bgGradient} rounded-3xl w-full max-w-[850px] md:h-[520px] p-6 md:p-8 shadow-2xl border border-stone-950/30 relative animate-in fade-in zoom-in duration-200 flex flex-col justify-between overflow-hidden`}>
+                  {/* Ventana modal con color fijo de Gohan, más cuadrada/espaciosa y sin desbordes */}
+                  <div className="bg-gradient-to-br from-amber-700 via-orange-600 to-stone-950 rounded-3xl w-full max-w-2xl md:h-[640px] p-6 md:p-8 shadow-2xl border border-white/20 relative animate-in fade-in zoom-in duration-200 flex flex-col justify-between overflow-visible text-white">
                     
                     {/* Botón cerrar */}
                     <button 
@@ -959,20 +967,20 @@
                         e.stopPropagation();
                         setCartOpen(false);
                       }}
-                      className="absolute top-5 right-5 w-9 h-9 rounded-full flex items-center justify-center transition cursor-pointer z-20 font-bold text-base border bg-stone-950/10 hover:bg-stone-950/20 text-stone-950 border-stone-900/30"
+                      className="absolute top-5 right-5 w-9 h-9 rounded-full flex items-center justify-center transition cursor-pointer z-20 font-bold text-base border bg-black/40 hover:bg-black/60 text-white border-white/20"
                     >
                       <i className="fa-solid fa-xmark text-sm"></i>
                     </button>
 
-                    <h3 className="text-xl md:text-2xl font-black mb-3 tracking-wide drop-shadow-sm pr-12 text-stone-950">Resumen de tu Pedido</h3>
+                    <h3 className="text-xl md:text-2xl font-black mb-3 tracking-wide drop-shadow-sm pr-12 text-white">Resumen de tu Pedido</h3>
 
                     {orderSuccess ? (
                       <div className="py-12 text-center space-y-4 my-auto">
-                        <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto text-3xl font-bold border bg-stone-950/10 text-stone-950 border-stone-900/30">
+                        <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto text-3xl font-bold border bg-black/40 text-emerald-400 border-white/20">
                           <i className="fa-solid fa-check text-2xl"></i>
                         </div>
-                        <h4 className="text-xl font-black text-stone-950">¡Redirigiendo a WhatsApp!</h4>
-                        <p className="text-sm font-bold opacity-80 text-stone-950">Se abrió tu chat con el pedido detallado. ¡Gracias por elegir HŌFU!</p>
+                        <h4 className="text-xl font-black text-white">¡Redirigiendo a WhatsApp!</h4>
+                        <p className="text-sm font-bold opacity-80 text-white">Se abrió tu chat con el pedido detallado. ¡Gracias por elegir HŌFU!</p>
                       </div>
                     ) : (
                       renderCartContent()
