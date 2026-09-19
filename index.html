@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>HŌFU - Menu Master</title>
+    
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome CDN -->
@@ -61,7 +62,7 @@
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
-        // Estructura completa de categorías y productos con Gohan Salmón optimizado con degradado sofisticado y profundo
+        // Estructura completa de categorías y productos bajo la regla general de diseño de alta gama (Color principal -> Negro profundo)
         const categoriesData = {
           favoritos: {
             name: 'FAVORITOS',
@@ -73,7 +74,7 @@
                 description: 'Base de Arroz • Palta • Queso Crema • Cebollín',
                 price: '$3.990',
                 rawPrice: 3990,
-                bgGradient: 'from-emerald-700 via-teal-800 to-stone-900', // Verde sofisticado único
+                bgGradient: 'from-emerald-700 via-teal-800 to-stone-950',
                 isLight: false,
                 image: 'img/onigiri.png',
                 hasProteinSelector: true
@@ -84,7 +85,7 @@
                 description: 'Base de Arroz • Queso Crema • Cebollín',
                 price: '$3.300',
                 rawPrice: 3300,
-                bgGradient: 'from-rose-600 via-pink-700 to-purple-900', // Rosa / Frambuesa refinado único
+                bgGradient: 'from-rose-600 via-pink-700 to-stone-950',
                 isLight: false,
                 image: 'img/handroll.png',
                 hasProteinSelector: true
@@ -100,7 +101,7 @@
                 description: 'Base de Arroz • Salmón • Palta • Queso Crema • Cebollín',
                 price: '$6.500',
                 rawPrice: 6500,
-                bgGradient: 'from-amber-600 via-orange-700 to-stone-900', // Degradado naranja profundo, envolvente y con textura sofisticada
+                bgGradient: 'from-amber-600 via-orange-700 to-stone-950',
                 isLight: false,
                 image: 'img/gohansalmon.png',
               },
@@ -110,7 +111,7 @@
                 description: 'Base de Arroz • Camarón Apanado • Palta • Queso Crema • Cebollín',
                 price: '$6.000',
                 rawPrice: 6000,
-                bgGradient: 'from-rose-700 via-orange-600 to-amber-700',
+                bgGradient: 'from-[#8F3FD5] via-purple-800 to-stone-950',
                 isLight: false,
                 image: 'img/gohancamaron.png',
               },
@@ -120,7 +121,7 @@
                 description: 'Base de Arroz • Pollo Apanado • Palta • Queso Crema • Cebollín',
                 price: '$5.500',
                 rawPrice: 5500,
-                bgGradient: 'from-amber-400 via-yellow-500 to-orange-600',
+                bgGradient: 'from-amber-400 via-yellow-500 to-stone-950',
                 isLight: true,
                 image: 'img/gohanpollo.png',
               },
@@ -135,7 +136,7 @@
                 description: 'Camarón Apanado • Palta • Queso Crema',
                 price: '$4.800',
                 rawPrice: 4800,
-                bgGradient: 'from-amber-500 via-orange-600 to-amber-700',
+                bgGradient: 'from-amber-500 via-orange-600 to-stone-950',
                 isLight: false,
                 image: 'img/tempuraroll.png',
               },
@@ -145,7 +146,7 @@
                 description: 'Camarón • Palta • Queso Crema',
                 price: '$4.600',
                 rawPrice: 4600,
-                bgGradient: 'from-teal-600 via-cyan-700 to-amber-700',
+                bgGradient: 'from-teal-600 via-cyan-700 to-stone-950',
                 isLight: false,
                 image: 'img/eskimalroll.png',
               }
@@ -160,7 +161,7 @@
                 description: 'Pollo teriyaki - queso crema - cebollín - apanado en panko',
                 price: '$5.000',
                 rawPrice: 5000,
-                bgGradient: 'from-red-800 via-orange-600 to-amber-700',
+                bgGradient: 'from-red-800 via-orange-600 to-stone-950',
                 isLight: false,
                 image: 'img/torihot.png',
               }
@@ -175,7 +176,7 @@
                 description: 'Bebida formato familiar 1.5 Litros bien fría para acompañar',
                 price: '$2.500',
                 rawPrice: 2500,
-                bgGradient: 'from-red-700 via-orange-600 to-amber-700',
+                bgGradient: 'from-[#CE2029] via-[#851117] to-stone-950',
                 isLight: false,
                 image: 'img/bebida1.5.png',
                 hasFlavorSelector: true
@@ -186,7 +187,7 @@
                 description: 'Bebida en lata individual 350 cc refrescante',
                 price: '$1.500',
                 rawPrice: 1500,
-                bgGradient: 'from-blue-700 via-indigo-600 to-amber-700',
+                bgGradient: 'from-blue-700 via-indigo-600 to-stone-950',
                 isLight: false,
                 image: 'img/bebidaslata.png',
                 hasFlavorSelector: true
@@ -202,7 +203,7 @@
                 description: 'Porción adicional de salsa de soya tradicional',
                 price: '$500',
                 rawPrice: 500,
-                bgGradient: 'from-amber-700 via-orange-600 to-amber-700',
+                bgGradient: 'from-amber-700 via-orange-600 to-stone-950',
                 isLight: false,
                 image: 'img/soyaextra.png',
               },
@@ -212,7 +213,7 @@
                 description: 'Salsa dulce de anguila caramelizada adicional',
                 price: '$800',
                 rawPrice: 800,
-                bgGradient: 'from-amber-700 via-orange-600 to-amber-700',
+                bgGradient: 'from-amber-700 via-orange-600 to-stone-950',
                 isLight: false,
                 image: 'img/unaguiextra.png',
               },
@@ -222,7 +223,7 @@
                 description: 'Extra de palta fresca en láminas',
                 price: '$1.200',
                 rawPrice: 1200,
-                bgGradient: 'from-emerald-600 via-teal-600 to-amber-700',
+                bgGradient: 'from-emerald-600 via-teal-600 to-stone-950',
                 isLight: false,
                 image: 'img/porcionpalta.png',
               },
@@ -232,7 +233,7 @@
                 description: 'Porción adicional de queso crema Philadelphia',
                 price: '$1.000',
                 rawPrice: 1000,
-                bgGradient: 'from-yellow-600 via-amber-600 to-orange-600',
+                bgGradient: 'from-yellow-600 via-amber-600 to-stone-950',
                 isLight: false,
                 image: 'img/quesocremaextra.png',
               }
@@ -262,20 +263,17 @@
           const [selectedProtein, setSelectedProtein] = useState('Pollo apanado');
           const [animating, setAnimating] = useState(false);
           const [quantity, setQuantity] = useState(1);
+          const [specialNotes, setSpecialNotes] = useState('');
 
-          // Estado para el Zoom al tocar la imagen principal
           const [isImageZoomed, setIsImageZoomed] = useState(false);
 
-          // Estados para Salsas Inteligentes en Móvil (Soya vs Teriyaki)
           const [soyaCount, setSoyaCount] = useState(1);
           const [teriyakiCount, setTeriyakiCount] = useState(0);
 
-          // Estados para interactividad (Buscador limpio, Carrito con localStorage y Modal Checkout)
           const [searchOpen, setSearchOpen] = useState(false);
           const [searchQuery, setSearchQuery] = useState('');
           const [cartOpen, setCartOpen] = useState(false);
-          
-          // Inicializar el carrito recuperándolo de localStorage de forma segura
+
           const [cart, setCart] = useState(() => {
             try {
               const savedCart = localStorage.getItem('hofu_cart');
@@ -287,9 +285,23 @@
 
           const [orderSuccess, setOrderSuccess] = useState(false);
           const [badgePulsing, setBadgePulsing] = useState(false);
-          
-          // Estado para animación de succión (Fly-to-Cart)
           const [flyingItem, setFlyingItem] = useState(null);
+
+          // Lógica en tiempo real para el estado del local (11:00 AM a 00:00 AM)
+          const [isOpen, setIsOpen] = useState(true);
+
+          useEffect(() => {
+            const checkStoreStatus = () => {
+              const now = new Date();
+              const hours = now.getHours();
+              const currentlyOpen = hours >= 11 && hours < 24;
+              setIsOpen(currentlyOpen);
+            };
+
+            checkStoreStatus();
+            const interval = setInterval(checkStoreStatus, 60000);
+            return () => clearInterval(interval);
+          }, []);
 
           const [formData, setFormData] = useState({ 
             fullName: '', 
@@ -299,7 +311,6 @@
             paymentMethod: 'Efectivo'
           });
 
-          // Estado para selectores personalizados
           const [comunaDropdownOpen, setComunaDropdownOpen] = useState(false);
           const [comunaSearch, setComunaSearch] = useState('');
           const [paymentDropdownOpen, setPaymentDropdownOpen] = useState(false);
@@ -309,23 +320,52 @@
           const searchContainerRef = useRef(null);
           const cartButtonRef = useRef(null);
           const productImgRef = useRef(null);
+          
+          const mobileCategoriesRef = useRef(null);
+          const isUserInteractingRef = useRef(false);
+          const scrollDirectionRef = useRef(1);
 
-          // Sincronizar automáticamente las salsas cuando cambia la cantidad principal
+          useEffect(() => {
+            const container = mobileCategoriesRef.current;
+            if (!container) return;
+            let animationFrameId;
+
+            const autoScroll = () => {
+              if (!isUserInteractingRef.current && container) {
+                const maxScrollLeft = container.scrollWidth - container.clientWidth;
+                if (maxScrollLeft > 0) {
+                  container.scrollLeft += 0.4 * scrollDirectionRef.current;
+                  if (container.scrollLeft >= maxScrollLeft - 1) {
+                    scrollDirectionRef.current = -1;
+                  } else if (container.scrollLeft <= 1) {
+                    scrollDirectionRef.current = 1;
+                  }
+                }
+              }
+              animationFrameId = requestAnimationFrame(autoScroll);
+            };
+
+            const timer = setTimeout(() => {
+              animationFrameId = requestAnimationFrame(autoScroll);
+            }, 1500);
+
+            return () => {
+              clearTimeout(timer);
+              cancelAnimationFrame(animationFrameId);
+            };
+          }, []);
+
           useEffect(() => {
             setSoyaCount(quantity);
             setTeriyakiCount(0);
           }, [quantity]);
 
-          // Sincronizar el carrito automáticamente con localStorage cada vez que cambie
           useEffect(() => {
             try {
               localStorage.setItem('hofu_cart', JSON.stringify(cart));
-            } catch (e) {
-              console.error("Error guardando carrito en localStorage", e);
-            }
+            } catch (e) {}
           }, [cart]);
 
-          // Manejar clics fuera de los dropdowns y buscador para cerrarlos
           useEffect(() => {
             function handleClickOutside(event) {
               if (comunaRef.current && !comunaRef.current.contains(event.target)) {
@@ -342,23 +382,34 @@
             return () => document.removeEventListener("mousedown", handleClickOutside);
           }, []);
 
-          // Cambiar de categoría con transición fluida
+          // Función para activar el Modo Inmersivo (Pantalla Completa)
+          const toggleFullScreen = () => {
+            if (!document.fullscreenElement) {
+              document.documentElement.requestFullscreen().catch(err => {
+                console.error("Error al intentar activar pantalla completa:", err);
+              });
+            } else {
+              if (document.exitFullscreen) {
+                document.exitFullscreen();
+              }
+            }
+          };
+
           const handleCategoryChange = (categoryKey) => {
             if (categoryKey === activeCategory) return;
             setAnimating(true);
             setIsImageZoomed(false);
             setActiveCategory(categoryKey);
-            const firstItem = categoriesData[categoryKey].items[0];
-            setSelectedItem(firstItem);
+            setSelectedItem(categoriesData[categoryKey].items[0]);
             setSelectedFlavor('Coca-Cola');
             setSelectedProtein('Pollo apanado');
             setQuantity(1);
             setSoyaCount(1);
             setTeriyakiCount(0);
+            setSpecialNotes('');
             setTimeout(() => setAnimating(false), 350);
           };
 
-          // Cambiar de producto con transición fluida tipo app nativa
           const handleItemChange = (item) => {
             if (item.id === selectedItem.id) return;
             setAnimating(true);
@@ -369,10 +420,10 @@
             setQuantity(1);
             setSoyaCount(1);
             setTeriyakiCount(0);
+            setSpecialNotes('');
             setTimeout(() => setAnimating(false), 350);
           };
 
-          // Control de cantidad principal y redistribución de salsas
           const decreaseQty = () => {
             if (quantity > 1) {
               const newQty = quantity - 1;
@@ -390,32 +441,22 @@
             setSoyaCount(prev => prev + 1);
           };
 
-          // Controles para las salsas inteligentes
           const updateSoya = (delta) => {
             if (delta > 0) {
-              if (soyaCount + teriyakiCount < quantity) {
-                setSoyaCount(prev => prev + 1);
-              }
+              if (soyaCount + teriyakiCount < quantity) setSoyaCount(prev => prev + 1);
             } else {
-              if (soyaCount > 0) {
-                setSoyaCount(prev => prev - 1);
-              }
+              if (soyaCount > 0) setSoyaCount(prev => prev - 1);
             }
           };
 
           const updateTeriyaki = (delta) => {
             if (delta > 0) {
-              if (soyaCount + teriyakiCount < quantity) {
-                setTeriyakiCount(prev => prev + 1);
-              }
+              if (soyaCount + teriyakiCount < quantity) setTeriyakiCount(prev => prev + 1);
             } else {
-              if (teriyakiCount > 0) {
-                setTeriyakiCount(prev => prev - 1);
-              }
+              if (teriyakiCount > 0) setTeriyakiCount(prev => prev - 1);
             }
           };
 
-          // Añadir producto actual al carrito con Animación de Succión (Fly-to-Cart)
           const addToCart = () => {
             if (productImgRef.current && cartButtonRef.current) {
               const startRect = productImgRef.current.getBoundingClientRect();
@@ -443,14 +484,14 @@
               variantSuffix = ` [Proteína: ${selectedProtein}]`;
             }
             
-            // Texto detallado de salsas para la bolsa y WhatsApp
             let saucesParts = [];
             if (soyaCount > 0) saucesParts.push(`${soyaCount} Soya`);
             if (teriyakiCount > 0) saucesParts.push(`${teriyakiCount} Teriyaki`);
             const saucesSuffix = saucesParts.length > 0 ? ` [Salsas: ${saucesParts.join(', ')}]` : '';
+            const notesSuffix = specialNotes.trim() !== '' ? ` [Nota: "${specialNotes.trim()}"]` : '';
 
-            const cartItemId = `${selectedItem.id}${variantSuffix}|S${soyaCount}T${teriyakiCount}`;
-            const cartItemTitle = `${selectedItem.title}${variantSuffix}${saucesSuffix}`;
+            const cartItemId = `${selectedItem.id}${variantSuffix}|S${soyaCount}T${teriyakiCount}|N${specialNotes}`;
+            const cartItemTitle = `${selectedItem.title}${variantSuffix}${saucesSuffix}${notesSuffix}`;
 
             setCart(prevCart => {
               const existingIndex = prevCart.findIndex(item => item.cartItemId === cartItemId);
@@ -470,9 +511,9 @@
             setQuantity(1);
             setSoyaCount(1);
             setTeriyakiCount(0);
+            setSpecialNotes('');
           };
 
-          // Modificar cantidad en carrito
           const updateCartItemQty = (cartItemId, delta) => {
             setCart(prevCart => {
               return prevCart.map(item => {
@@ -485,20 +526,15 @@
             });
           };
 
-          // Eliminar un producto específico del carrito
           const removeCartItem = (cartItemId) => {
             setCart(prevCart => prevCart.filter(item => item.cartItemId !== cartItemId));
           };
 
-          // Vaciar todo el carrito
           const clearCart = () => {
             setCart([]);
-            try {
-              localStorage.removeItem('hofu_cart');
-            } catch (e) {}
+            try { localStorage.removeItem('hofu_cart'); } catch (e) {}
           };
 
-          // Filtrar productos para el buscador principal entre todas las categorías
           const allProducts = Object.values(categoriesData).flatMap(cat => cat.items);
           const filteredProducts = searchQuery.trim() === '' ? [] : allProducts.filter(p => 
             p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -519,12 +555,12 @@
             setQuantity(1);
             setSoyaCount(1);
             setTeriyakiCount(0);
+            setSpecialNotes('');
             setSearchOpen(false);
             setSearchQuery('');
             setTimeout(() => setAnimating(false), 350);
           };
 
-          // Procesar formulario y enviar a WhatsApp (único momento en que se limpia el carrito)
           const handleCheckoutSubmit = (e) => {
             e.preventDefault();
             if (!formData.fullName || !formData.address || !formData.phone) return;
@@ -532,6 +568,9 @@
             const totalAmount = cart.reduce((acc, item) => acc + (item.rawPrice * item.quantity), 0);
             
             let message = `*¡Hola HŌFU! Quisiera realizar el siguiente pedido:*\n\n`;
+            if (!isOpen) {
+              message += `*(Nota: Pedido programado fuera de horario)*\n\n`;
+            }
             message += `*📋 DETALLE DE LA ORDEN:*\n`;
             cart.forEach((item, idx) => {
               message += `${idx + 1}. ${item.displayTitle} x${item.quantity} - $${(item.rawPrice * item.quantity).toLocaleString('es-CL')}\n`;
@@ -554,9 +593,7 @@
               window.open(whatsappUrl, '_blank');
               setOrderSuccess(false);
               setCart([]);
-              try {
-                localStorage.removeItem('hofu_cart');
-              } catch (e) {}
+              try { localStorage.removeItem('hofu_cart'); } catch (e) {}
               setCartOpen(false);
               setFormData({ fullName: '', address: '', comuna: 'Santiago', phone: '', paymentMethod: 'Efectivo' });
             }, 2000);
@@ -564,11 +601,13 @@
 
           const isLight = selectedItem.isLight;
           const filteredComunas = COMUNAS_SANTIAGO.filter(c => c.toLowerCase().includes(comunaSearch.toLowerCase()));
+          const totalCartItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+          const totalCartAmount = cart.reduce((acc, item) => acc + (item.rawPrice * item.quantity), 0);
 
           return (
             <div className={`min-h-screen w-full bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-x-hidden select-none relative`}>
               
-              {/* Elemento Volador para la Animación de Succión (Fly-to-Cart) */}
+              {/* Elemento Volador para Animación de Succión */}
               {flyingItem && (
                 <div 
                   style={{
@@ -597,16 +636,36 @@
                 }
               `}</style>
 
-              {/* 1. Navbar Principal con Buscador Integrado y No Invasivo */}
-              <header className="w-full px-6 md:px-12 py-3 lg:py-5 flex items-center justify-between z-30 max-w-7xl mx-auto relative shrink-0">
-                {/* Logo HŌFU */}
+              {/* 1. Mini-barra superior (Top Bar) con horario, luz parpadeante y botón de pantalla completa */}
+              <div className="w-full bg-black/60 backdrop-blur-md px-4 py-1.5 flex items-center justify-between z-40 border-b border-white/10 shrink-0">
+                <div className="flex items-center gap-2">
+                  <button 
+                    onClick={toggleFullScreen}
+                    className="w-6 h-6 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-[10px] text-white transition active:scale-90 cursor-pointer shadow-sm"
+                    title="Pantalla Completa"
+                  >
+                    <i className="fa-solid fa-expand"></i>
+                  </button>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span className={`w-2.5 h-2.5 rounded-full animate-pulse ${isOpen ? 'bg-emerald-400' : 'bg-red-500'}`}></span>
+                  <span className="text-[10px] sm:text-[11px] font-semibold tracking-wider uppercase text-white/95">
+                    {isOpen ? 'Abierto • 11:00 - 00:00' : 'Cerrado • Abre a las 11:00'}
+                  </span>
+                </div>
+
+                <div className="w-6"></div> {/* Espaciador para centrar el horario */}
+              </div>
+
+              {/* 2. Navbar Principal con Buscador Predictivo */}
+              <header className="w-full px-6 md:px-12 py-3 lg:py-4 flex items-center justify-between z-30 max-w-7xl mx-auto relative shrink-0">
                 <div className="flex items-center cursor-pointer">
                   <span className={`font-black tracking-[0.3em] text-2xl md:text-3xl uppercase drop-shadow-sm ${isLight ? 'text-stone-950' : 'text-white'}`}>
                     HŌFU
                   </span>
                 </div>
 
-                {/* Sistema de Pestañas de Categorías (Desktop) */}
                 <nav className={`hidden md:flex items-center gap-1 ${isLight ? 'bg-black/10 border-stone-900/20 text-stone-900' : 'bg-black/20 border-white/20 text-white'} backdrop-blur-md px-4 py-1.5 rounded-full border text-xs tracking-wider font-medium shadow-md`}>
                   {Object.keys(categoriesData).map((catKey) => {
                     const isActive = activeCategory === catKey;
@@ -615,7 +674,7 @@
                       <button
                         key={catKey}
                         onClick={() => handleCategoryChange(catKey)}
-                        className={`px-4 py-2 rounded-full transition-all duration-300 cursor-pointer tracking-wider flex items-center gap-2 ${
+                        className={`px-4 py-2 rounded-full transition-all duration-300 cursor-pointer tracking-wider flex items-center gap-2 active:scale-95 ${
                           isActive 
                             ? `${isLight ? 'bg-stone-950 text-white' : 'bg-white/25 text-white'} shadow-sm font-bold scale-105` 
                             : `${isLight ? 'hover:text-stone-950 text-stone-900/80' : 'hover:text-white text-white/80'}`
@@ -628,15 +687,12 @@
                   })}
                 </nav>
 
-                {/* Controles Derechos: Buscador & Carrito */}
                 <div className="flex items-center gap-3" ref={searchContainerRef}>
-                  
-                  {/* Buscador Integrado No Invasivo */}
                   <div className="flex items-center relative">
                     {!searchOpen ? (
                       <button 
                         onClick={() => setSearchOpen(true)}
-                        className={`w-10 h-10 rounded-full ${isLight ? 'bg-black/10 border-stone-900/20 text-stone-900 hover:bg-black/20' : 'bg-black/20 border-white/20 text-white hover:bg-black/30'} backdrop-blur-md flex items-center justify-center border transition cursor-pointer shadow-md`}
+                        className={`w-10 h-10 rounded-full ${isLight ? 'bg-black/10 border-stone-900/20 text-stone-900 hover:bg-black/20' : 'bg-black/20 border-white/20 text-white hover:bg-black/30'} backdrop-blur-md flex items-center justify-center border transition active:scale-95 cursor-pointer shadow-md`}
                         title="Buscar producto"
                       >
                         <i className="fa-solid fa-search text-xs"></i>
@@ -646,7 +702,7 @@
                         <i className="fa-solid fa-search text-xs opacity-50 shrink-0"></i>
                         <input 
                           type="text" 
-                          placeholder="Buscar plato, bebida..." 
+                          placeholder="Buscar en el menú..." 
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
                           autoFocus
@@ -657,23 +713,22 @@
                             setSearchOpen(false);
                             setSearchQuery('');
                           }}
-                          className="w-5 h-5 rounded-full flex items-center justify-center opacity-60 hover:opacity-100 transition cursor-pointer text-xs"
+                          className="w-5 h-5 rounded-full flex items-center justify-center opacity-60 hover:opacity-100 transition active:scale-95 cursor-pointer text-xs"
                         >
                           <i className="fa-solid fa-xmark text-xs"></i>
                         </button>
                       </div>
                     )}
 
-                    {/* Resultados del buscador */}
                     {searchOpen && searchQuery.trim() !== '' && (
                       <div className={`absolute right-0 top-12 w-72 sm:w-80 ${isLight ? 'bg-white text-stone-950 border-stone-300' : 'bg-stone-900 text-white border-white/10'} p-3 rounded-2xl shadow-2xl border z-40`}>
-                        <div className="max-h-48 overflow-y-auto space-y-1">
+                        <div className="max-h-48 overflow-y-auto space-y-1 no-scrollbar">
                           {filteredProducts.length > 0 ? (
                             filteredProducts.map(prod => (
                               <div 
                                 key={prod.id}
                                 onClick={() => selectSearchedItem(prod)}
-                                className={`flex items-center justify-between p-2 rounded-xl ${isLight ? 'hover:bg-stone-100' : 'hover:bg-white/10'} cursor-pointer transition text-xs`}
+                                className={`flex items-center justify-between p-2 rounded-xl ${isLight ? 'hover:bg-stone-100' : 'hover:bg-white/10'} cursor-pointer transition text-xs active:scale-98`}
                               >
                                 <div className="flex items-center gap-2">
                                   <img src={prod.image} alt={prod.title} className="w-8 h-8 object-cover rounded-lg" />
@@ -683,32 +738,37 @@
                               </div>
                             ))
                           ) : (
-                            <div className="p-3 text-center text-xs opacity-50">No se encontraron resultados</div>
+                            <div className="p-3 text-center text-xs opacity-50">No hay coincidencias en el menú</div>
                           )}
                         </div>
                       </div>
                     )}
                   </div>
 
-                  {/* Botón Carrito con Ref para Animación Fly-to-Cart */}
                   <button 
                     ref={cartButtonRef}
                     onClick={() => setCartOpen(true)}
-                    className={`w-10 h-10 rounded-full ${isLight ? 'bg-black/10 border-stone-900/20 text-stone-900 hover:bg-black/20' : 'bg-black/20 border-white/20 text-white hover:bg-black/30'} backdrop-blur-md flex items-center justify-center border transition relative cursor-pointer shadow-md`}
+                    className={`w-10 h-10 rounded-full ${isLight ? 'bg-black/10 border-stone-900/20 text-stone-900 hover:bg-black/20' : 'bg-black/20 border-white/20 text-white hover:bg-black/30'} backdrop-blur-md flex items-center justify-center border transition relative active:scale-95 cursor-pointer shadow-md`}
                   >
                     <i className="fa-solid fa-bag-shopping text-xs"></i>
-                    {cart.reduce((sum, item) => sum + item.quantity, 0) > 0 && (
+                    {totalCartItems > 0 && (
                       <span className={`absolute -top-1 -right-1 w-4 h-4 bg-orange-500 text-white rounded-full text-[10px] flex items-center justify-center font-bold ${badgePulsing ? 'badge-bounce' : ''}`}>
-                        {cart.reduce((sum, item) => sum + item.quantity, 0)}
+                        {totalCartItems}
                       </span>
                     )}
                   </button>
-
                 </div>
               </header>
 
-              {/* Menú de categorías móvil compacto y fijo */}
-              <div className={`flex md:hidden overflow-x-auto px-4 py-1.5 gap-2 scrollbar-none z-20 border-b ${isLight ? 'border-stone-900/10 bg-black/5 text-stone-900' : 'border-white/10 bg-black/15 text-white'} backdrop-blur-md justify-start shrink-0`}>
+              {/* Menú de categorías móvil compacto con auto-scroll fluido */}
+              <div 
+                ref={mobileCategoriesRef}
+                onTouchStart={() => { isUserInteractingRef.current = true; }}
+                onTouchEnd={() => { setTimeout(() => { isUserInteractingRef.current = false; }, 2500); }}
+                onMouseEnter={() => { isUserInteractingRef.current = true; }}
+                onMouseLeave={() => { isUserInteractingRef.current = false; }}
+                className={`flex md:hidden overflow-x-auto px-4 py-1.5 gap-2 scrollbar-none z-20 border-b ${isLight ? 'border-stone-900/10 bg-black/5 text-stone-900' : 'border-white/10 bg-black/15 text-white'} backdrop-blur-md justify-start shrink-0`}
+              >
                 {Object.keys(categoriesData).map((catKey) => {
                   const isActive = activeCategory === catKey;
                   const cat = categoriesData[catKey];
@@ -716,7 +776,7 @@
                     <button
                       key={catKey}
                       onClick={() => handleCategoryChange(catKey)}
-                      className={`px-3.5 py-1 rounded-full text-[10px] tracking-wider whitespace-nowrap transition-all duration-300 cursor-pointer flex items-center gap-1.5 ${
+                      className={`px-3.5 py-1 rounded-full text-[10px] tracking-wider whitespace-nowrap transition-all duration-300 cursor-pointer flex items-center gap-1.5 shrink-0 active:scale-95 ${
                         isActive 
                           ? `${isLight ? 'bg-stone-950 text-white font-bold' : 'bg-white/30 text-white font-bold'} scale-105` 
                           : `${isLight ? 'text-stone-900/80' : 'text-white/80'}`
@@ -729,11 +789,10 @@
                 })}
               </div>
 
-              {/* 2. Main Hero Section con Transición Fluida y Zoom Interactivo al Tocar */}
+              {/* 3. Main Hero Section */}
               <main className="flex-1 flex items-center justify-center px-4 md:px-8 py-1 lg:py-2 z-10 w-full overflow-hidden">
                 <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-12 items-center mx-auto">
                   
-                  {/* Columna Izquierda (Desktop): Título, descripción, selectores y controles */}
                   <div className="lg:col-span-5 hidden lg:flex flex-col justify-center space-y-4 order-1 text-left pt-2">
                     <div className={`space-y-3 lg:space-y-4 transition-all duration-300 ease-out ${animating ? 'opacity-0 -translate-x-6 scale-95' : 'opacity-100 translate-x-0 scale-100'}`}>
                       <h1 className="text-4xl lg:text-6xl font-extrabold tracking-tight leading-tight whitespace-nowrap drop-shadow-sm">
@@ -744,7 +803,6 @@
                         {selectedItem.description}
                       </p>
 
-                      {/* Selector de Sabor (Bebidas) */}
                       {selectedItem.hasFlavorSelector && (
                         <div className="space-y-1.5 pt-1">
                           <label className="text-xs font-bold uppercase tracking-wider opacity-90 block">Elige tu sabor:</label>
@@ -753,7 +811,7 @@
                               <button
                                 key={flavor}
                                 onClick={() => setSelectedFlavor(flavor)}
-                                className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+                                className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all active:scale-95 cursor-pointer ${
                                   selectedFlavor === flavor
                                     ? 'bg-orange-500 border-orange-400 text-white shadow-md scale-105'
                                     : `${isLight ? 'bg-black/5 border-stone-900/20 text-stone-900 hover:bg-black/10' : 'bg-black/30 border-white/20 text-white/90 hover:bg-black/50'}`
@@ -766,7 +824,6 @@
                         </div>
                       )}
 
-                      {/* Selector de Proteína (Onigiri / Hand Roll) */}
                       {selectedItem.hasProteinSelector && (
                         <div className="space-y-1.5 pt-1">
                           <label className="text-xs font-bold uppercase tracking-wider opacity-90 block">Elige tu proteína:</label>
@@ -775,7 +832,7 @@
                               <button
                                 key={protein}
                                 onClick={() => setSelectedProtein(protein)}
-                                className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+                                className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all active:scale-95 cursor-pointer ${
                                   selectedProtein === protein
                                     ? 'bg-orange-500 border-orange-400 text-white shadow-md scale-105'
                                     : `${isLight ? 'bg-black/5 border-stone-900/20 text-stone-900 hover:bg-black/10' : 'bg-black/30 border-white/20 text-white/90 hover:bg-black/50'}`
@@ -788,21 +845,32 @@
                         </div>
                       )}
 
-                      {/* Control de Cantidad y Botón Añadir al Carrito */}
+                      {/* Campo de notas especiales */}
+                      <div className="space-y-1 pt-1">
+                        <label className="text-xs font-bold uppercase tracking-wider opacity-90 block">Notas especiales (opcional):</label>
+                        <input 
+                          type="text" 
+                          placeholder="Ej. Sin cebollín, salsa extra..."
+                          value={specialNotes}
+                          onChange={(e) => setSpecialNotes(e.target.value)}
+                          className={`w-full ${isLight ? 'bg-black/5 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/30 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-xl px-3 py-2 text-xs outline-none focus:border-orange-500 transition`}
+                        />
+                      </div>
+
                       <div className="pt-2 flex items-center gap-4">
                         <div className={`flex items-center rounded-full border px-3 py-1.5 ${isLight ? 'bg-black/5 border-stone-900/20' : 'bg-black/30 border-white/25'} backdrop-blur-md shadow-md`}>
-                          <button onClick={decreaseQty} className="w-7 h-7 flex items-center justify-center font-bold text-base hover:opacity-75 transition cursor-pointer">
+                          <button onClick={decreaseQty} className="w-7 h-7 flex items-center justify-center font-bold text-base active:scale-90 transition cursor-pointer">
                             <i className="fa-solid fa-minus text-xs"></i>
                           </button>
                           <span className="w-8 text-center font-bold text-sm">{quantity}</span>
-                          <button onClick={increaseQty} className="w-7 h-7 flex items-center justify-center font-bold text-base hover:opacity-75 transition cursor-pointer">
+                          <button onClick={increaseQty} className="w-7 h-7 flex items-center justify-center font-bold text-base active:scale-90 transition cursor-pointer">
                             <i className="fa-solid fa-plus text-xs"></i>
                           </button>
                         </div>
 
                         <button 
                           onClick={addToCart}
-                          className={`font-semibold px-8 py-3.5 rounded-full flex items-center gap-3 transition shadow-xl text-sm group cursor-pointer border ${isLight ? 'bg-stone-950 text-white border-black hover:bg-stone-900' : 'bg-stone-950 text-white border-white/20 hover:bg-black'}`}
+                          className={`font-semibold px-8 py-3.5 rounded-full flex items-center gap-3 transition active:scale-95 shadow-xl text-sm group cursor-pointer border ${isLight ? 'bg-stone-950 text-white border-black hover:bg-stone-900' : 'bg-stone-950 text-white border-white/20 hover:bg-black'}`}
                         >
                           Añadir al carrito 
                           <span className="w-6 h-6 bg-white text-stone-950 rounded-full flex items-center justify-center text-xs font-bold group-hover:translate-x-1 transition">
@@ -813,17 +881,15 @@
                     </div>
                   </div>
 
-                  {/* Versión Móvil: Título superior optimizado */}
                   <div className={`flex lg:hidden flex-col items-center text-center order-1 pt-0.5 pb-0 transition-all duration-300 ease-out ${animating ? 'opacity-0 scale-90' : 'opacity-100 scale-100'}`}>
                     <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight whitespace-nowrap drop-shadow-sm">
                       <span>{selectedItem.title}</span>
                     </h1>
                   </div>
 
-                  {/* Columna Central: Visor de Producto con Zoom Interactivo al Tocar */}
                   <div className="lg:col-span-4 relative flex flex-col items-center justify-center order-2">
-                    <div className="relative w-full h-[210px] sm:h-[260px] lg:h-[420px] flex items-center justify-center my-0">
-                      <div className={`absolute w-48 h-48 sm:w-64 sm:h-64 ${isLight ? 'bg-white/60' : 'bg-white/20'} rounded-full blur-3xl pointer-events-none transition-all duration-500`}></div>
+                    <div className="relative w-full h-[190px] sm:h-[240px] lg:h-[420px] flex items-center justify-center my-0">
+                      <div className={`absolute w-44 h-44 sm:w-64 sm:h-64 ${isLight ? 'bg-white/60' : 'bg-white/20'} rounded-full blur-3xl pointer-events-none transition-all duration-500`}></div>
                       
                       <img 
                         ref={productImgRef}
@@ -834,7 +900,7 @@
                         onMouseDown={() => setIsImageZoomed(true)}
                         onMouseUp={() => setIsImageZoomed(false)}
                         onMouseLeave={() => setIsImageZoomed(false)}
-                        className={`max-h-[190px] sm:max-h-[240px] lg:max-h-full max-w-full object-contain drop-shadow-[0_20px_20px_rgba(0,0,0,0.5)] transition-all duration-300 ease-out cursor-pointer select-none ${
+                        className={`max-h-[170px] sm:max-h-[220px] lg:max-h-full max-w-full object-contain drop-shadow-[0_20px_20px_rgba(0,0,0,0.5)] transition-all duration-300 ease-out cursor-pointer select-none ${
                           isImageZoomed ? 'scale-135 sm:scale-150 rotate-1' : 'scale-110 sm:scale-125 lg:scale-100'
                         } ${animating ? 'opacity-0 scale-75 rotate-3 translate-y-4' : 'opacity-100 translate-y-0'}`}
                         onError={(e)=>{
@@ -843,13 +909,11 @@
                       />
                     </div>
 
-                    {/* Descripción, Selectores y Controles en Móvil */}
-                    <div className={`flex lg:hidden flex-col items-center text-center space-y-1.5 w-full px-2 mt-0.5 mb-1 transition-all duration-300 ease-out ${animating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
+                    <div className={`flex lg:hidden flex-col items-center text-center space-y-1 w-full px-2 mt-0 mb-1 transition-all duration-300 ease-out ${animating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
                       <p className={`text-[11px] sm:text-xs font-medium leading-tight max-w-xs ${isLight ? 'text-stone-900/90' : 'text-white/95'} drop-shadow line-clamp-2`}>
                         {selectedItem.description}
                       </p>
 
-                      {/* Selector de Sabor (Móvil) */}
                       {selectedItem.hasFlavorSelector && (
                         <div className="space-y-0.5 w-full max-w-xs">
                           <label className="text-[9px] font-bold uppercase tracking-wider opacity-90 block text-center">Elige tu sabor:</label>
@@ -858,7 +922,7 @@
                               <button
                                 key={flavor}
                                 onClick={() => setSelectedFlavor(flavor)}
-                                className={`px-2 py-0.5 rounded-lg text-[9px] font-semibold border transition-all cursor-pointer ${
+                                className={`px-2 py-0.5 rounded-lg text-[9px] font-semibold border transition-all active:scale-95 cursor-pointer ${
                                   selectedFlavor === flavor
                                     ? 'bg-orange-500 border-orange-400 text-white shadow-md scale-105'
                                     : `${isLight ? 'bg-black/5 border-stone-900/20 text-stone-900' : 'bg-black/30 border-white/20 text-white/90'}`
@@ -871,7 +935,6 @@
                         </div>
                       )}
 
-                      {/* Selector de Proteína (Móvil - Onigiri / Hand Roll) */}
                       {selectedItem.hasProteinSelector && (
                         <div className="space-y-0.5 w-full max-w-xs">
                           <label className="text-[9px] font-bold uppercase tracking-wider opacity-90 block text-center">Elige tu proteína:</label>
@@ -880,7 +943,7 @@
                               <button
                                 key={protein}
                                 onClick={() => setSelectedProtein(protein)}
-                                className={`px-2 py-0.5 rounded-lg text-[9px] font-semibold border transition-all cursor-pointer ${
+                                className={`px-2 py-0.5 rounded-lg text-[9px] font-semibold border transition-all active:scale-95 cursor-pointer ${
                                   selectedProtein === protein
                                     ? 'bg-orange-500 border-orange-400 text-white shadow-md scale-105'
                                     : `${isLight ? 'bg-black/5 border-stone-900/20 text-stone-900' : 'bg-black/30 border-white/20 text-white/90'}`
@@ -893,37 +956,45 @@
                         </div>
                       )}
 
-                      {/* Selector de Salsas Inteligente por Cantidad (Móvil) */}
+                      {/* Campo de notas especiales para móvil */}
+                      <div className="w-full max-w-xs">
+                        <input 
+                          type="text" 
+                          placeholder="Nota (ej. sin cebollín)..."
+                          value={specialNotes}
+                          onChange={(e) => setSpecialNotes(e.target.value)}
+                          className={`w-full ${isLight ? 'bg-black/5 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/30 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-xl px-2.5 py-1 text-[10px] outline-none focus:border-orange-500 transition`}
+                        />
+                      </div>
+
                       <div className="space-y-1 w-full max-w-xs bg-black/25 p-1.5 rounded-2xl border border-white/10">
                         <div className="flex justify-between items-center px-1">
-                          <span className="text-[9px] font-bold uppercase tracking-wider opacity-90">Salsas Incluidas ({soyaCount + teriyakiCount}/{quantity}):</span>
+                          <span className="text-[9px] font-bold uppercase tracking-wider opacity-90">Salsas ({soyaCount + teriyakiCount}/{quantity}):</span>
                           <span className={`text-[8px] font-bold ${soyaCount + teriyakiCount === quantity ? 'text-emerald-400' : 'text-orange-300'}`}>
                             {soyaCount + teriyakiCount === quantity ? '¡Completo!' : 'Asigna todas'}
                           </span>
                         </div>
                         <div className="grid grid-cols-2 gap-2">
-                          {/* Soya */}
-                          <div className="flex items-center justify-between bg-black/30 px-2 py-1 rounded-xl border border-white/10">
+                          <div className="flex items-center justify-between bg-black/30 px-2 py-0.5 rounded-xl border border-white/10">
                             <span className="text-[10px] font-bold">Soya</span>
                             <div className="flex items-center gap-1.5">
-                              <button onClick={() => updateSoya(-1)} className="w-5 h-5 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[9px] font-bold">
+                              <button onClick={() => updateSoya(-1)} className="w-5 h-5 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[9px] font-bold active:scale-90">
                                 <i className="fa-solid fa-minus"></i>
                               </button>
                               <span className="text-xs font-bold w-3 text-center">{soyaCount}</span>
-                              <button onClick={() => updateSoya(1)} className="w-5 h-5 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[9px] font-bold">
+                              <button onClick={() => updateSoya(1)} className="w-5 h-5 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[9px] font-bold active:scale-90">
                                 <i className="fa-solid fa-plus"></i>
                               </button>
                             </div>
                           </div>
-                          {/* Teriyaki */}
-                          <div className="flex items-center justify-between bg-black/30 px-2 py-1 rounded-xl border border-white/10">
+                          <div className="flex items-center justify-between bg-black/30 px-2 py-0.5 rounded-xl border border-white/10">
                             <span className="text-[10px] font-bold">Teriyaki</span>
                             <div className="flex items-center gap-1.5">
-                              <button onClick={() => updateTeriyaki(-1)} className="w-5 h-5 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[9px] font-bold">
+                              <button onClick={() => updateTeriyaki(-1)} className="w-5 h-5 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[9px] font-bold active:scale-90">
                                 <i className="fa-solid fa-minus"></i>
                               </button>
                               <span className="text-xs font-bold w-3 text-center">{teriyakiCount}</span>
-                              <button onClick={() => updateTeriyaki(1)} className="w-5 h-5 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[9px] font-bold">
+                              <button onClick={() => updateTeriyaki(1)} className="w-5 h-5 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[9px] font-bold active:scale-90">
                                 <i className="fa-solid fa-plus"></i>
                               </button>
                             </div>
@@ -931,14 +1002,13 @@
                         </div>
                       </div>
 
-                      {/* Controles de Cantidad Principal y Botón */}
-                      <div className="flex items-center gap-3 pt-1 pb-0.5">
+                      <div className="flex items-center gap-3 pt-0.5 pb-0.5">
                         <div className={`flex items-center rounded-full border px-2.5 py-1 ${isLight ? 'bg-black/5 border-stone-900/20' : 'bg-black/30 border-white/25'} backdrop-blur-md`}>
-                          <button onClick={decreaseQty} className="w-5 h-5 flex items-center justify-center font-bold text-xs">
+                          <button onClick={decreaseQty} className="w-5 h-5 flex items-center justify-center font-bold text-xs active:scale-90">
                             <i className="fa-solid fa-minus text-[9px]"></i>
                           </button>
                           <span className="w-5 text-center font-bold text-xs">{quantity}</span>
-                          <button onClick={increaseQty} className="w-5 h-5 flex items-center justify-center font-bold text-xs">
+                          <button onClick={increaseQty} className="w-5 h-5 flex items-center justify-center font-bold text-xs active:scale-90">
                             <i className="fa-solid fa-plus text-[9px]"></i>
                           </button>
                         </div>
@@ -946,7 +1016,7 @@
                         <button 
                           onClick={addToCart}
                           disabled={soyaCount + teriyakiCount !== quantity}
-                          className={`font-semibold px-5 py-2.5 rounded-full flex items-center gap-2 transition shadow-xl text-xs group cursor-pointer border ${
+                          className={`font-semibold px-5 py-2 rounded-full flex items-center gap-2 transition active:scale-95 shadow-xl text-xs group cursor-pointer border ${
                             soyaCount + teriyakiCount !== quantity 
                               ? 'opacity-50 cursor-not-allowed bg-stone-800 text-white/50 border-white/10' 
                               : isLight ? 'bg-stone-950 text-white border-black hover:bg-stone-900' : 'bg-stone-950 text-white border-white/20 hover:bg-black'
@@ -960,34 +1030,29 @@
                       </div>
                     </div>
 
-                    <div className="text-center mt-2 hidden lg:block">
+                    <div className="text-center mt-1 hidden lg:block">
                       <p className={`font-serif italic text-xs sm:text-sm tracking-wide ${isLight ? 'text-stone-950/80' : 'text-white/95'} drop-shadow`}>
                         Calidad y sabor,<br /> frescos en cada bocado
                       </p>
                     </div>
                   </div>
 
-                  {/* Columna Derecha: Precio Actual y Miniaturas */}
                   <div className="lg:col-span-3 flex flex-col justify-center items-center lg:items-end space-y-4 lg:space-y-8 order-3 pb-2 lg:pb-0">
-                    
-                    {/* Precio actual (Desktop) */}
                     <div className={`hidden lg:block text-center lg:text-right space-y-1 transition-all duration-300 ease-out ${animating ? 'opacity-0 scale-90 translate-y-2' : 'opacity-100 scale-100 translate-y-0'}`}>
                       <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight drop-shadow-sm">{selectedItem.price}</div>
                     </div>
 
-                    {/* Precio en móvil */}
                     <div className={`flex lg:hidden text-2xl font-extrabold text-white drop-shadow-md my-0.5 transition-all duration-300 ease-out ${animating ? 'opacity-0' : 'opacity-100'}`}>
                       {selectedItem.price}
                     </div>
 
-                    {/* Miniaturas interactivas */}
                     <div className="space-y-2 w-full flex flex-col items-center lg:items-end">
                       <div className="flex gap-2 sm:gap-3 justify-center lg:justify-end flex-wrap max-w-xs">
                         {categoriesData[activeCategory].items.map((item) => (
                           <button
                             key={item.id}
                             onClick={() => handleItemChange(item)}
-                            className={`w-12 h-14 sm:w-14 sm:h-16 rounded-xl overflow-hidden border-2 transition-all duration-300 relative cursor-pointer ${isLight ? 'bg-black/10' : 'bg-black/30'} shadow-md flex items-center justify-center p-1 ${
+                            className={`w-12 h-14 sm:w-14 sm:h-16 rounded-xl overflow-hidden border-2 transition-all duration-300 relative cursor-pointer active:scale-95 ${isLight ? 'bg-black/10' : 'bg-black/30'} shadow-md flex items-center justify-center p-1 ${
                               selectedItem.id === item.id
                                 ? `${isLight ? 'border-stone-950 ring-2 ring-stone-950/40' : 'border-white ring-2 ring-white/50'} scale-110 shadow-xl`
                                 : `${isLight ? 'border-stone-900/30 opacity-70 hover:opacity-100' : 'border-white/30 opacity-70 hover:opacity-100'}`
@@ -1011,25 +1076,31 @@
                 </div>
               </main>
 
-              {/* 3. Modal de Resumen de Pedido & Formulario WhatsApp */}
+              {/* Modal de Resumen de Pedido & Formulario WhatsApp */}
               {cartOpen && (
                 <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-4">
                   
                   <div className={`bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} rounded-3xl max-w-md lg:max-w-6xl w-full p-5 lg:p-10 shadow-2xl border ${isLight ? 'border-stone-900/20' : 'border-white/20'} relative animate-in fade-in zoom-in duration-200 max-h-[92vh] lg:max-h-[90vh] overflow-y-auto no-scrollbar`}>
                     
-                    {/* Botón cerrar */}
                     <button 
                       type="button"
                       onClick={(e) => {
                         e.stopPropagation();
                         setCartOpen(false);
                       }}
-                      className={`absolute top-5 right-5 w-8 h-8 rounded-full ${isLight ? 'bg-black/10 hover:bg-black/20 text-stone-950' : 'bg-white/10 hover:bg-white/20 text-white'} flex items-center justify-center transition cursor-pointer z-20 font-bold text-sm`}
+                      className={`absolute top-5 right-5 w-8 h-8 rounded-full ${isLight ? 'bg-black/10 hover:bg-black/20 text-stone-950' : 'bg-white/10 hover:bg-white/20 text-white'} flex items-center justify-center transition active:scale-90 cursor-pointer z-20 font-bold text-sm`}
                     >
                       <i className="fa-solid fa-xmark text-xs"></i>
                     </button>
 
                     <h3 className="text-xl lg:text-2xl font-extrabold mb-4 lg:mb-6 tracking-wide drop-shadow-sm pr-12">Resumen de tu Pedido</h3>
+
+                    {!isOpen && (
+                      <div className="mb-4 bg-amber-500/20 border border-amber-400/40 p-3 rounded-2xl text-xs flex items-center gap-2.5 text-amber-200">
+                        <i className="fa-solid fa-clock text-amber-400 text-sm"></i>
+                        <span>El local se encuentra cerrado en este momento. Tu pedido se enviará programado para la próxima apertura (11:00 AM).</span>
+                      </div>
+                    )}
 
                     {orderSuccess ? (
                       <div className="py-16 text-center space-y-3">
@@ -1047,13 +1118,12 @@
                     ) : (
                       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-start">
                         
-                        {/* Columna Izquierda: Resumen de Bolsa */}
                         <div className="lg:col-span-5 flex flex-col space-y-3">
                           <div className="flex items-center justify-between border-b pb-2 border-white/15">
                             <span className="text-xs uppercase tracking-wider font-bold opacity-90">Productos en tu bolsa</span>
                             <button 
                               onClick={clearCart}
-                              className="text-xs font-bold text-red-400 hover:text-red-300 transition flex items-center gap-1.5 cursor-pointer"
+                              className="text-xs font-bold text-red-400 hover:text-red-300 transition flex items-center gap-1.5 cursor-pointer active:scale-95"
                             >
                               <i className="fa-solid fa-trash-can text-xs"></i> Vaciar carrito
                             </button>
@@ -1071,18 +1141,18 @@
                                 </div>
                                 <div className="flex items-center gap-2 shrink-0">
                                   <div className={`flex items-center ${isLight ? 'bg-white/60 border-stone-900/20' : 'bg-stone-900 border-white/20'} border rounded-lg px-1.5 py-0.5`}>
-                                    <button onClick={() => updateCartItemQty(item.cartItemId, -1)} className="px-1 text-xs font-bold cursor-pointer">
+                                    <button onClick={() => updateCartItemQty(item.cartItemId, -1)} className="px-1 text-xs font-bold cursor-pointer active:scale-90">
                                       <i className="fa-solid fa-minus text-[7px]"></i>
                                     </button>
                                     <span className="w-5 text-center text-xs font-bold">{item.quantity}</span>
-                                    <button onClick={() => updateCartItemQty(item.cartItemId, 1)} className="px-1 text-xs font-bold cursor-pointer">
+                                    <button onClick={() => updateCartItemQty(item.cartItemId, 1)} className="px-1 text-xs font-bold cursor-pointer active:scale-90">
                                       <i className="fa-solid fa-plus text-[7px]"></i>
                                     </button>
                                   </div>
                                   <span className="font-bold text-xs w-12 text-right">${(item.rawPrice * item.quantity).toLocaleString('es-CL')}</span>
                                   <button 
                                     onClick={() => removeCartItem(item.cartItemId)}
-                                    className="w-6 h-6 rounded-full bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white flex items-center justify-center transition cursor-pointer text-xs"
+                                    className="w-6 h-6 rounded-full bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white flex items-center justify-center transition cursor-pointer text-xs active:scale-90"
                                     title="Eliminar producto"
                                   >
                                     <i className="fa-solid fa-trash-can text-[9px]"></i>
@@ -1095,12 +1165,11 @@
                           <div className={`flex justify-between items-center pt-3 border-t ${isLight ? 'border-stone-900/20' : 'border-white/20'} font-bold text-sm lg:text-lg`}>
                             <span>Total a pagar:</span>
                             <span className="text-orange-400 text-base lg:text-xl">
-                              ${cart.reduce((acc, item) => acc + (item.rawPrice * item.quantity), 0).toLocaleString('es-CL')}
+                              ${totalCartAmount.toLocaleString('es-CL')}
                             </span>
                           </div>
                         </div>
 
-                        {/* Columna Derecha: Formulario de Envío y Pago */}
                         <div className="lg:col-span-7 flex flex-col space-y-3">
                           <form onSubmit={handleCheckoutSubmit} className="space-y-3">
                             <h4 className="text-xs font-bold uppercase tracking-wider opacity-90">Datos de Entrega & Pago (Santiago)</h4>
@@ -1124,7 +1193,6 @@
                                 className={`w-full ${isLight ? 'bg-white/60 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/40 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-xl px-3.5 py-2.5 text-xs lg:text-sm outline-none focus:border-orange-500 transition`}
                               />
 
-                              {/* Selector de Comuna */}
                               <div className="relative" ref={comunaRef}>
                                 <div 
                                   onClick={() => setComunaDropdownOpen(!comunaDropdownOpen)}
@@ -1147,7 +1215,7 @@
                                         className="bg-transparent w-full text-xs lg:text-sm outline-none placeholder-current placeholder-opacity-50"
                                       />
                                     </div>
-                                    <div className="max-h-40 overflow-y-auto space-y-1 pr-1">
+                                    <div className="max-h-40 overflow-y-auto space-y-1 pr-1 no-scrollbar">
                                       {filteredComunas.length > 0 ? (
                                         filteredComunas.map((comuna) => (
                                           <div 
@@ -1157,7 +1225,7 @@
                                               setComunaDropdownOpen(false);
                                               setComunaSearch('');
                                             }}
-                                            className={`px-3 py-2 rounded-xl text-xs lg:text-sm cursor-pointer transition ${
+                                            className={`px-3 py-2 rounded-xl text-xs lg:text-sm cursor-pointer transition active:scale-98 ${
                                               formData.comuna === comuna 
                                                 ? 'bg-orange-500 text-white font-bold' 
                                                 : `${isLight ? 'hover:bg-stone-100' : 'hover:bg-white/10'}`
@@ -1185,7 +1253,6 @@
                                 className={`w-full ${isLight ? 'bg-white/60 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/40 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-xl px-3.5 py-2.5 text-xs lg:text-sm outline-none focus:border-orange-500 transition`}
                               />
 
-                              {/* Selector de Pago */}
                               <div className="relative" ref={paymentRef}>
                                 <div 
                                   onClick={() => setPaymentDropdownOpen(!paymentDropdownOpen)}
@@ -1204,7 +1271,7 @@
                                           setFormData({...formData, paymentMethod: metodo});
                                           setPaymentDropdownOpen(false);
                                         }}
-                                        className={`px-3 py-2 rounded-xl text-xs lg:text-sm cursor-pointer transition ${
+                                        className={`px-3 py-2 rounded-xl text-xs lg:text-sm cursor-pointer transition active:scale-98 ${
                                           formData.paymentMethod === metodo 
                                             ? 'bg-orange-500 text-white font-bold' 
                                             : `${isLight ? 'hover:bg-stone-100' : 'hover:bg-white/10'}`
@@ -1218,10 +1285,9 @@
                               </div>
                             </div>
 
-                            {/* Botón WhatsApp */}
                             <button 
                               type="submit"
-                              className="w-full bg-stone-950 hover:bg-black text-white border border-white/20 font-bold py-3.5 rounded-2xl transition shadow-xl text-xs lg:text-sm uppercase tracking-wider cursor-pointer mt-2 flex items-center justify-center gap-2.5"
+                              className="w-full bg-stone-950 hover:bg-black text-white border border-white/20 font-bold py-3.5 rounded-2xl transition active:scale-95 shadow-xl text-xs lg:text-sm uppercase tracking-wider cursor-pointer mt-2 flex items-center justify-center gap-2.5"
                             >
                               <i className="fa-brands fa-whatsapp text-base text-emerald-400"></i>
                               Enviar Pedido por WhatsApp
