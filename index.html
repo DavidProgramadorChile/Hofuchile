@@ -773,23 +773,13 @@
                 </div>
               )}
 
-              {/* 1. Versión Móvil: Mini-barra superior ultra fina, delgada y minimalista, fondo negro sólido con icono de reloj FontAwesome */}
-              <div className="flex md:hidden w-full bg-black px-3 py-1 flex items-center justify-center z-40 border-b border-white/10 shrink-0">
+              {/* 1. Barra superior de estado y horario ultra fina, delgada y translúcida (Aplicada exactamente igual en Móvil y PC) */}
+              <div className="w-full bg-black/35 backdrop-blur-md px-3 lg:px-6 py-1 flex items-center justify-center z-40 border-b border-white/10 shrink-0">
                 <div className={`flex items-center gap-1.5 transition-opacity duration-300 ${dynamicIsland.show ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
-                  <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${isOpen ? 'bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.9)]' : 'bg-red-600 shadow-[0_0_6px_rgba(220,38,38,0.9)]'}`}></span>
-                  <i className="fa-solid fa-clock text-[9px] text-white/70 ml-0.5"></i>
-                  <span className="text-[9px] font-bold tracking-widest uppercase text-white/95">
+                  <span className={`w-1.5 h-1.5 lg:w-2 lg:h-2 rounded-full animate-pulse ${isOpen ? 'bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.9)]' : 'bg-red-600 shadow-[0_0_6px_rgba(220,38,38,0.9)]'}`}></span>
+                  <i className="fa-solid fa-clock text-[9px] lg:text-[10px] text-white/70 ml-0.5"></i>
+                  <span className="text-[9px] lg:text-[10px] font-bold tracking-widest uppercase text-white/95">
                     {isOpen ? 'ABIERTO • 12:00 PM - 11:30 PM' : 'CERRADO • 12:00 PM - 11:30 PM'}
-                  </span>
-                </div>
-              </div>
-
-              {/* 1. Versión PC: Intacta exactamente igual a como se dejó (Sin alteraciones) */}
-              <div className="hidden md:flex w-full bg-black/60 backdrop-blur-md px-6 py-2 items-center justify-center z-40 border-b border-white/10 shrink-0">
-                <div className={`flex items-center gap-2 transition-opacity duration-300 ${dynamicIsland.show ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
-                  <span className={`w-2.5 h-2.5 rounded-full animate-pulse ${isOpen ? 'bg-emerald-400' : 'bg-red-500'}`}></span>
-                  <span className="text-[11px] font-semibold tracking-wider uppercase text-white/95">
-                    {isOpen ? 'Abierto • 11:00 - 00:00' : 'Cerrado • Abre a las 11:00'}
                   </span>
                 </div>
               </div>
