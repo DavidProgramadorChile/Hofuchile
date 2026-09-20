@@ -164,12 +164,31 @@
             animation: cinematicFadeOut 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
-        @keyframes progressBarCountdown75 {
+        /* Duración exacta de 10 segundos para la barra de progreso */
+        @keyframes progressBarCountdown10 {
             0% { width: 100%; }
             100% { width: 0%; }
         }
-        .progress-bar-anim-75 {
-            animation: progressBarCountdown75 7.5s linear forwards;
+        .progress-bar-anim-10 {
+            animation: progressBarCountdown10 10s linear forwards;
+        }
+
+        /* Efecto visual de onda expansiva luminosa al tocar la pantalla para saltar */
+        @keyframes touchRipple {
+            0% { transform: scale(0); opacity: 0.8; }
+            100% { transform: scale(4); opacity: 0; }
+        }
+        .ripple-effect {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
+            width: 150px;
+            height: 150px;
+            margin-top: -75px;
+            margin-left: -75px;
+            animation: touchRipple 0.6s cubic-bezier(0, 0, 0.2, 1) forwards;
+            pointer-events: none;
+            z-index: 60;
         }
 
         /* Ocultar barras de scroll por defecto y mostrarlas con un estilo ultra sutil al hacer scroll */
@@ -417,9 +436,10 @@
         const METODOS_PAGO = ["Efectivo", "Tarjeta"];
 
         function HofuLanding() {
-          // Estados para la pantalla de bienvenida universal de alta gama (7.5 segundos, sin texto en esquina, subtítulo "SUSHI & GOHAN")
+          // Estados para la pantalla de bienvenida universal de alta gama (10 segundos, skip interactivo con onda luminosa)
           const [showUniversalWelcome, setShowUniversalWelcome] = useState(true);
           const [isUniversalWelcomeExiting, setIsUniversalWelcomeExiting] = useState(false);
+          const [ripples, setRipples] = useState([]);
 
           useEffect(() => {
             const timer = setTimeout(() => {
@@ -427,10 +447,30 @@
               setTimeout(() => {
                 setShowUniversalWelcome(false);
               }, 600);
-            }, 7500);
+            }, 10000);
 
             return () => clearTimeout(timer);
           }, []);
+
+          // Función para manejar el salto rápido interactivo al tocar/hacer clic en cualquier parte con efecto de onda luminosa
+          const handleWelcomeClick = (e) => {
+            if (isUniversalWelcomeExiting) return;
+
+            const rect = e.currentTarget.getBoundingClientRect();
+            const clientX = e.clientX !== undefined ? e.clientX : (e.touches && e.touches[0] ? e.touches[0].clientX : rect.width / 2);
+            const clientY = e.clientY !== undefined ? e.clientY : (e.touches && e.touches[0] ? e.touches[0].clientY : rect.height / 2);
+            
+            const x = clientX - rect.left;
+            const y = clientY - rect.top;
+            const newRipple = { id: Date.now(), x, y };
+
+            setRipples(prev => [...prev, newRipple]);
+            setIsUniversalWelcomeExiting(true);
+
+            setTimeout(() => {
+              setShowUniversalWelcome(false);
+            }, 600);
+          };
 
           const [activeCategory, setActiveCategory] = useState('favoritos');
           const [selectedItem, setSelectedItem] = useState(categoriesData.favoritos.items[0]);
@@ -816,16 +856,24 @@
           return (
             <div className={`h-full w-full bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-hidden select-none relative`}>
               
-              {/* Pantalla de Bienvenida / Intro Universal de Alta Gama (7.5s, sin texto en esquina, subtítulo "SUSHI & GOHAN") */}
+              {/* Pantalla de Bienvenida / Intro Universal de Alta Gama (10s, interactiva con click/tap to skip y ondas luminosas) */}
               {showUniversalWelcome && (
-                <div className={`flex fixed inset-0 z-50 cinematic-universal-bg items-center justify-center overflow-hidden ${isUniversalWelcomeExiting ? 'cinematic-exit' : ''}`}>
-                  
+                <div 
+                  onClick={handleWelcomeClick}
+                  onTouchStart={handleWelcomeClick}
+                  className={`flex fixed inset-0 z-50 cinematic-universal-bg items-center justify-center overflow-hidden cursor-pointer ${isUniversalWelcomeExiting ? 'cinematic-exit' : ''}`}
+                >
+                  {/* Ondas de expansión luminosa generadas al tocar/hacer clic */}
+                  {ripples.map(r => (
+                    <div key={r.id} className="ripple-effect" style={{ left: `${r.x}px`, top: `${r.y}px` }}></div>
+                  ))}
+
                   {/* Sello de ubicación minimalista inferior */}
-                  <div className="absolute bottom-8 right-8 text-[9px] sm:text-xs tracking-[0.3em] font-medium uppercase text-stone-900/60 select-none">
+                  <div className="absolute bottom-8 right-8 text-[9px] sm:text-xs tracking-[0.3em] font-medium uppercase text-stone-900/60 select-none pointer-events-none">
                     SANTIAGO DE CHILE
                   </div>
 
-                  <div className="relative w-full max-w-[1600px] px-6 sm:px-12 lg:px-16 flex flex-col items-center justify-center h-full text-center">
+                  <div className="relative w-full max-w-[1600px] px-6 sm:px-12 lg:px-16 flex flex-col items-center justify-center h-full text-center pointer-events-none">
                     <h1 className="text-6xl sm:text-9xl lg:text-[15rem] font-black tracking-[0.2em] uppercase cinematic-logo-text-deep select-none leading-none">
                       HŌFU
                     </h1>
@@ -839,9 +887,9 @@
                     </p>
                   </div>
 
-                  {/* Barra de progreso de lujo e indicador luminoso y delicado en la parte inferior */}
-                  <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-black/10 overflow-hidden shadow-inner">
-                    <div className="h-full bg-gradient-to-r from-stone-800 via-stone-950 to-stone-800 progress-bar-anim-75 relative">
+                  {/* Barra de progreso de lujo con duración exacta de 10 segundos e indicador luminoso */}
+                  <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-black/10 overflow-hidden shadow-inner pointer-events-none">
+                    <div className="h-full bg-gradient-to-r from-stone-800 via-stone-950 to-stone-800 progress-bar-anim-10 relative">
                       <div className="absolute top-0 right-0 bottom-0 w-8 bg-white/40 blur-sm animate-pulse"></div>
                     </div>
                   </div>
@@ -1386,7 +1434,7 @@
                     ) : (
                       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
                         
-                        {/* Columna de productos del carrito organizada: Nombre recto completo, salsa justo debajo, sin precio repetido */}
+                        {/* Columna de productos del carrito organizada: Nombre recto completo, salsa justo downregulated, sin precio repetido */}
                         <div className="lg:col-span-6 flex flex-col space-y-4">
                           <div className="flex items-center justify-between border-b pb-3 border-white/15">
                             <span className="text-xs uppercase tracking-wider font-bold opacity-95">Productos en tu bolsa</span>
