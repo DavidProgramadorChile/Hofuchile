@@ -606,11 +606,11 @@
               setLoaderActive(false);
             }, 1800);
 
-            let variantSuffix = '';
+            let variantTitle = selectedItem.title;
             if (selectedItem.hasFlavorSelector) {
-              variantSuffix = ` (${selectedFlavor})`;
+              variantTitle += ` (${selectedFlavor})`;
             } else if (selectedItem.hasProteinSelector) {
-              variantSuffix = ` [Proteína: ${selectedProtein}]`;
+              variantTitle += ` [Proteína: ${selectedProtein}]`;
             }
             
             let saucesParts = [];
@@ -618,11 +618,10 @@
               if (soyaCount > 0) saucesParts.push(`${soyaCount} Soya`);
               if (teriyakiCount > 0) saucesParts.push(`${teriyakiCount} Teriyaki`);
             }
-            const saucesSuffix = saucesParts.length > 0 ? ` [Salsas: ${saucesParts.join(', ')}]` : '';
-            const notesSuffix = (allowCustomizations && specialNotes.trim() !== '') ? ` [Nota: "${specialNotes.trim()}"]` : '';
+            const saucesText = saucesParts.length > 0 ? `Salsas: ${saucesParts.join(', ')}` : '';
+            const notesText = (allowCustomizations && specialNotes.trim() !== '') ? `Nota: "${specialNotes.trim()}"` : '';
 
-            const cartItemId = `${selectedItem.id}${variantSuffix}|S${soyaCount}T${teriyakiCount}|N${specialNotes}`;
-            const cartItemTitle = `${selectedItem.title}${variantSuffix}${saucesSuffix}${notesSuffix}`;
+            const cartItemId = `${selectedItem.id}|${variantTitle}|S${soyaCount}T${teriyakiCount}|N${specialNotes}`;
 
             setCart(prevCart => {
               const existingIndex = prevCart.findIndex(item => item.cartItemId === cartItemId);
@@ -634,7 +633,9 @@
                 return [...prevCart, { 
                   ...selectedItem, 
                   cartItemId, 
-                  displayTitle: cartItemTitle, 
+                  cleanTitle: variantTitle,
+                  saucesText,
+                  notesText,
                   quantity 
                 }];
               }
@@ -705,7 +706,10 @@
             }
             message += `*📋 DETALLE DE LA ORDEN:*\n`;
             cart.forEach((item, idx) => {
-              message += `${idx + 1}. ${item.displayTitle} x${item.quantity} - $${(item.rawPrice * item.quantity).toLocaleString('es-CL')}\n`;
+              let fullDesc = item.cleanTitle;
+              if (item.saucesText) fullDesc += ` [${item.saucesText}]`;
+              if (item.notesText) fullDesc += ` [${item.notesText}]`;
+              message += `${idx + 1}. ${fullDesc} x${item.quantity} - $${(item.rawPrice * item.quantity).toLocaleString('es-CL')}\n`;
             });
             message += `\n*💰 Total a pagar:* $${totalAmount.toLocaleString('es-CL')}\n`;
             message += `*💳 Método de pago:* ${formData.paymentMethod}\n\n`;
@@ -736,12 +740,9 @@
           const totalCartAmount = cart.reduce((acc, item) => acc + (item.rawPrice * item.quantity), 0);
 
           // Sistema de Contraste Inteligente Dinámico para la pantalla del carrito / resumen de pedido
-          // Detecta si el gradiente activo actual es claro/luminoso (amarillo, naranja, dorado, etc.) o oscuro/profundo
           const gradientStr = selectedItem.bgGradient;
           const isBackgroundLuminous = gradientStr.includes('amber-400') || gradientStr.includes('yellow-500') || gradientStr.includes('orange-400');
           
-          // Clases de contraste dinámicas según el brillo del fondo
-          const dynamicTextColor = isBackgroundLuminous ? 'text-stone-950 font-bold' : 'text-white font-medium';
           const dynamicPriceColor = isBackgroundLuminous ? 'text-stone-950 font-extrabold' : 'text-white font-extrabold';
           const dynamicIconContainerBg = isBackgroundLuminous ? 'bg-black/15 text-stone-950 hover:bg-black/25' : 'bg-white/15 text-white hover:bg-white/25';
           const dynamicClosedBannerBg = 'bg-black/40 backdrop-blur-md border border-white/10 shadow-lg';
@@ -1291,7 +1292,7 @@
                     ) : (
                       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
                         
-                        {/* Columna de productos del carrito con diseño holgado en móvil y nombre completo sin cortes en PC */}
+                        {/* Columna de productos del carrito organizada: Nombre recto completo, salsa justo debajo, sin precio repetido */}
                         <div className="lg:col-span-6 flex flex-col space-y-4">
                           <div className="flex items-center justify-between border-b pb-3 border-white/15">
                             <span className="text-xs uppercase tracking-wider font-bold opacity-95">Productos en tu bolsa</span>
@@ -1311,9 +1312,23 @@
                               <div key={item.cartItemId} className={`flex flex-col sm:flex-row sm:items-center justify-between ${isLight ? 'bg-white/40 border-stone-900/10' : 'bg-black/40 border-white/10'} backdrop-blur-md p-4 rounded-2xl border gap-3.5 shadow-md`}>
                                 <div className="flex items-start sm:items-center gap-3.5 min-w-0 flex-1">
                                   <img src={item.image} alt={item.title} className="w-12 h-12 sm:w-14 sm:h-14 object-cover rounded-xl shrink-0" />
-                                  <div className="min-w-0 flex-1">
-                                    <h4 className="font-bold text-xs sm:text-sm leading-relaxed whitespace-normal break-words">{item.displayTitle}</h4>
-                                    <p className={`text-xs mt-0.5 ${dynamicTextColor}`}>{item.price} c/u</p>
+                                  <div className="min-w-0 flex-1 flex flex-col justify-center">
+                                    {/* Nombre limpio y completo sin cortes */}
+                                    <h4 className="font-bold text-xs sm:text-sm leading-snug whitespace-normal break-words">{item.cleanTitle}</h4>
+                                    
+                                    {/* Salsa seleccionada justo debajo como línea secundaria descriptiva y ordenada */}
+                                    {item.saucesText && (
+                                      <span className={`text-[11px] font-medium opacity-90 mt-0.5 whitespace-normal break-words ${isBackgroundLuminous ? 'text-stone-950 font-semibold' : 'text-white/90'}`}>
+                                        {item.saucesText}
+                                      </span>
+                                    )}
+
+                                    {/* Nota especial si existe */}
+                                    {item.notesText && (
+                                      <span className={`text-[10px] italic opacity-80 mt-0.5 whitespace-normal break-words ${isBackgroundLuminous ? 'text-stone-950' : 'text-white/80'}`}>
+                                        {item.notesText}
+                                      </span>
+                                    )}
                                   </div>
                                 </div>
                                 <div className="flex items-center justify-between sm:justify-end gap-3.5 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-white/10">
