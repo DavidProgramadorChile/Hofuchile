@@ -153,7 +153,7 @@
         }
     </style>
 </head>
-<body class="bg-[#7c2d12] text-white selection:bg-orange-500 selection:text-white">
+<body class="bg-stone-950 text-white selection:bg-orange-500 selection:text-white">
 
     <div id="root" class="w-full h-full flex flex-col overflow-hidden"></div>
 
@@ -749,7 +749,7 @@
           const activeNeonColor = selectedItem.islandColor || '#10b981';
 
           return (
-            <div className="h-full w-full bg-gradient-to-br from-emerald-700 via-teal-800 to-stone-950 text-white native-transition flex flex-col overflow-hidden select-none relative" style={{ backgroundImage: `linear-gradient(to bottom right, var(--tw-gradient-stops))` }}>
+            <div className={`h-full w-full bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-hidden select-none relative`}>
               
               {/* Notificación tipo Dynamic Island optimizada: tamaño adaptativo en PC y con nombre de producto y proteína detallada */}
               {dynamicIsland.show && (
@@ -769,18 +769,14 @@
                 </div>
               )}
 
-              {/* 1. Mini-barra superior (Top Bar) con horario condicional y sin botón de pantalla completa en PC */}
-              <div className="w-full bg-black/60 backdrop-blur-md px-6 py-2 flex items-center justify-between z-40 border-b border-white/10 shrink-0">
-                <div className="flex items-center gap-2"></div>
-
+              {/* 1. Mini-barra superior (Top Bar) con horario condicional y sin botón de pantalla completa en ningún dispositivo */}
+              <div className="w-full bg-black/60 backdrop-blur-md px-6 py-2 flex items-center justify-center z-40 border-b border-white/10 shrink-0">
                 <div className={`flex items-center gap-2 transition-opacity duration-300 ${dynamicIsland.show ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
                   <span className={`w-2.5 h-2.5 rounded-full animate-pulse ${isOpen ? 'bg-emerald-400' : 'bg-red-500'}`}></span>
                   <span className="text-[11px] font-semibold tracking-wider uppercase text-white/95">
                     {isOpen ? 'Abierto • 11:00 - 00:00' : 'Cerrado • Abre a las 11:00'}
                   </span>
                 </div>
-
-                <div className="w-8"></div>
               </div>
 
               {/* 2. Navbar Principal con Buscador Predictivo (Logo HŌFU con escala aumentada en Modo Normal PC) */}
