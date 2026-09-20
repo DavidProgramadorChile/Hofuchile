@@ -114,7 +114,7 @@
             animation: badgePop 0.3s ease-in-out;
         }
 
-        /* Estilos de bienvenida universal cinematográfica de alta gama (Blanco puro con viñeteados oscuros intensificados y zoom suave) */
+        /* Estilos de bienvenida universal cinematográfica de alta gama (Blanco puro, viñeteados oscuros intensificados y zoom suave) */
         .cinematic-universal-bg {
             background-color: #ffffff; /* Blanco puro y elegante */
             background-image: 
@@ -134,6 +134,26 @@
                 0 0 25px rgba(0, 0, 0, 0.25),
                 0 20px 45px rgba(0, 0, 0, 0.35),
                 4px 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Animación para el subtítulo y el sello de marca con aparición suave */
+        @keyframes fadeInElements {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .intro-fade-in {
+            animation: fadeInElements 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+            opacity: 0;
+        }
+
+        /* Animación para estirar la línea divisoria ultra fina */
+        @keyframes lineStretch {
+            0% { width: 0%; opacity: 0; }
+            100% { width: 120px; opacity: 1; }
+        }
+        .intro-line-stretch {
+            animation: lineStretch 1s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+            width: 0%;
         }
 
         @keyframes cinematicFadeOut {
@@ -397,7 +417,7 @@
         const METODOS_PAGO = ["Efectivo", "Tarjeta"];
 
         function HofuLanding() {
-          // Estados para la pantalla de bienvenida universal (en ambas plataformas durante exactamente 7.5 segundos sin botón X)
+          // Estados para la pantalla de bienvenida universal de alta gama (7.5 segundos, sin botón X, subtítulo, línea y sello)
           const [showUniversalWelcome, setShowUniversalWelcome] = useState(true);
           const [isUniversalWelcomeExiting, setIsUniversalWelcomeExiting] = useState(false);
 
@@ -796,19 +816,38 @@
           return (
             <div className={`h-full w-full bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-hidden select-none relative`}>
               
-              {/* Pantalla de Bienvenida / Intro Universal de Alta Gama (7.5 segundos, sin botón X, viñeteados oscuros intensificados y sombreado de texto profundo) */}
+              {/* Pantalla de Bienvenida / Intro Universal de Alta Gama (7.5s, subtítulo elegante, línea animada, sello de marca y barra de lujo) */}
               {showUniversalWelcome && (
                 <div className={`flex fixed inset-0 z-50 cinematic-universal-bg items-center justify-center overflow-hidden ${isUniversalWelcomeExiting ? 'cinematic-exit' : ''}`}>
                   
-                  <div className="relative w-full max-w-[1600px] px-6 sm:px-12 lg:px-16 flex items-center justify-center h-full">
-                    <h1 className="text-6xl sm:text-9xl lg:text-[16rem] font-black tracking-[0.2em] uppercase cinematic-logo-text-deep select-none text-center">
-                      HŌFU
-                    </h1>
+                  {/* Sello de marca minimalista en la esquina superior izquierda / inferior */}
+                  <div className="absolute top-6 left-6 sm:top-10 sm:left-10 text-[9px] sm:text-xs tracking-[0.3em] font-medium uppercase text-stone-900/60 select-none hidden sm:block">
+                    EST. 2026 • HŌFU MASTER
                   </div>
 
-                  {/* Línea o barra de progreso minimalista y delgada ajustada exactamente a 7.5 segundos */}
-                  <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-black/10 overflow-hidden">
-                    <div className="h-full bg-stone-950 progress-bar-anim-75"></div>
+                  <div className="absolute bottom-8 right-8 text-[9px] sm:text-xs tracking-[0.3em] font-medium uppercase text-stone-900/60 select-none">
+                    SANTIAGO DE CHILE
+                  </div>
+
+                  <div className="relative w-full max-w-[1600px] px-6 sm:px-12 lg:px-16 flex flex-col items-center justify-center h-full text-center">
+                    <h1 className="text-6xl sm:text-9xl lg:text-[15rem] font-black tracking-[0.2em] uppercase cinematic-logo-text-deep select-none leading-none">
+                      HŌFU
+                    </h1>
+                    
+                    {/* Línea divisoria animada ultra fina */}
+                    <div className="h-[1.5px] bg-stone-900/40 my-4 sm:my-6 intro-line-stretch mx-auto"></div>
+
+                    {/* Subtítulo elegante y secundario */}
+                    <p className="text-[10px] sm:text-sm lg:text-base tracking-[0.4em] font-semibold text-stone-900/80 uppercase intro-fade-in select-none">
+                      JAPANESE FOOD &amp; SUSHI
+                    </p>
+                  </div>
+
+                  {/* Barra de progreso de lujo e indicador luminoso y delicado en la parte inferior */}
+                  <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-black/10 overflow-hidden shadow-inner">
+                    <div className="h-full bg-gradient-to-r from-stone-800 via-stone-950 to-stone-800 progress-bar-anim-75 relative">
+                      <div className="absolute top-0 right-0 bottom-0 w-8 bg-white/40 blur-sm animate-pulse"></div>
+                    </div>
                   </div>
                 </div>
               )}
