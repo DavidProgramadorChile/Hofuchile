@@ -114,34 +114,42 @@
             animation: badgePop 0.3s ease-in-out;
         }
 
-        /* Estilos para la Pantalla de Bienvenida de PC (Fondo amarillo brillante con viñeteado oscuro y texto HŌFU central) */
-        .welcome-bg-pc {
-            background-color: #facc15; /* Amarillo brillante */
+        /* Estilos cinematográficos para la pantalla de bienvenida / intro de PC */
+        .cinematic-welcome-bg {
+            background-color: #facc15; /* Amarillo brillante y cálido */
             background-image: 
                 radial-gradient(circle at 0% 0%, rgba(0, 0, 0, 0.55) 0%, transparent 45%),
                 radial-gradient(circle at 100% 100%, rgba(0, 0, 0, 0.6) 0%, transparent 50%);
         }
 
-        @keyframes welcomeScaleIn {
-            0% { opacity: 0; transform: scale(0.85); filter: blur(8px); }
+        @keyframes cinematicScaleIn {
+            0% { opacity: 0; transform: scale(0.85); filter: blur(12px); }
             100% { opacity: 1; transform: scale(1); filter: blur(0); }
         }
-        .welcome-logo-text {
-            animation: welcomeScaleIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        .cinematic-logo-text {
+            animation: cinematicScaleIn 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             color: #0c0a09; /* Negro elegante */
             text-shadow: 
-                0 0 2px rgba(0, 0, 0, 0.8),
-                0 0 10px rgba(0, 0, 0, 0.5),
-                0 15px 35px rgba(0, 0, 0, 0.4),
-                2px 2px 0px rgba(255, 255, 255, 0.3);
+                0 0 3px rgba(0, 0, 0, 0.85),
+                0 0 12px rgba(0, 0, 0, 0.45),
+                0 20px 40px rgba(0, 0, 0, 0.35),
+                2px 2px 0px rgba(255, 255, 255, 0.35);
         }
 
-        @keyframes welcomeFadeOut {
+        @keyframes cinematicFadeOut {
             0% { opacity: 1; transform: scale(1); }
             100% { opacity: 0; transform: scale(1.06); pointer-events: none; }
         }
-        .welcome-exit {
-            animation: welcomeFadeOut 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        .cinematic-exit {
+            animation: cinematicFadeOut 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes progressBarCountdown {
+            0% { width: 100%; }
+            100% { width: 0%; }
+        }
+        .progress-bar-anim {
+            animation: progressBarCountdown 10s linear forwards;
         }
 
         /* Ocultar barras de scroll por defecto y mostrarlas con un estilo ultra sutil al hacer scroll */
@@ -389,22 +397,22 @@
         const METODOS_PAGO = ["Efectivo", "Tarjeta"];
 
         function HofuLanding() {
-          // Estados para la pantalla de bienvenida / intro de PC (10 segundos con botón X)
-          const [showWelcomePC, setShowWelcomePC] = useState(true);
-          const [isWelcomeExiting, setIsWelcomeExiting] = useState(false);
+          // Estados para la pantalla de bienvenida cinematográfica de PC (10 segundos con barra de progreso y botón X)
+          const [showCinematicPC, setShowCinematicPC] = useState(true);
+          const [isCinematicExiting, setIsCinematicExiting] = useState(false);
 
           useEffect(() => {
             const timer = setTimeout(() => {
-              handleCloseWelcome();
+              handleCloseCinematic();
             }, 10000);
 
             return () => clearTimeout(timer);
           }, []);
 
-          const handleCloseWelcome = () => {
-            setIsWelcomeExiting(true);
+          const handleCloseCinematic = () => {
+            setIsCinematicExiting(true);
             setTimeout(() => {
-              setShowWelcomePC(false);
+              setShowCinematicPC(false);
             }, 600);
           };
 
@@ -792,23 +800,28 @@
           return (
             <div className={`h-full w-full bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-hidden select-none relative`}>
               
-              {/* Pantalla de Bienvenida EXCLUSIVAMENTE PARA PC (Fondo amarillo brillante, viñeteado oscuro, HŌFU central masivo y botón X) */}
-              {showWelcomePC && (
-                <div className={`hidden lg:flex fixed inset-0 z-50 welcome-bg-pc items-center justify-center overflow-hidden ${isWelcomeExiting ? 'welcome-exit' : ''}`}>
+              {/* Pantalla de Bienvenida / Intro Cinemática EXCLUSIVAMENTE PARA PC (Fondo amarillo con viñeteado, HŌFU central con relieve Glass Glow, barra de progreso y botón X) */}
+              {showCinematicPC && (
+                <div className={`hidden lg:flex fixed inset-0 z-50 cinematic-welcome-bg items-center justify-center overflow-hidden ${isCinematicExiting ? 'cinematic-exit' : ''}`}>
                   
-                  {/* Botón de cierre "X" en la esquina superior derecha */}
+                  {/* Botón de cierre "X" flotante en la esquina superior derecha con microinteracción hover */}
                   <button 
-                    onClick={handleCloseWelcome}
-                    className="absolute top-8 right-8 w-12 h-12 rounded-full bg-black/15 hover:bg-black/30 backdrop-blur-md text-stone-950 flex items-center justify-center transition active:scale-90 cursor-pointer z-50 shadow-2xl border border-black/25"
+                    onClick={handleCloseCinematic}
+                    className="absolute top-8 right-8 w-12 h-12 rounded-full bg-black/15 hover:bg-black/30 backdrop-blur-md text-stone-950 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-90 cursor-pointer z-50 shadow-2xl border border-black/25"
                     title="Omitir bienvenida"
                   >
                     <i className="fa-solid fa-xmark text-lg"></i>
                   </button>
 
                   <div className="relative w-full max-w-[1600px] px-16 flex items-center justify-center h-full">
-                    <h1 className="text-[12rem] lg:text-[16rem] font-black tracking-[0.2em] uppercase welcome-logo-text select-none text-center">
+                    <h1 className="text-[12rem] lg:text-[16rem] font-black tracking-[0.2em] uppercase cinematic-logo-text select-none text-center">
                       HŌFU
                     </h1>
+                  </div>
+
+                  {/* Línea o barra de progreso minimalista y delgada en la parte inferior */}
+                  <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-black/10 overflow-hidden">
+                    <div className="h-full bg-stone-950 progress-bar-anim"></div>
                   </div>
                 </div>
               )}
