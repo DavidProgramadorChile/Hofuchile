@@ -173,7 +173,7 @@
             transform: scale(0.92);
         }
 
-        /* Sombreado negro elegante, profundo y difuminado exclusivo para el Onigiri y Favoritos (#D7FF44) */
+        /* Sombreado negro elegante, profundo y difuminado exclusivo para el Onigiri */
         .onigiri-deep-shadow {
             filter: drop-shadow(0 25px 45px rgba(0, 0, 0, 0.35)) drop-shadow(0 10px 20px rgba(0, 0, 0, 0.25));
         }
@@ -213,7 +213,7 @@
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
-        // Estructura completa de categorías y productos con #D7FF44 para Favoritos / Onigiri
+        // Estructura completa de categorías y productos con #D7FF44 exclusivo para Onigiri
         const categoriesData = {
           favoritos: {
             name: 'FAVORITOS',
@@ -238,9 +238,9 @@
                 description: 'Base de Arroz • Queso Crema • Cebollín',
                 price: '$3.300',
                 rawPrice: 3300,
-                bgGradient: 'bg-[#D7FF44]',
-                islandColor: '#65a30d',
-                isLight: true,
+                bgGradient: 'bg-gradient-to-br from-rose-600 via-pink-700 to-stone-950',
+                islandColor: '#f43f5e', // Rosa fucsia vibrante
+                isLight: false,
                 image: 'img/handroll.png',
                 hasProteinSelector: true,
                 proteinas: ["Pollo apanado", "Camarón apanado", "Salmón", "Kanikama", "Champiñón salteado"]
