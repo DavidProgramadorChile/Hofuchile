@@ -196,7 +196,8 @@
                 islandColor: '#10b981', // Verde esmeralda vivo
                 isLight: false,
                 image: 'img/onigiri.png',
-                hasProteinSelector: true
+                hasProteinSelector: true,
+                proteinas: ["Pollo apanado", "Camarón apanado", "Salmón", "Champiñón salteado"] // Sin Kanikama para Onigiri
               },
               {
                 id: 'handroll',
@@ -208,7 +209,8 @@
                 islandColor: '#f43f5e', // Rosa fucsia vibrante
                 isLight: false,
                 image: 'img/handroll.png',
-                hasProteinSelector: true
+                hasProteinSelector: true,
+                proteinas: ["Pollo apanado", "Camarón apanado", "Salmón", "Kanikama", "Champiñón salteado"]
               }
             ]
           },
@@ -374,7 +376,6 @@
         };
 
         const SABORES_BEBIDAS = ["Coca-Cola", "Coca-Cola Zero", "Fanta", "Sprite"];
-        const PROTEINAS_HANDROLL = ["Pollo apanado", "Camarón apanado", "Salmón", "Kanikama", "Champiñón salteado"];
 
         const COMUNAS_SANTIAGO = [
           "Cerrillos", "Cerro Navia", "Conchalí", "El Bosque", "Estación Central", 
@@ -577,9 +578,12 @@
             setAnimating(true);
             setIsImageZoomed(false);
             setActiveCategory(categoryKey);
-            setSelectedItem(categoriesData[categoryKey].items[0]);
+            const firstItem = categoriesData[categoryKey].items[0];
+            setSelectedItem(firstItem);
             setSelectedFlavor('Coca-Cola');
-            setSelectedProtein('Pollo apanado');
+            if (firstItem.hasProteinSelector && firstItem.proteinas) {
+              setSelectedProtein(firstItem.proteinas[0]);
+            }
             setQuantity(1);
             setSoyaCount(1);
             setTeriyakiCount(0);
@@ -593,7 +597,9 @@
             setIsImageZoomed(false);
             setSelectedItem(item);
             setSelectedFlavor('Coca-Cola');
-            setSelectedProtein('Pollo apanado');
+            if (item.hasProteinSelector && item.proteinas) {
+              setSelectedProtein(item.proteinas[0]);
+            }
             setQuantity(1);
             setSoyaCount(1);
             setTeriyakiCount(0);
@@ -649,8 +655,19 @@
             setBadgePulsing(true);
             setLoaderActive(true);
             
-            // Nombre del producto incluido dinámicamente en la notificación para PC y móvil
-            triggerCustomDynamicIsland(`¡Añadido: ${selectedItem.title}! 🍣`, "fa-solid fa-check");
+            // Verificación para saber si estamos en PC (ancho >= 1024px)
+            const isDesktop = window.innerWidth >= 1024;
+
+            if (isDesktop && selectedItem.hasProteinSelector) {
+              // Notificación detallada con proteína exclusivamente para PC
+              triggerCustomDynamicIsland(`¡Añadido: ${selectedItem.title} de ${selectedProtein}! 🍣`, "fa-solid fa-check");
+            } else if (isDesktop) {
+              // Notificación detallada para productos normales en PC
+              triggerCustomDynamicIsland(`¡Añadido: ${selectedItem.title}! 🍣`, "fa-solid fa-check");
+            } else {
+              // Versión móvil intacta: estándar
+              triggerCustomDynamicIsland(`¡Añadido con éxito! 🍣`, "fa-solid fa-check");
+            }
 
             setTimeout(() => {
               setBadgePulsing(false);
@@ -733,7 +750,9 @@
             setActiveCategory(targetCat);
             setSelectedItem(item);
             setSelectedFlavor('Coca-Cola');
-            setSelectedProtein('Pollo apanado');
+            if (item.hasProteinSelector && item.proteinas) {
+              setSelectedProtein(item.proteinas[0]);
+            }
             setQuantity(1);
             setSoyaCount(1);
             setTeriyakiCount(0);
@@ -792,7 +811,7 @@
           return (
             <div className={`h-full w-full bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-hidden select-none relative ${isFullscreenActive ? 'fullscreen-active' : ''}`}>
               
-              {/* Notificación tipo Dynamic Island optimizada: tamaño adaptativo en PC y con nombre de producto incluido */}
+              {/* Notificación tipo Dynamic Island optimizada: tamaño adaptativo en PC y con nombre de producto y proteína detallada */}
               {dynamicIsland.show && (
                 <div className="fixed dynamic-island-wrapper left-0 right-0 z-50 flex justify-center pointer-events-none px-4">
                   <div 
@@ -1005,11 +1024,11 @@
                         </div>
                       )}
 
-                      {selectedItem.hasProteinSelector && (
+                      {selectedItem.hasProteinSelector && selectedItem.proteinas && (
                         <div className="space-y-2 pt-2">
                           <label className="text-xs font-bold uppercase tracking-wider opacity-90 block">Elige tu proteína:</label>
                           <div className="flex flex-wrap gap-2.5">
-                            {PROTEINAS_HANDROLL.map((protein) => (
+                            {selectedItem.proteinas.map((protein) => (
                               <button
                                 key={protein}
                                 onClick={() => setSelectedProtein(protein)}
@@ -1120,11 +1139,11 @@
                         </div>
                       )}
 
-                      {selectedItem.hasProteinSelector && (
+                      {selectedItem.hasProteinSelector && selectedItem.proteinas && (
                         <div className="space-y-0.5 w-full max-w-xs">
                           <label className="text-[10px] font-bold uppercase tracking-wider opacity-90 block text-center">Elige tu proteína:</label>
                           <div className="flex flex-wrap justify-center gap-1">
-                            {PROTEINAS_HANDROLL.map((protein) => (
+                            {selectedItem.proteinas.map((protein) => (
                               <button
                                 key={protein}
                                 onClick={() => setSelectedProtein(protein)}
