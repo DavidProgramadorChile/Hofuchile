@@ -735,6 +735,18 @@
           const totalCartItems = cart.reduce((sum, item) => sum + item.quantity, 0);
           const totalCartAmount = cart.reduce((acc, item) => acc + (item.rawPrice * item.quantity), 0);
 
+          // Sistema de Contraste Inteligente Dinámico para la pantalla del carrito / resumen de pedido
+          // Detecta si el gradiente activo actual es claro/luminoso (amarillo, naranja, dorado, etc.) o oscuro/profundo
+          const gradientStr = selectedItem.bgGradient;
+          const isBackgroundLuminous = gradientStr.includes('amber-400') || gradientStr.includes('yellow-500') || gradientStr.includes('orange-400');
+          
+          // Clases de contraste dinámicas según el brillo del fondo
+          const dynamicTextColor = isBackgroundLuminous ? 'text-stone-950 font-bold' : 'text-white font-medium';
+          const dynamicPriceColor = isBackgroundLuminous ? 'text-stone-950 font-extrabold' : 'text-white font-extrabold';
+          const dynamicIconContainerBg = isBackgroundLuminous ? 'bg-black/15 text-stone-950 hover:bg-black/25' : 'bg-white/15 text-white hover:bg-white/25';
+          const dynamicClosedBannerBg = 'bg-black/40 backdrop-blur-md border border-white/10 shadow-lg';
+          const dynamicClosedBannerText = isBackgroundLuminous ? 'text-white' : 'text-white';
+
           // Color neón e icono interior sincronizados exactamente con el color del producto/tema activo actual
           const activeNeonColor = selectedItem.islandColor || '#10b981';
 
@@ -1257,9 +1269,9 @@
                     <h3 className="text-2xl lg:text-3xl font-extrabold mb-6 tracking-wide drop-shadow-sm pr-12">Resumen de tu Pedido</h3>
 
                     {!isOpen && (
-                      <div className="mb-6 bg-amber-500/20 border border-amber-400/40 p-3.5 rounded-2xl text-xs lg:text-sm flex items-center gap-3 text-amber-200">
-                        <i className="fa-solid fa-clock text-amber-400 text-base"></i>
-                        <span>El local se encuentra cerrado en este momento. Tu pedido se enviará programado para la próxima apertura (12:00 PM).</span>
+                      <div className={`mb-6 p-3.5 rounded-2xl text-xs lg:text-sm flex items-center gap-3 shadow-lg ${dynamicClosedBannerBg} ${dynamicClosedBannerText}`}>
+                        <i className={`fa-solid fa-clock text-base ${isBackgroundLuminous ? 'text-stone-950' : 'text-white'}`}></i>
+                        <span className={`font-semibold ${isBackgroundLuminous ? 'text-stone-950' : 'text-white'}`}>El local se encuentra cerrado en este momento. Tu pedido se enviará programado para la próxima apertura (12:00 PM).</span>
                       </div>
                     )}
 
@@ -1285,9 +1297,12 @@
                             <span className="text-xs uppercase tracking-wider font-bold opacity-95">Productos en tu bolsa</span>
                             <button 
                               onClick={clearCart}
-                              className="text-xs font-bold text-red-400 hover:text-red-300 transition flex items-center gap-1.5 cursor-pointer active:scale-95"
+                              className={`text-xs font-bold px-3 py-1.5 rounded-full transition flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-sm backdrop-blur-md ${isBackgroundLuminous ? 'bg-black/15 text-stone-950 hover:bg-black/25' : 'bg-white/15 text-white hover:bg-white/25'}`}
                             >
-                              <i className="fa-solid fa-trash-can text-xs"></i> Vaciar carrito
+                              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] ${isBackgroundLuminous ? 'bg-black/20 text-stone-950' : 'bg-white/20 text-white'}`}>
+                                <i className="fa-solid fa-trash-can"></i>
+                              </span>
+                              Vaciar carrito
                             </button>
                           </div>
 
@@ -1298,7 +1313,7 @@
                                   <img src={item.image} alt={item.title} className="w-12 h-12 sm:w-14 sm:h-14 object-cover rounded-xl shrink-0" />
                                   <div className="min-w-0 flex-1">
                                     <h4 className="font-bold text-xs sm:text-sm leading-relaxed whitespace-normal break-words">{item.displayTitle}</h4>
-                                    <p className="text-xs text-orange-400 font-bold mt-0.5">{item.price} c/u</p>
+                                    <p className={`text-xs mt-0.5 ${dynamicTextColor}`}>{item.price} c/u</p>
                                   </div>
                                 </div>
                                 <div className="flex items-center justify-between sm:justify-end gap-3.5 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-white/10">
@@ -1314,7 +1329,7 @@
                                   <span className="font-bold text-xs sm:text-sm w-20 text-right">${(item.rawPrice * item.quantity).toLocaleString('es-CL')}</span>
                                   <button 
                                     onClick={() => removeCartItem(item.cartItemId)}
-                                    className="w-7 h-7 rounded-full bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white flex items-center justify-center transition cursor-pointer text-xs active:scale-90"
+                                    className={`w-7 h-7 rounded-full flex items-center justify-center transition cursor-pointer text-xs active:scale-90 shadow-sm ${dynamicIconContainerBg}`}
                                     title="Eliminar producto"
                                   >
                                     <i className="fa-solid fa-trash-can text-[10px]"></i>
@@ -1326,7 +1341,7 @@
 
                           <div className={`flex justify-between items-center pt-4 border-t ${isLight ? 'border-stone-900/20' : 'border-white/20'} font-bold text-base lg:text-xl`}>
                             <span>Total a pagar:</span>
-                            <span className="text-orange-400 text-xl lg:text-2xl">
+                            <span className={`text-xl lg:text-2xl ${dynamicPriceColor}`}>
                               ${totalCartAmount.toLocaleString('es-CL')}
                             </span>
                           </div>
