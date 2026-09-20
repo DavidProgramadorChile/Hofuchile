@@ -155,7 +155,7 @@
             scrollbar-width: none;
         }
 
-        /* Reglas CSS estrictas para Modo Pantalla Completa activo en PC con imagen central maximizada en protagonismo */
+        /* Reglas CSS estrictas para Modo Pantalla Completa activo (Intacto e inalterado) */
         .fullscreen-active .fullscreen-main-area {
             flex: 1 1 100% !important;
             justify-content: space-evenly !important;
@@ -163,13 +163,13 @@
             padding-bottom: 0.25rem !important;
         }
         .fullscreen-active .fullscreen-hero-img-box {
-            height: 480px !important;
+            height: 300px !important;
             margin-top: 0 !important;
             margin-bottom: 0 !important;
         }
         .fullscreen-active .fullscreen-hero-img {
-            max-height: 460px !important;
-            transform: scale(1.45) !important;
+            max-height: 280px !important;
+            transform: scale(1.25) !important;
         }
     </style>
 </head>
@@ -858,10 +858,10 @@
                 <div className="w-8"></div>
               </div>
 
-              {/* 2. Navbar Principal con Buscador Predictivo (Logo HŌFU con mayor presencia y escala en PC) */}
+              {/* 2. Navbar Principal con Buscador Predictivo (Logo HŌFU con escala aumentada en Modo Normal PC) */}
               <header className="w-full px-6 lg:px-16 py-3 lg:py-5 flex items-center justify-between z-30 max-w-[1600px] mx-auto relative shrink-0">
                 <div className="flex items-center cursor-pointer">
-                  <span className={`font-black tracking-[0.35em] text-2xl sm:text-3xl lg:text-4xl uppercase drop-shadow-md ${isLight ? 'text-stone-950' : 'text-white'}`}>
+                  <span className={`font-black tracking-[0.35em] text-2xl sm:text-3xl lg:text-5xl uppercase drop-shadow-md ${isLight ? 'text-stone-950' : 'text-white'}`}>
                     HŌFU
                   </span>
                 </div>
@@ -960,7 +960,7 @@
                 </div>
               </header>
 
-              {/* Menú de categorías móvil compacto (Visible estrictamente en móvil) */}
+              {/* Menú de categorías móvil compacto (Visible estrictamente en móvil - Intacto) */}
               <div 
                 ref={mobileCategoriesRef}
                 onScroll={handleCategoriesScroll}
@@ -992,12 +992,17 @@
               <main className="flex-1 flex items-center justify-center px-4 md:px-8 lg:px-20 py-2 lg:py-6 z-10 w-full overflow-hidden fullscreen-main-area">
                 <div className="max-w-[1600px] w-full grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-16 items-center mx-auto my-auto">
                   
-                  {/* Columna Izquierda (Escritorio): Información, Título, Descripción, Selectores con fondo y borde negro sólido y Botón de Compra */}
+                  {/* Columna Izquierda (Escritorio): Título con precio alineado, Descripción, Selectores y Botón de Añadir al Carrito con borde negro */}
                   <div className="lg:col-span-5 hidden lg:flex flex-col justify-center space-y-6 order-1 text-left">
                     <div className={`space-y-4 lg:space-y-6 transition-all duration-300 ease-out ${animating ? 'opacity-0 -translate-x-6 scale-95' : 'opacity-100 translate-x-0 scale-100'}`}>
-                      <h1 className="text-4xl lg:text-7xl font-extrabold tracking-tight leading-tight drop-shadow-sm">
-                        <span>{selectedItem.title}</span>
-                      </h1>
+                      <div className="flex items-baseline justify-between gap-4 flex-wrap">
+                        <h1 className="text-4xl lg:text-7xl font-extrabold tracking-tight leading-tight drop-shadow-sm">
+                          <span>{selectedItem.title}</span>
+                        </h1>
+                        <div className="text-4xl lg:text-6xl font-extrabold tracking-tight text-orange-400 drop-shadow-sm">
+                          {selectedItem.price}
+                        </div>
+                      </div>
                       
                       <p className={`text-base lg:text-xl leading-relaxed max-w-xl font-medium ${isLight ? 'text-stone-900/90' : 'text-white/95'} drop-shadow`}>
                         {selectedItem.description}
@@ -1072,7 +1077,7 @@
 
                         <button 
                           onClick={addToCart}
-                          className={`font-semibold px-10 py-4 rounded-full flex items-center gap-3 transition active:scale-95 shadow-2xl text-sm lg:text-base group cursor-pointer border ${isLight ? 'bg-stone-950 text-white border-black hover:bg-stone-900' : 'bg-stone-950 text-white border-white/20 hover:bg-black'}`}
+                          className="font-semibold px-10 py-4 rounded-full flex items-center gap-3 transition active:scale-95 shadow-2xl text-sm lg:text-base group cursor-pointer border bg-stone-950 text-white border-black hover:bg-stone-900"
                         >
                           Añadir al carrito 
                           <span className="w-7 h-7 bg-white text-stone-950 rounded-full flex items-center justify-center text-xs font-bold group-hover:translate-x-1 transition">
@@ -1083,17 +1088,17 @@
                     </div>
                   </div>
 
-                  {/* Título móvil (Visible estrictamente en móvil) */}
+                  {/* Título móvil (Visible estrictamente en móvil - Intacto) */}
                   <div className={`flex lg:hidden flex-col items-center text-center order-1 pt-0.5 pb-0 transition-all duration-300 ease-out ${animating ? 'opacity-0 scale-90' : 'opacity-100 scale-100'}`}>
                     <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight whitespace-nowrap drop-shadow-sm">
                       <span>{selectedItem.title}</span>
                     </h1>
                   </div>
 
-                  {/* Columna Central: Imagen del Producto Hero (Significativamente ampliada y imponente en PC, texto inferior eliminado en PC) */}
+                  {/* Columna Central: Imagen del Producto Hero (Imagen significativamente ampliada en Modo Normal PC) */}
                   <div className="lg:col-span-4 relative flex flex-col items-center justify-center order-2">
                     <div className="relative w-full h-[180px] sm:h-[220px] lg:h-[650px] flex items-center justify-center my-0 fullscreen-hero-img-box">
-                      <div className={`absolute w-44 h-44 sm:w-64 sm:h-64 lg:w-[540px] lg:h-[540px] ${isLight ? 'bg-white/60' : 'bg-white/20'} rounded-full blur-3xl pointer-events-none transition-all duration-500`}></div>
+                      <div className={`absolute w-44 h-44 sm:w-64 sm:h-64 lg:w-[560px] lg:h-[560px] ${isLight ? 'bg-white/60' : 'bg-white/20'} rounded-full blur-3xl pointer-events-none transition-all duration-500`}></div>
                       
                       <img 
                         src={selectedItem.image} 
@@ -1103,8 +1108,8 @@
                         onMouseDown={() => setIsImageZoomed(true)}
                         onMouseUp={() => setIsImageZoomed(false)}
                         onMouseLeave={() => setIsImageZoomed(false)}
-                        className={`max-h-[160px] sm:max-h-[200px] lg:max-h-[620px] max-w-full object-contain drop-shadow-[0_20px_20px_rgba(0,0,0,0.5)] lg:drop-shadow-[0_35px_40px_rgba(0,0,0,0.75)] transition-all duration-300 ease-out cursor-pointer select-none fullscreen-hero-img ${
-                          isImageZoomed ? 'scale-135 sm:scale-150 lg:scale-150 rotate-1' : 'scale-115 sm:scale-130 lg:scale-120'
+                        className={`max-h-[160px] sm:max-h-[200px] lg:max-h-[640px] max-w-full object-contain drop-shadow-[0_20px_20px_rgba(0,0,0,0.5)] lg:drop-shadow-[0_40px_45px_rgba(0,0,0,0.8)] transition-all duration-300 ease-out cursor-pointer select-none fullscreen-hero-img ${
+                          isImageZoomed ? 'scale-135 sm:scale-150 lg:scale-150 rotate-1' : 'scale-115 sm:scale-130 lg:scale-125'
                         } ${animating ? 'opacity-0 scale-75 rotate-3 translate-y-4' : 'opacity-100 translate-y-0'}`}
                         onError={(e)=>{
                           e.target.src = "https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&q=80&w=800";
@@ -1239,12 +1244,8 @@
 
                   </div>
 
-                  {/* Columna Derecha: Precio & Miniaturas inferiores perfectamente espaciadas */}
+                  {/* Columna Derecha: Miniaturas inferiores perfectamente espaciadas */}
                   <div className="lg:col-span-3 flex flex-col justify-center items-center lg:items-end space-y-3 lg:space-y-6 order-3 pb-2 sm:pb-3 lg:pb-0">
-                    <div className={`hidden lg:block text-center lg:text-right space-y-1 transition-all duration-300 ease-out ${animating ? 'opacity-0 scale-90 translate-y-2' : 'opacity-100 scale-100 translate-y-0'}`}>
-                      <div className="text-5xl lg:text-6xl font-extrabold tracking-tight drop-shadow-sm">{selectedItem.price}</div>
-                    </div>
-
                     <div className={`flex lg:hidden text-3xl font-extrabold text-white drop-shadow-md my-1 transition-all duration-300 ease-out ${animating ? 'opacity-0' : 'opacity-100'}`}>
                       {selectedItem.price}
                     </div>
