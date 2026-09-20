@@ -155,7 +155,7 @@
             scrollbar-width: none;
         }
 
-        /* Reglas CSS estrictas para Modo Pantalla Completa activo */
+        /* Reglas CSS estrictas para Modo Pantalla Completa activo en PC con imagen central maximizada en protagonismo */
         .fullscreen-active .fullscreen-main-area {
             flex: 1 1 100% !important;
             justify-content: space-evenly !important;
@@ -163,13 +163,13 @@
             padding-bottom: 0.25rem !important;
         }
         .fullscreen-active .fullscreen-hero-img-box {
-            height: 300px !important;
+            height: 480px !important;
             margin-top: 0 !important;
             margin-bottom: 0 !important;
         }
         .fullscreen-active .fullscreen-hero-img {
-            max-height: 280px !important;
-            transform: scale(1.25) !important;
+            max-height: 460px !important;
+            transform: scale(1.45) !important;
         }
     </style>
 </head>
@@ -858,10 +858,10 @@
                 <div className="w-8"></div>
               </div>
 
-              {/* 2. Navbar Principal con Buscador Predictivo */}
-              <header className="w-full px-6 lg:px-16 py-3 lg:py-4 flex items-center justify-between z-30 max-w-[1600px] mx-auto relative shrink-0">
+              {/* 2. Navbar Principal con Buscador Predictivo (Logo HŌFU con mayor presencia y escala en PC) */}
+              <header className="w-full px-6 lg:px-16 py-3 lg:py-5 flex items-center justify-between z-30 max-w-[1600px] mx-auto relative shrink-0">
                 <div className="flex items-center cursor-pointer">
-                  <span className={`font-black tracking-[0.3em] text-2xl lg:text-3xl uppercase drop-shadow-sm ${isLight ? 'text-stone-950' : 'text-white'}`}>
+                  <span className={`font-black tracking-[0.35em] text-2xl sm:text-3xl lg:text-4xl uppercase drop-shadow-md ${isLight ? 'text-stone-950' : 'text-white'}`}>
                     HŌFU
                   </span>
                 </div>
@@ -992,7 +992,7 @@
               <main className="flex-1 flex items-center justify-center px-4 md:px-8 lg:px-20 py-2 lg:py-6 z-10 w-full overflow-hidden fullscreen-main-area">
                 <div className="max-w-[1600px] w-full grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-16 items-center mx-auto my-auto">
                   
-                  {/* Columna Izquierda (Escritorio): Información, Título, Descripción, Selectores y Botón de Compra */}
+                  {/* Columna Izquierda (Escritorio): Información, Título, Descripción, Selectores con fondo y borde negro sólido y Botón de Compra */}
                   <div className="lg:col-span-5 hidden lg:flex flex-col justify-center space-y-6 order-1 text-left">
                     <div className={`space-y-4 lg:space-y-6 transition-all duration-300 ease-out ${animating ? 'opacity-0 -translate-x-6 scale-95' : 'opacity-100 translate-x-0 scale-100'}`}>
                       <h1 className="text-4xl lg:text-7xl font-extrabold tracking-tight leading-tight drop-shadow-sm">
@@ -1013,7 +1013,7 @@
                                 onClick={() => setSelectedFlavor(flavor)}
                                 className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all active:scale-95 cursor-pointer ${
                                   selectedFlavor === flavor
-                                    ? 'bg-stone-950 text-white border-white/40 font-bold shadow-md scale-105'
+                                    ? 'bg-stone-950 border-black text-white font-bold shadow-md scale-105'
                                     : `${isLight ? 'bg-black/5 border-stone-900/20 text-stone-900 hover:bg-black/10' : 'bg-black/30 border-white/20 text-white/90 hover:bg-black/50'}`
                                 }`}
                               >
@@ -1034,7 +1034,7 @@
                                 onClick={() => setSelectedProtein(protein)}
                                 className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all active:scale-95 cursor-pointer ${
                                   selectedProtein === protein
-                                    ? 'bg-stone-950 text-white border-white/40 font-bold shadow-md scale-105'
+                                    ? 'bg-stone-950 border-black text-white font-bold shadow-md scale-105'
                                     : `${isLight ? 'bg-black/5 border-stone-900/20 text-stone-900 hover:bg-black/10' : 'bg-black/30 border-white/20 text-white/90 hover:bg-black/50'}`
                                 }`}
                               >
@@ -1090,10 +1090,10 @@
                     </h1>
                   </div>
 
-                  {/* Columna Central: Imagen del Producto Hero (Significativamente ampliada en PC, texto inferior eliminado en PC) */}
+                  {/* Columna Central: Imagen del Producto Hero (Significativamente ampliada y imponente en PC, texto inferior eliminado en PC) */}
                   <div className="lg:col-span-4 relative flex flex-col items-center justify-center order-2">
-                    <div className="relative w-full h-[180px] sm:h-[220px] lg:h-[620px] flex items-center justify-center my-0 fullscreen-hero-img-box">
-                      <div className={`absolute w-44 h-44 sm:w-64 sm:h-64 lg:w-[480px] lg:h-[480px] ${isLight ? 'bg-white/60' : 'bg-white/20'} rounded-full blur-3xl pointer-events-none transition-all duration-500`}></div>
+                    <div className="relative w-full h-[180px] sm:h-[220px] lg:h-[650px] flex items-center justify-center my-0 fullscreen-hero-img-box">
+                      <div className={`absolute w-44 h-44 sm:w-64 sm:h-64 lg:w-[540px] lg:h-[540px] ${isLight ? 'bg-white/60' : 'bg-white/20'} rounded-full blur-3xl pointer-events-none transition-all duration-500`}></div>
                       
                       <img 
                         src={selectedItem.image} 
@@ -1103,8 +1103,8 @@
                         onMouseDown={() => setIsImageZoomed(true)}
                         onMouseUp={() => setIsImageZoomed(false)}
                         onMouseLeave={() => setIsImageZoomed(false)}
-                        className={`max-h-[160px] sm:max-h-[200px] lg:max-h-[580px] max-w-full object-contain drop-shadow-[0_20px_20px_rgba(0,0,0,0.5)] lg:drop-shadow-[0_30px_35px_rgba(0,0,0,0.7)] transition-all duration-300 ease-out cursor-pointer select-none fullscreen-hero-img ${
-                          isImageZoomed ? 'scale-135 sm:scale-150 lg:scale-150 rotate-1' : 'scale-115 sm:scale-130 lg:scale-110'
+                        className={`max-h-[160px] sm:max-h-[200px] lg:max-h-[620px] max-w-full object-contain drop-shadow-[0_20px_20px_rgba(0,0,0,0.5)] lg:drop-shadow-[0_35px_40px_rgba(0,0,0,0.75)] transition-all duration-300 ease-out cursor-pointer select-none fullscreen-hero-img ${
+                          isImageZoomed ? 'scale-135 sm:scale-150 lg:scale-150 rotate-1' : 'scale-115 sm:scale-130 lg:scale-120'
                         } ${animating ? 'opacity-0 scale-75 rotate-3 translate-y-4' : 'opacity-100 translate-y-0'}`}
                         onError={(e)=>{
                           e.target.src = "https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&q=80&w=800";
