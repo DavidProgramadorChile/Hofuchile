@@ -1279,9 +1279,10 @@
                     ) : (
                       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
                         
-                        <div className="lg:col-span-5 flex flex-col space-y-4">
+                        {/* Columna de productos del carrito con diseño holgado en móvil y nombre completo sin cortes en PC */}
+                        <div className="lg:col-span-6 flex flex-col space-y-4">
                           <div className="flex items-center justify-between border-b pb-3 border-white/15">
-                            <span className="text-xs uppercase tracking-wider font-bold opacity-90">Productos en tu bolsa</span>
+                            <span className="text-xs uppercase tracking-wider font-bold opacity-95">Productos en tu bolsa</span>
                             <button 
                               onClick={clearCart}
                               className="text-xs font-bold text-red-400 hover:text-red-300 transition flex items-center gap-1.5 cursor-pointer active:scale-95"
@@ -1290,18 +1291,18 @@
                             </button>
                           </div>
 
-                          <div className="space-y-3 max-h-60 lg:max-h-96 overflow-y-auto no-scrollbar pr-1">
+                          <div className="space-y-3.5 max-h-72 lg:max-h-96 overflow-y-auto no-scrollbar pr-1">
                             {cart.map((item) => (
-                              <div key={item.cartItemId} className={`flex items-center justify-between ${isLight ? 'bg-white/40 border-stone-900/10' : 'bg-black/40 border-white/10'} backdrop-blur-md p-3 rounded-2xl border gap-3`}>
-                                <div className="flex items-center gap-3 min-w-0 flex-1">
-                                  <img src={item.image} alt={item.title} className="w-12 h-12 object-cover rounded-xl shrink-0" />
+                              <div key={item.cartItemId} className={`flex flex-col sm:flex-row sm:items-center justify-between ${isLight ? 'bg-white/40 border-stone-900/10' : 'bg-black/40 border-white/10'} backdrop-blur-md p-4 rounded-2xl border gap-3.5 shadow-md`}>
+                                <div className="flex items-start sm:items-center gap-3.5 min-w-0 flex-1">
+                                  <img src={item.image} alt={item.title} className="w-12 h-12 sm:w-14 sm:h-14 object-cover rounded-xl shrink-0" />
                                   <div className="min-w-0 flex-1">
-                                    <h4 className="font-bold text-xs lg:text-sm leading-tight truncate">{item.displayTitle}</h4>
-                                    <p className="text-xs text-orange-400 font-bold">{item.price} c/u</p>
+                                    <h4 className="font-bold text-xs sm:text-sm leading-relaxed whitespace-normal break-words">{item.displayTitle}</h4>
+                                    <p className="text-xs text-orange-400 font-bold mt-0.5">{item.price} c/u</p>
                                   </div>
                                 </div>
-                                <div className="flex items-center gap-3 shrink-0">
-                                  <div className={`flex items-center ${isLight ? 'bg-white/60 border-stone-900/20' : 'bg-stone-900 border-white/20'} border rounded-xl px-2 py-1`}>
+                                <div className="flex items-center justify-between sm:justify-end gap-3.5 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-white/10">
+                                  <div className={`flex items-center ${isLight ? 'bg-white/60 border-stone-900/20' : 'bg-stone-900 border-white/20'} border rounded-xl px-2.5 py-1`}>
                                     <button onClick={() => updateCartItemQty(item.cartItemId, -1)} className="px-1.5 text-xs font-bold cursor-pointer active:scale-90">
                                       <i className="fa-solid fa-minus text-[8px]"></i>
                                     </button>
@@ -1310,7 +1311,7 @@
                                       <i className="fa-solid fa-plus text-[8px]"></i>
                                     </button>
                                   </div>
-                                  <span className="font-bold text-xs lg:text-sm w-16 text-right">${(item.rawPrice * item.quantity).toLocaleString('es-CL')}</span>
+                                  <span className="font-bold text-xs sm:text-sm w-20 text-right">${(item.rawPrice * item.quantity).toLocaleString('es-CL')}</span>
                                   <button 
                                     onClick={() => removeCartItem(item.cartItemId)}
                                     className="w-7 h-7 rounded-full bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white flex items-center justify-center transition cursor-pointer text-xs active:scale-90"
@@ -1331,7 +1332,7 @@
                           </div>
                         </div>
 
-                        <div className="lg:col-span-7 flex flex-col space-y-4">
+                        <div className="lg:col-span-6 flex flex-col space-y-4">
                           <form onSubmit={handleCheckoutSubmit} className="space-y-4">
                             <h4 className="text-xs font-bold uppercase tracking-wider opacity-90">Datos de Entrega & Pago (Santiago)</h4>
                             
