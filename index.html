@@ -114,42 +114,42 @@
             animation: badgePop 0.3s ease-in-out;
         }
 
-        /* Estilos de bienvenida universal de alta gama (Blanco puro con viñeteados oscuros y efecto Zoom en ambas plataformas) */
-        .universal-welcome-bg {
+        /* Estilos de bienvenida universal cinematográfica de alta gama (Blanco puro con viñeteados oscuros intensificados y zoom suave) */
+        .cinematic-universal-bg {
             background-color: #ffffff; /* Blanco puro y elegante */
             background-image: 
-                radial-gradient(circle at 0% 0%, rgba(0, 0, 0, 0.35) 0%, transparent 45%),
-                radial-gradient(circle at 100% 100%, rgba(0, 0, 0, 0.4) 0%, transparent 50%);
+                radial-gradient(circle at 0% 0%, rgba(0, 0, 0, 0.55) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(0, 0, 0, 0.6) 0%, transparent 55%);
         }
 
-        @keyframes universalWelcomeZoomIn {
-            0% { opacity: 0; transform: scale(0.75); filter: blur(12px); }
+        @keyframes cinematicZoomIn {
+            0% { opacity: 0; transform: scale(0.75); filter: blur(14px); }
             100% { opacity: 1; transform: scale(1); filter: blur(0); }
         }
-        .universal-welcome-logo-text {
-            animation: universalWelcomeZoomIn 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        .cinematic-logo-text-deep {
+            animation: cinematicZoomIn 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             color: #09090b; /* Negro sólido */
             text-shadow: 
-                0 0 3px rgba(0, 0, 0, 0.35),
-                0 0 20px rgba(0, 0, 0, 0.18),
-                0 15px 35px rgba(0, 0, 0, 0.28),
-                3px 3px 6px rgba(0, 0, 0, 0.25);
+                0 0 4px rgba(0, 0, 0, 0.45),
+                0 0 25px rgba(0, 0, 0, 0.25),
+                0 20px 45px rgba(0, 0, 0, 0.35),
+                4px 4px 10px rgba(0, 0, 0, 0.3);
         }
 
-        @keyframes universalWelcomeFadeOut {
+        @keyframes cinematicFadeOut {
             0% { opacity: 1; transform: scale(1); }
             100% { opacity: 0; transform: scale(1.06); pointer-events: none; }
         }
-        .universal-welcome-exit {
-            animation: universalWelcomeFadeOut 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        .cinematic-exit {
+            animation: cinematicFadeOut 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
-        @keyframes progressBarCountdown {
+        @keyframes progressBarCountdown75 {
             0% { width: 100%; }
             100% { width: 0%; }
         }
-        .progress-bar-anim {
-            animation: progressBarCountdown 10s linear forwards;
+        .progress-bar-anim-75 {
+            animation: progressBarCountdown75 7.5s linear forwards;
         }
 
         /* Ocultar barras de scroll por defecto y mostrarlas con un estilo ultra sutil al hacer scroll */
@@ -397,24 +397,20 @@
         const METODOS_PAGO = ["Efectivo", "Tarjeta"];
 
         function HofuLanding() {
-          // Estados para la pantalla de bienvenida universal (en ambas plataformas: PC y Móvil durante 10 segundos)
+          // Estados para la pantalla de bienvenida universal (en ambas plataformas durante exactamente 7.5 segundos sin botón X)
           const [showUniversalWelcome, setShowUniversalWelcome] = useState(true);
           const [isUniversalWelcomeExiting, setIsUniversalWelcomeExiting] = useState(false);
 
           useEffect(() => {
             const timer = setTimeout(() => {
-              handleCloseUniversalWelcome();
-            }, 10000);
+              setIsUniversalWelcomeExiting(true);
+              setTimeout(() => {
+                setShowUniversalWelcome(false);
+              }, 600);
+            }, 7500);
 
             return () => clearTimeout(timer);
           }, []);
-
-          const handleCloseUniversalWelcome = () => {
-            setIsUniversalWelcomeExiting(true);
-            setTimeout(() => {
-              setShowUniversalWelcome(false);
-            }, 600);
-          };
 
           const [activeCategory, setActiveCategory] = useState('favoritos');
           const [selectedItem, setSelectedItem] = useState(categoriesData.favoritos.items[0]);
@@ -800,28 +796,19 @@
           return (
             <div className={`h-full w-full bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-hidden select-none relative`}>
               
-              {/* Pantalla de Bienvenida / Intro Universal de Alta Gama (Aplicada en ambas plataformas: PC y Móvil, con blanco puro, viñeteados oscuros, zoom suave, barra de progreso y botón "X" minimalista y fino) */}
+              {/* Pantalla de Bienvenida / Intro Universal de Alta Gama (7.5 segundos, sin botón X, viñeteados oscuros intensificados y sombreado de texto profundo) */}
               {showUniversalWelcome && (
-                <div className={`flex fixed inset-0 z-50 universal-welcome-bg items-center justify-center overflow-hidden ${isUniversalWelcomeExiting ? 'universal-welcome-exit' : ''}`}>
+                <div className={`flex fixed inset-0 z-50 cinematic-universal-bg items-center justify-center overflow-hidden ${isUniversalWelcomeExiting ? 'cinematic-exit' : ''}`}>
                   
-                  {/* Botón de cierre "X" minimalista, estético y fino en la esquina superior derecha con transición fluida */}
-                  <button 
-                    onClick={handleCloseUniversalWelcome}
-                    className="absolute top-5 right-5 sm:top-8 sm:right-8 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/10 hover:bg-black/20 backdrop-blur-md text-stone-950 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-90 cursor-pointer z-50 shadow-xl border border-black/15"
-                    title="Omitir bienvenida"
-                  >
-                    <i className="fa-solid fa-xmark text-sm sm:text-lg"></i>
-                  </button>
-
                   <div className="relative w-full max-w-[1600px] px-6 sm:px-12 lg:px-16 flex items-center justify-center h-full">
-                    <h1 className="text-6xl sm:text-9xl lg:text-[16rem] font-black tracking-[0.2em] uppercase universal-welcome-logo-text select-none text-center">
+                    <h1 className="text-6xl sm:text-9xl lg:text-[16rem] font-black tracking-[0.2em] uppercase cinematic-logo-text-deep select-none text-center">
                       HŌFU
                     </h1>
                   </div>
 
-                  {/* Línea o barra de progreso minimalista y delgada en la parte inferior */}
+                  {/* Línea o barra de progreso minimalista y delgada ajustada exactamente a 7.5 segundos */}
                   <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-black/10 overflow-hidden">
-                    <div className="h-full bg-stone-950 progress-bar-anim"></div>
+                    <div className="h-full bg-stone-950 progress-bar-anim-75"></div>
                   </div>
                 </div>
               )}
