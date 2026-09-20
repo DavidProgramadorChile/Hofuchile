@@ -979,7 +979,7 @@
                             placeholder="Ej. Sin cebollín, salsa extra..."
                             value={specialNotes}
                             onChange={(e) => setSpecialNotes(e.target.value)}
-                            className={`w-full max-w-md ${isLight ? 'bg-black/5 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/30 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-2xl px-4 py-2.5 text-xs lg:text-sm outline-none focus:border-orange-500 transition`}
+                            className={`w-full max-w-md ${isLight ? 'bg-black/5 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/30 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-2xl px-4 py-2.5 text-xs lg:text-sm outline-none focus:border-stone-950 transition`}
                           />
                         </div>
                       )}
@@ -1135,7 +1135,7 @@
                             placeholder="Nota (ej. sin cebollín)..."
                             value={specialNotes}
                             onChange={(e) => setSpecialNotes(e.target.value)}
-                            className={`w-full ${isLight ? 'bg-black/5 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/30 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-xl px-2.5 py-0.5 text-[11px] outline-none focus:border-orange-500 transition`}
+                            className={`w-full ${isLight ? 'bg-black/5 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/30 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-xl px-2.5 py-0.5 text-[11px] outline-none focus:border-stone-950 transition`}
                           />
                         </div>
                       )}
@@ -1252,9 +1252,9 @@
 
               {/* Modal de Resumen de Pedido & Formulario WhatsApp */}
               {cartOpen && (
-                <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-4">
+                <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-4 overflow-y-auto">
                   
-                  <div className={`bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} rounded-3xl max-w-4xl lg:max-w-6xl w-full p-6 lg:p-12 shadow-2xl border ${isLight ? 'border-stone-900/20' : 'border-white/20'} relative animate-in fade-in zoom-in duration-200 max-h-[92vh] lg:max-h-[90vh] overflow-y-auto no-scrollbar`}>
+                  <div className={`bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} rounded-3xl max-w-4xl lg:max-w-6xl w-full p-6 lg:p-12 shadow-2xl border ${isLight ? 'border-stone-900/20' : 'border-white/20'} relative animate-in fade-in zoom-in duration-200 my-auto`}>
                     
                     <button 
                       type="button"
@@ -1362,6 +1362,7 @@
                           </div>
                         </div>
 
+                        {/* Columna Derecha con Formulario mejorado (Glassmorphism, bordes perfectos, focus negro y selección negra) */}
                         <div className="lg:col-span-6 flex flex-col space-y-4">
                           <form onSubmit={handleCheckoutSubmit} className="space-y-4">
                             <h4 className="text-xs font-bold uppercase tracking-wider opacity-90">Datos de Entrega & Pago (Santiago)</h4>
@@ -1372,7 +1373,7 @@
                               required
                               value={formData.fullName}
                               onChange={(e) => setFormData({...formData, fullName: e.target.value})}
-                              className={`w-full ${isLight ? 'bg-white/60 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/40 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-2xl px-4 py-3 text-xs lg:text-sm outline-none focus:border-orange-500 transition`}
+                              className={`w-full ${isLight ? 'bg-white/30 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/25 border-white/20 text-white placeholder-white/50'} backdrop-blur-lg border rounded-2xl px-4 py-3 text-xs lg:text-sm outline-none focus:border-stone-950 transition`}
                             />
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -1382,21 +1383,21 @@
                                 required
                                 value={formData.address}
                                 onChange={(e) => setFormData({...formData, address: e.target.value})}
-                                className={`w-full ${isLight ? 'bg-white/60 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/40 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-2xl px-4 py-3 text-xs lg:text-sm outline-none focus:border-orange-500 transition`}
+                                className={`w-full ${isLight ? 'bg-white/30 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/25 border-white/20 text-white placeholder-white/50'} backdrop-blur-lg border rounded-2xl px-4 py-3 text-xs lg:text-sm outline-none focus:border-stone-950 transition`}
                               />
 
                               <div className="relative" ref={comunaRef}>
                                 <div 
                                   onClick={() => setComunaDropdownOpen(!comunaDropdownOpen)}
-                                  className={`w-full ${isLight ? 'bg-white/60 border-stone-900/20 text-stone-950' : 'bg-black/40 border-white/20 text-white'} backdrop-blur-md border rounded-2xl px-4 py-3 text-xs lg:text-sm flex items-center justify-between cursor-pointer transition select-none`}
+                                  className={`w-full ${isLight ? 'bg-white/30 border-stone-900/20 text-stone-950' : 'bg-black/25 border-white/20 text-white'} backdrop-blur-lg border rounded-2xl px-4 py-3 text-xs lg:text-sm flex items-center justify-between cursor-pointer transition select-none`}
                                 >
                                   <span className="truncate">{formData.comuna}</span>
                                   <i className="fa-solid fa-chevron-down text-xs opacity-60"></i>
                                 </div>
 
                                 {comunaDropdownOpen && (
-                                  <div className={`absolute left-0 right-0 mt-2 ${isLight ? 'bg-white text-stone-950 border-stone-300' : 'bg-stone-900 text-white border-white/10'} rounded-2xl shadow-2xl border z-50 p-3`}>
-                                    <div className={`flex items-center gap-2 ${isLight ? 'bg-stone-100 border-stone-200 text-stone-900' : 'bg-stone-800 border-white/10 text-white'} px-3 py-2 rounded-xl border mb-2`}>
+                                  <div className={`absolute left-0 right-0 mt-2 ${isLight ? 'bg-white/90 text-stone-950 border-stone-300' : 'bg-stone-900/90 text-white border-white/10'} backdrop-blur-xl rounded-2xl shadow-2xl border z-50 p-3`}>
+                                    <div className={`flex items-center gap-2 ${isLight ? 'bg-stone-100/50 border-stone-200 text-stone-900' : 'bg-stone-800/50 border-white/10 text-white'} backdrop-blur-md px-3 py-2 rounded-xl border mb-2`}>
                                       <i className="fa-solid fa-search text-xs opacity-50"></i>
                                       <input 
                                         type="text" 
@@ -1419,8 +1420,8 @@
                                             }}
                                             className={`px-3.5 py-2 rounded-xl text-xs lg:text-sm cursor-pointer transition active:scale-98 ${
                                               formData.comuna === comuna 
-                                                ? 'bg-orange-500 text-white font-bold' 
-                                                : `${isLight ? 'hover:bg-stone-100' : 'hover:bg-white/10'}`
+                                                ? 'bg-stone-950 text-white font-bold border border-black shadow-md' 
+                                                : `${isLight ? 'hover:bg-stone-100/60' : 'hover:bg-white/10'}`
                                             }`}
                                           >
                                             {comuna}
@@ -1442,20 +1443,20 @@
                                 required
                                 value={formData.phone}
                                 onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                                className={`w-full ${isLight ? 'bg-white/60 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/40 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-2xl px-4 py-3 text-xs lg:text-sm outline-none focus:border-orange-500 transition`}
+                                className={`w-full ${isLight ? 'bg-white/30 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/25 border-white/20 text-white placeholder-white/50'} backdrop-blur-lg border rounded-2xl px-4 py-3 text-xs lg:text-sm outline-none focus:border-stone-950 transition`}
                               />
 
                               <div className="relative" ref={paymentRef}>
                                 <div 
                                   onClick={() => setPaymentDropdownOpen(!paymentDropdownOpen)}
-                                  className={`w-full ${isLight ? 'bg-white/60 border-stone-900/20 text-stone-950' : 'bg-black/40 border-white/20 text-white'} backdrop-blur-md border rounded-2xl px-4 py-3 text-xs lg:text-sm flex items-center justify-between cursor-pointer transition select-none`}
+                                  className={`w-full ${isLight ? 'bg-white/30 border-stone-900/20 text-stone-950' : 'bg-black/25 border-white/20 text-white'} backdrop-blur-lg border rounded-2xl px-4 py-3 text-xs lg:text-sm flex items-center justify-between cursor-pointer transition select-none`}
                                 >
                                   <span className="truncate">Pago: {formData.paymentMethod}</span>
                                   <i className="fa-solid fa-chevron-down text-xs opacity-60"></i>
                                 </div>
 
                                 {paymentDropdownOpen && (
-                                  <div className={`absolute left-0 right-0 mt-2 ${isLight ? 'bg-white text-stone-950 border-stone-300' : 'bg-stone-900 text-white border-white/10'} rounded-2xl shadow-2xl border z-50 p-2 space-y-1`}>
+                                  <div className={`absolute left-0 right-0 mt-2 ${isLight ? 'bg-white/90 text-stone-950 border-stone-300' : 'bg-stone-900/90 text-white border-white/10'} backdrop-blur-xl rounded-2xl shadow-2xl border z-50 p-2 space-y-1`}>
                                     {METODOS_PAGO.map((metodo) => (
                                       <div 
                                         key={metodo}
@@ -1465,8 +1466,8 @@
                                         }}
                                         className={`px-3.5 py-2.5 rounded-xl text-xs lg:text-sm cursor-pointer transition active:scale-98 ${
                                           formData.paymentMethod === metodo 
-                                            ? 'bg-orange-500 text-white font-bold' 
-                                            : `${isLight ? 'hover:bg-stone-100' : 'hover:bg-white/10'}`
+                                            ? 'bg-stone-950 text-white font-bold border border-black shadow-md' 
+                                            : `${isLight ? 'hover:bg-stone-100/60' : 'hover:bg-white/10'}`
                                         }`}
                                       >
                                         {metodo}
