@@ -918,26 +918,26 @@
               <main className="flex-1 flex items-center justify-center px-4 md:px-8 lg:px-20 py-2 lg:py-6 z-10 w-full overflow-hidden">
                 <div className="max-w-[1600px] w-full grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-16 items-center mx-auto my-auto">
                   
-                  {/* Columna Izquierda (Escritorio): Título, Descripción, Selectores y Botón de Añadir al Carrito con borde negro */}
-                  <div className="lg:col-span-5 hidden lg:flex flex-col justify-center space-y-6 order-1 text-left">
-                    <div className={`space-y-4 lg:space-y-6 transition-all duration-300 ease-out ${animating ? 'opacity-0 -translate-x-6 scale-95' : 'opacity-100 translate-x-0 scale-100'}`}>
-                      <h1 className="text-4xl lg:text-7xl font-extrabold tracking-tight leading-tight drop-shadow-sm">
+                  {/* Columna Izquierda (Escritorio): Título, Descripción, Selectores, Salsas y Botón de Añadir al Carrito con borde negro */}
+                  <div className="lg:col-span-5 hidden lg:flex flex-col justify-center space-y-4 order-1 text-left">
+                    <div className={`space-y-4 transition-all duration-300 ease-out ${animating ? 'opacity-0 -translate-x-6 scale-95' : 'opacity-100 translate-x-0 scale-100'}`}>
+                      <h1 className="text-4xl lg:text-6xl font-extrabold tracking-tight leading-tight drop-shadow-sm">
                         <span>{selectedItem.title}</span>
                       </h1>
                       
-                      <p className={`text-base lg:text-xl leading-relaxed max-w-xl font-medium ${isLight ? 'text-stone-900/90' : 'text-white/95'} drop-shadow`}>
+                      <p className={`text-base lg:text-lg leading-relaxed max-w-xl font-medium ${isLight ? 'text-stone-900/90' : 'text-white/95'} drop-shadow`}>
                         {selectedItem.description}
                       </p>
 
                       {selectedItem.hasFlavorSelector && (
-                        <div className="space-y-2 pt-2">
+                        <div className="space-y-2 pt-1">
                           <label className="text-xs font-bold uppercase tracking-wider opacity-90 block">Elige tu sabor:</label>
-                          <div className="flex flex-wrap gap-2.5">
+                          <div className="flex flex-wrap gap-2">
                             {SABORES_BEBIDAS.map((flavor) => (
                               <button
                                 key={flavor}
                                 onClick={() => setSelectedFlavor(flavor)}
-                                className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all active:scale-95 cursor-pointer ${
+                                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold border transition-all active:scale-95 cursor-pointer ${
                                   selectedFlavor === flavor
                                     ? 'bg-stone-950 border-black text-white font-bold shadow-md scale-105'
                                     : `${isLight ? 'bg-black/5 border-stone-900/20 text-stone-900 hover:bg-black/10' : 'bg-black/30 border-white/20 text-white/90 hover:bg-black/50'}`
@@ -951,14 +951,14 @@
                       )}
 
                       {selectedItem.hasProteinSelector && selectedItem.proteinas && (
-                        <div className="space-y-2 pt-2">
+                        <div className="space-y-2 pt-1">
                           <label className="text-xs font-bold uppercase tracking-wider opacity-90 block">Elige tu proteína:</label>
-                          <div className="flex flex-wrap gap-2.5">
+                          <div className="flex flex-wrap gap-2">
                             {selectedItem.proteinas.map((protein) => (
                               <button
                                 key={protein}
                                 onClick={() => setSelectedProtein(protein)}
-                                className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all active:scale-95 cursor-pointer ${
+                                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold border transition-all active:scale-95 cursor-pointer ${
                                   selectedProtein === protein
                                     ? 'bg-stone-950 border-black text-white font-bold shadow-md scale-105'
                                     : `${isLight ? 'bg-black/5 border-stone-900/20 text-stone-900 hover:bg-black/10' : 'bg-black/30 border-white/20 text-white/90 hover:bg-black/50'}`
@@ -973,19 +973,57 @@
 
                       {/* Campo de notas especiales (Oculto en Bebidas y Extras) */}
                       {allowCustomizations && (
-                        <div className="space-y-2 pt-2">
+                        <div className="space-y-1.5 pt-1">
                           <label className="text-xs font-bold uppercase tracking-wider opacity-90 block">Notas especiales (opcional):</label>
                           <input 
                             type="text" 
                             placeholder="Ej. Sin cebollín, salsa extra..."
                             value={specialNotes}
                             onChange={(e) => setSpecialNotes(e.target.value)}
-                            className={`w-full max-w-md ${isLight ? 'bg-black/5 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/30 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-2xl px-4 py-3 text-xs lg:text-sm outline-none focus:border-orange-500 transition`}
+                            className={`w-full max-w-md ${isLight ? 'bg-black/5 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/30 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-2xl px-4 py-2.5 text-xs lg:text-sm outline-none focus:border-orange-500 transition`}
                           />
                         </div>
                       )}
 
-                      <div className="pt-4 flex items-center gap-6">
+                      {/* Sección de Salsas integrada para PC */}
+                      {allowCustomizations && (
+                        <div className="space-y-1.5 w-full max-w-md bg-black/25 p-2.5 rounded-2xl border border-white/10 backdrop-blur-md">
+                          <div className="flex justify-between items-center px-1">
+                            <span className="text-xs font-bold uppercase tracking-wider opacity-90">Elige tu salsa favorita</span>
+                            <span className={`text-[11px] font-bold ${soyaCount + teriyakiCount === quantity ? 'text-emerald-400' : 'text-orange-300'}`}>
+                              {soyaCount + teriyakiCount === quantity ? '¡Completo!' : `${soyaCount + teriyakiCount}/${quantity} asignadas`}
+                            </span>
+                          </div>
+                          <div className="grid grid-cols-2 gap-2">
+                            <div className="flex items-center justify-between bg-black/30 px-3 py-1.5 rounded-xl border border-white/10">
+                              <span className="text-xs font-bold">Soya</span>
+                              <div className="flex items-center gap-1.5">
+                                <button onClick={() => updateSoya(-1)} className="w-5 h-5 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-xs font-bold active:scale-90 cursor-pointer">
+                                  <i className="fa-solid fa-minus text-[9px]"></i>
+                                </button>
+                                <span className="text-xs font-bold w-4 text-center">{soyaCount}</span>
+                                <button onClick={() => updateSoya(1)} className="w-5 h-5 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-xs font-bold active:scale-90 cursor-pointer">
+                                  <i className="fa-solid fa-plus text-[9px]"></i>
+                                </button>
+                              </div>
+                            </div>
+                            <div className="flex items-center justify-between bg-black/30 px-3 py-1.5 rounded-xl border border-white/10">
+                              <span className="text-xs font-bold">Teriyaki</span>
+                              <div className="flex items-center gap-1.5">
+                                <button onClick={() => updateTeriyaki(-1)} className="w-5 h-5 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-xs font-bold active:scale-90 cursor-pointer">
+                                  <i className="fa-solid fa-minus text-[9px]"></i>
+                                </button>
+                                <span className="text-xs font-bold w-4 text-center">{teriyakiCount}</span>
+                                <button onClick={() => updateTeriyaki(1)} className="w-5 h-5 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-xs font-bold active:scale-90 cursor-pointer">
+                                  <i className="fa-solid fa-plus text-[9px]"></i>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="pt-2 flex items-center gap-6">
                         <div className={`flex items-center rounded-full border px-4 py-2 ${isLight ? 'bg-black/5 border-stone-900/20' : 'bg-black/30 border-white/25'} backdrop-blur-md shadow-md`}>
                           <button onClick={decreaseQty} className="w-8 h-8 flex items-center justify-center font-bold text-base active:scale-90 transition cursor-pointer">
                             <i className="fa-solid fa-minus text-xs"></i>
@@ -998,7 +1036,12 @@
 
                         <button 
                           onClick={addToCart}
-                          className="font-semibold px-10 py-4 rounded-full flex items-center gap-3 transition active:scale-95 shadow-2xl text-sm lg:text-base group cursor-pointer border bg-stone-950 text-white border-black hover:bg-stone-900"
+                          disabled={allowCustomizations && (soyaCount + teriyakiCount !== quantity)}
+                          className={`font-semibold px-10 py-3.5 rounded-full flex items-center gap-3 transition active:scale-95 shadow-2xl text-sm lg:text-base group cursor-pointer border bg-stone-950 text-white border-black hover:bg-stone-900 ${
+                            allowCustomizations && (soyaCount + teriyakiCount !== quantity)
+                              ? 'opacity-50 cursor-not-allowed bg-stone-800 text-white/50 border-white/10' 
+                              : ''
+                          }`}
                         >
                           Añadir al carrito 
                           <span className="w-7 h-7 bg-white text-stone-950 rounded-full flex items-center justify-center text-xs font-bold group-hover:translate-x-1 transition">
@@ -1101,20 +1144,20 @@
                       {allowCustomizations && (
                         <div className="space-y-0.5 w-full max-w-xs bg-black/25 p-1 rounded-xl border border-white/10">
                           <div className="flex justify-between items-center px-1">
-                            <span className="text-[9px] font-bold uppercase tracking-wider opacity-90">Salsas ({soyaCount + teriyakiCount}/{quantity}):</span>
+                            <span className="text-[9px] font-bold uppercase tracking-wider opacity-90">Elige tu salsa favorita</span>
                             <span className={`text-[9px] font-bold ${soyaCount + teriyakiCount === quantity ? 'text-emerald-400' : 'text-orange-300'}`}>
-                              {soyaCount + teriyakiCount === quantity ? '¡Completo!' : 'Asigna todas'}
+                              {soyaCount + teriyakiCount === quantity ? '¡Completo!' : `${soyaCount + teriyakiCount}/${quantity}`}
                             </span>
                           </div>
                           <div className="grid grid-cols-2 gap-1.5">
                             <div className="flex items-center justify-between bg-black/30 px-2 py-0.5 rounded-lg border border-white/10">
                               <span className="text-[10px] font-bold">Soya</span>
                               <div className="flex items-center gap-1">
-                                <button onClick={() => updateSoya(-1)} className="w-4 h-4 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[9px] font-bold active:scale-90">
+                                <button onClick={() => updateSoya(-1)} className="w-4 h-4 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[9px] font-bold active:scale-90 cursor-pointer">
                                   <i className="fa-solid fa-minus"></i>
                                 </button>
                                 <span className="text-[10px] font-bold w-2.5 text-center">{soyaCount}</span>
-                                <button onClick={() => updateSoya(1)} className="w-4 h-4 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[9px] font-bold active:scale-90">
+                                <button onClick={() => updateSoya(1)} className="w-4 h-4 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[9px] font-bold active:scale-90 cursor-pointer">
                                   <i className="fa-solid fa-plus"></i>
                                 </button>
                               </div>
@@ -1122,11 +1165,11 @@
                             <div className="flex items-center justify-between bg-black/30 px-2 py-0.5 rounded-lg border border-white/10">
                               <span className="text-[10px] font-bold">Teriyaki</span>
                               <div className="flex items-center gap-1">
-                                <button onClick={() => updateTeriyaki(-1)} className="w-4 h-4 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[9px] font-bold active:scale-90">
+                                <button onClick={() => updateTeriyaki(-1)} className="w-4 h-4 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[9px] font-bold active:scale-90 cursor-pointer">
                                   <i className="fa-solid fa-minus"></i>
                                 </button>
                                 <span className="text-[10px] font-bold w-2.5 text-center">{teriyakiCount}</span>
-                                <button onClick={() => updateTeriyaki(1)} className="w-4 h-4 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[9px] font-bold active:scale-90">
+                                <button onClick={() => updateTeriyaki(1)} className="w-4 h-4 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[9px] font-bold active:scale-90 cursor-pointer">
                                   <i className="fa-solid fa-plus"></i>
                                 </button>
                               </div>
@@ -1137,11 +1180,11 @@
 
                       <div className="flex items-center gap-2.5 pt-0.5 pb-0">
                         <div className={`flex items-center rounded-full border px-2.5 py-0.5 ${isLight ? 'bg-black/5 border-stone-900/20' : 'bg-black/30 border-white/25'} backdrop-blur-md`}>
-                          <button onClick={decreaseQty} className="w-5 h-5 flex items-center justify-center font-bold text-[10px] active:scale-90">
+                          <button onClick={decreaseQty} className="w-5 h-5 flex items-center justify-center font-bold text-[10px] active:scale-90 cursor-pointer">
                             <i className="fa-solid fa-minus text-[9px]"></i>
                           </button>
                           <span className="w-5 text-center font-bold text-[11px]">{quantity}</span>
-                          <button onClick={increaseQty} className="w-5 h-5 flex items-center justify-center font-bold text-[10px] active:scale-90">
+                          <button onClick={increaseQty} className="w-5 h-5 flex items-center justify-center font-bold text-[10px] active:scale-90 cursor-pointer">
                             <i className="fa-solid fa-plus text-[9px]"></i>
                           </button>
                         </div>
