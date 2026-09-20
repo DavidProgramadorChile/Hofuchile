@@ -89,17 +89,6 @@
             padding-bottom: 0.375rem;
             font-size: 0.7rem;
         }
-        @media (min-width: 1024px) {
-            .dynamic-island-content {
-                padding-left: 1.5rem;
-                padding-right: 1.5rem;
-                padding-top: 0.6rem;
-                padding-bottom: 0.6rem;
-                font-size: 0.875rem;
-            }
-        }
-
-        /* Loader Circular de Puntos - Estilo Minimalista Oscuro / Negro Elegante */
         @keyframes circularLoaderSpin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
@@ -125,45 +114,34 @@
             animation: badgePop 0.3s ease-in-out;
         }
 
-        /* Animaciones y estilos específicos para la Intro de PC (Fondo amarillo brillante y viñeteado oscuro) */
-        .megastore-bg {
+        /* Estilos para la Pantalla de Bienvenida de PC (Fondo amarillo brillante con viñeteado oscuro y texto HŌFU central) */
+        .welcome-bg-pc {
             background-color: #facc15; /* Amarillo brillante */
             background-image: 
                 radial-gradient(circle at 0% 0%, rgba(0, 0, 0, 0.55) 0%, transparent 45%),
                 radial-gradient(circle at 100% 100%, rgba(0, 0, 0, 0.6) 0%, transparent 50%);
         }
 
-        @keyframes bounceInDown {
-            0% { opacity: 0; transform: translateY(-100px) scale(0.8); }
-            60% { opacity: 1; transform: translateY(20px) scale(1.05); }
-            80% { transform: translateY(-10px) scale(0.98); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
+        @keyframes welcomeScaleIn {
+            0% { opacity: 0; transform: scale(0.85); filter: blur(8px); }
+            100% { opacity: 1; transform: scale(1); filter: blur(0); }
         }
-        .animate-bounce-in {
-            animation: bounceInDown 0.8s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
-        }
-
-        @keyframes fadeSlideUp {
-            0% { opacity: 0; transform: translateY(30px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeSlideOutUp {
-            0% { opacity: 1; transform: translateY(0); }
-            100% { opacity: 0; transform: translateY(-40px); }
-        }
-        .animate-fade-up {
-            animation: fadeSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-        .animate-fade-out-up {
-            animation: fadeSlideOutUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        .welcome-logo-text {
+            animation: welcomeScaleIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            color: #0c0a09; /* Negro elegante */
+            text-shadow: 
+                0 0 2px rgba(0, 0, 0, 0.8),
+                0 0 10px rgba(0, 0, 0, 0.5),
+                0 15px 35px rgba(0, 0, 0, 0.4),
+                2px 2px 0px rgba(255, 255, 255, 0.3);
         }
 
-        @keyframes megastoreFadeOut {
+        @keyframes welcomeFadeOut {
             0% { opacity: 1; transform: scale(1); }
-            100% { opacity: 0; transform: scale(1.05); pointer-events: none; }
+            100% { opacity: 0; transform: scale(1.06); pointer-events: none; }
         }
-        .megastore-exit {
-            animation: megastoreFadeOut 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        .welcome-exit {
+            animation: welcomeFadeOut 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
         /* Ocultar barras de scroll por defecto y mostrarlas con un estilo ultra sutil al hacer scroll */
@@ -411,38 +389,22 @@
         const METODOS_PAGO = ["Efectivo", "Tarjeta"];
 
         function HofuLanding() {
-          // Estados para la pantalla de bienvenida / intro de PC (~25s con secuencia de texto exacta y botón X)
-          const [showMegastoreWelcome, setShowMegastoreWelcome] = useState(true);
-          const [isMegastoreExiting, setIsMegastoreExiting] = useState(false);
-          const [megastoreStage, setMegastoreStage] = useState(1); // 1: "Gohan" rebote, 2: "Bienvenido", 3: Slide a la izquierda y "Gohan Pollo" rotado
+          // Estados para la pantalla de bienvenida / intro de PC (10 segundos con botón X)
+          const [showWelcomePC, setShowWelcomePC] = useState(true);
+          const [isWelcomeExiting, setIsWelcomeExiting] = useState(false);
 
           useEffect(() => {
-            // Paso 1 a Paso 2: tras 2.2s cambia de "Gohan" a "Bienvenido"
-            const timer1 = setTimeout(() => {
-              setMegastoreStage(2);
-            }, 2200);
+            const timer = setTimeout(() => {
+              handleCloseWelcome();
+            }, 10000);
 
-            // Paso 2 a Paso 3: tras 4.2s desliza el Gohan a la izquierda y muestra "Gohan Pollo" rotado
-            const timer2 = setTimeout(() => {
-              setMegastoreStage(3);
-            }, 4200);
-
-            // Cierre automático completo tras 25 segundos
-            const timer3 = setTimeout(() => {
-              handleCloseMegastore();
-            }, 25000);
-
-            return () => {
-              clearTimeout(timer1);
-              clearTimeout(timer2);
-              clearTimeout(timer3);
-            };
+            return () => clearTimeout(timer);
           }, []);
 
-          const handleCloseMegastore = () => {
-            setIsMegastoreExiting(true);
+          const handleCloseWelcome = () => {
+            setIsWelcomeExiting(true);
             setTimeout(() => {
-              setShowMegastoreWelcome(false);
+              setShowWelcomePC(false);
             }, 600);
           };
 
@@ -827,74 +789,26 @@
           // Color neón e icono interior sincronizados exactamente con el color del producto/tema activo actual
           const activeNeonColor = selectedItem.islandColor || '#10b981';
 
-          // Plato Gohan destacado para la intro de PC
-          const featuredGohan = categoriesData.gohan.items[2]; // Gohan Pollo
-
           return (
             <div className={`h-full w-full bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-hidden select-none relative`}>
               
-              {/* Pantalla de Bienvenida / Intro EXCLUSIVAMENTE PARA PC (Fondo amarillo, viñeteado oscuro, Gohan central y secuencia de texto exacta sin precios) */}
-              {showMegastoreWelcome && (
-                <div className={`hidden lg:flex fixed inset-0 z-50 megastore-bg text-black items-center justify-center overflow-hidden ${isMegastoreExiting ? 'megastore-exit' : ''}`}>
+              {/* Pantalla de Bienvenida EXCLUSIVAMENTE PARA PC (Fondo amarillo brillante, viñeteado oscuro, HŌFU central masivo y botón X) */}
+              {showWelcomePC && (
+                <div className={`hidden lg:flex fixed inset-0 z-50 welcome-bg-pc items-center justify-center overflow-hidden ${isWelcomeExiting ? 'welcome-exit' : ''}`}>
                   
-                  {/* Botón de cierre "X" visible en la esquina superior derecha */}
+                  {/* Botón de cierre "X" en la esquina superior derecha */}
                   <button 
-                    onClick={handleCloseMegastore}
-                    className="absolute top-8 right-8 w-12 h-12 rounded-full bg-black/15 hover:bg-black/30 backdrop-blur-md text-stone-950 flex items-center justify-center transition active:scale-90 cursor-pointer z-50 shadow-2xl border border-black/20"
+                    onClick={handleCloseWelcome}
+                    className="absolute top-8 right-8 w-12 h-12 rounded-full bg-black/15 hover:bg-black/30 backdrop-blur-md text-stone-950 flex items-center justify-center transition active:scale-90 cursor-pointer z-50 shadow-2xl border border-black/25"
                     title="Omitir bienvenida"
                   >
                     <i className="fa-solid fa-xmark text-lg"></i>
                   </button>
 
-                  <div className="relative w-full max-w-[1650px] px-16 flex items-center justify-center h-full">
-                    
-                    {/* Paso 1: "Gohan" ingresando desde arriba con rebote elástico y Gohan central */}
-                    {megastoreStage === 1 && (
-                      <div className="flex flex-col items-center justify-center space-y-4">
-                        <h1 className="text-9xl font-black tracking-tighter uppercase text-stone-950 drop-shadow-md animate-bounce-in">
-                          GOHAN
-                        </h1>
-                        <div className="relative w-[450px] h-[450px] flex items-center justify-center">
-                          <div className="absolute w-96 h-96 bg-black/10 rounded-full blur-2xl"></div>
-                          <img src={featuredGohan.image} alt={featuredGohan.title} className="max-h-[420px] object-contain drop-shadow-[0_30px_40px_rgba(0,0,0,0.6)] animate-bounce-in" />
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Paso 2: "Gohan" sube desvaneciéndose y aparece suavemente "Bienvenido" */}
-                    {megastoreStage === 2 && (
-                      <div className="flex flex-col items-center justify-center space-y-4">
-                        <h1 className="text-8xl font-black tracking-tighter uppercase text-stone-950 drop-shadow-md animate-fade-out-up absolute top-32">
-                          GOHAN
-                        </h1>
-                        <h2 className="text-8xl font-black tracking-tight uppercase text-stone-950 drop-shadow-md animate-fade-up">
-                          BIENVENIDO
-                        </h2>
-                        <div className="relative w-[450px] h-[450px] flex items-center justify-center mt-6">
-                          <div className="absolute w-96 h-96 bg-black/10 rounded-full blur-2xl"></div>
-                          <img src={featuredGohan.image} alt={featuredGohan.title} className="max-h-[420px] object-contain drop-shadow-[0_30px_40px_rgba(0,0,0,0.6)]" />
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Paso 3: Gohan se desliza a la izquierda y aparece "Gohan Pollo" en tipografía masiva rotada */}
-                    {megastoreStage === 3 && (
-                      <div className="w-full grid grid-cols-12 gap-12 items-center transition-all duration-700 ease-out transform translate-x-0">
-                        <div className="col-span-5 flex justify-center transform -translate-x-12 scale-105 transition-all duration-700 ease-out">
-                          <img src={featuredGohan.image} alt={featuredGohan.title} className="max-h-[520px] object-contain drop-shadow-[0_35px_45px_rgba(0,0,0,0.7)]" />
-                        </div>
-                        <div className="col-span-7 flex flex-col items-start justify-center space-y-4 transform translate-x-8 transition-all duration-700 ease-out">
-                          <span className="text-lg uppercase tracking-[0.4em] font-extrabold text-stone-900">MENÚ EXCLUSIVO</span>
-                          <h1 className="text-8xl lg:text-9xl font-black tracking-tighter leading-none uppercase text-stone-950 drop-shadow-2xl transform rotate-[-3deg] origin-left">
-                            GOHAN POLLO
-                          </h1>
-                          <p className="text-xl text-stone-900 font-bold max-w-xl leading-relaxed pt-2">
-                            {featuredGohan.description}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-
+                  <div className="relative w-full max-w-[1600px] px-16 flex items-center justify-center h-full">
+                    <h1 className="text-[12rem] lg:text-[16rem] font-black tracking-[0.2em] uppercase welcome-logo-text select-none text-center">
+                      HŌFU
+                    </h1>
                   </div>
                 </div>
               )}
