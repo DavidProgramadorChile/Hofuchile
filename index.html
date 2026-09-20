@@ -50,10 +50,7 @@
 
         /* Posicionamiento dinámico para Dynamic Island con área segura y soporte anti-cámara central móvil */
         .dynamic-island-wrapper {
-            top: 0.5rem; /* Posición estándar por defecto (modo normal / PC) */
-        }
-        .fullscreen-active .dynamic-island-wrapper {
-            top: calc(env(safe-area-inset-top, 0px) + 12px);
+            top: 0.5rem;
         }
 
         /* Efecto de Border Beam / Running Light (Haz de luz recorriendo el borde sincronizado al color del tema) */
@@ -153,23 +150,6 @@
         .no-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
-        }
-
-        /* Reglas CSS estrictas para Modo Pantalla Completa activo (Intacto e inalterado) */
-        .fullscreen-active .fullscreen-main-area {
-            flex: 1 1 100% !important;
-            justify-content: space-evenly !important;
-            padding-top: 0.25rem !important;
-            padding-bottom: 0.25rem !important;
-        }
-        .fullscreen-active .fullscreen-hero-img-box {
-            height: 300px !important;
-            margin-top: 0 !important;
-            margin-bottom: 0 !important;
-        }
-        .fullscreen-active .fullscreen-hero-img {
-            max-height: 280px !important;
-            transform: scale(1.25) !important;
         }
     </style>
 </head>
@@ -406,7 +386,6 @@
           const [searchOpen, setSearchOpen] = useState(false);
           const [searchQuery, setSearchQuery] = useState('');
           const [cartOpen, setCartOpen] = useState(false);
-          const [isFullscreenActive, setIsFullscreenActive] = useState(false);
 
           const [cart, setCart] = useState(() => {
             try {
@@ -438,22 +417,6 @@
             checkStoreStatus();
             const interval = setInterval(checkStoreStatus, 60000);
             return () => clearInterval(interval);
-          }, []);
-
-          // Sincronizar estado real de pantalla completa nativa del navegador con la clase CSS y notificación Dynamic Island
-          useEffect(() => {
-            const handleFullscreenChange = () => {
-              const isFull = !!document.fullscreenElement;
-              setIsFullscreenActive(isFull);
-              
-              if (isFull) {
-                triggerCustomDynamicIsland("Modo inmersivo activado", "fa-solid fa-expand");
-              } else {
-                triggerCustomDynamicIsland("Modo normal restaurado", "fa-solid fa-compress");
-              }
-            };
-            document.addEventListener('fullscreenchange', handleFullscreenChange);
-            return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
           }, []);
 
           const [formData, setFormData] = useState({ 
@@ -549,29 +512,6 @@
             document.addEventListener("mousedown", handleClickOutside);
             return () => document.removeEventListener("mousedown", handleClickOutside);
           }, []);
-
-          // Función para activar / desactivar el Modo Inmersivo con ocultación de barra de estado y UI del navegador
-          const toggleFullScreen = () => {
-            if (!document.fullscreenElement) {
-              const docElm = document.documentElement;
-              const requestOptions = docElm.requestFullscreen ? { navigationUI: "hide" } : {};
-              
-              const promise = docElm.requestFullscreen ? docElm.requestFullscreen(requestOptions) : Promise.reject();
-              promise.then(() => {
-                setIsFullscreenActive(true);
-              }).catch(err => {
-                console.error("Error al intentar activar pantalla completa:", err);
-              });
-            } else {
-              if (document.exitFullscreen) {
-                document.exitFullscreen().then(() => {
-                  setIsFullscreenActive(false);
-                }).catch(() => {
-                  setIsFullscreenActive(false);
-                });
-              }
-            }
-          };
 
           const handleCategoryChange = (categoryKey) => {
             if (categoryKey === activeCategory) return;
@@ -809,7 +749,7 @@
           const activeNeonColor = selectedItem.islandColor || '#10b981';
 
           return (
-            <div className={`h-full w-full bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-hidden select-none relative ${isFullscreenActive ? 'fullscreen-active' : ''}`}>
+            <div className="h-full w-full bg-gradient-to-br from-emerald-700 via-teal-800 to-stone-950 text-white native-transition flex flex-col overflow-hidden select-none relative" style={{ backgroundImage: `linear-gradient(to bottom right, var(--tw-gradient-stops))` }}>
               
               {/* Notificación tipo Dynamic Island optimizada: tamaño adaptativo en PC y con nombre de producto y proteína detallada */}
               {dynamicIsland.show && (
@@ -829,31 +769,16 @@
                 </div>
               )}
 
-              {/* 1. Mini-barra superior (Top Bar) con horario condicional y el botón minimalista sin borde de pantalla completa */}
+              {/* 1. Mini-barra superior (Top Bar) con horario condicional y sin botón de pantalla completa en PC */}
               <div className="w-full bg-black/60 backdrop-blur-md px-6 py-2 flex items-center justify-between z-40 border-b border-white/10 shrink-0">
-                <div className="flex items-center gap-2">
-                  <button 
-                    onClick={toggleFullScreen}
-                    className="group relative w-8 h-8 rounded-full bg-white/10 backdrop-blur-xl text-white transition-all duration-300 active:scale-95 cursor-pointer shadow-md flex items-center justify-center overflow-hidden"
-                    title="Pantalla Completa"
-                  >
-                    <span className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                    <i 
-                      style={{ color: activeNeonColor }}
-                      className={`fa-solid ${isFullscreenActive ? 'fa-compress' : 'fa-expand'} text-[12px] transition-colors duration-300 relative z-10`}
-                    ></i>
-                  </button>
-                </div>
+                <div className="flex items-center gap-2"></div>
 
-                {/* Horario del local: Se oculta por completo en modo pantalla completa inmersivo */}
-                {!isFullscreenActive && (
-                  <div className={`flex items-center gap-2 transition-opacity duration-300 ${dynamicIsland.show ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
-                    <span className={`w-2.5 h-2.5 rounded-full animate-pulse ${isOpen ? 'bg-emerald-400' : 'bg-red-500'}`}></span>
-                    <span className="text-[11px] font-semibold tracking-wider uppercase text-white/95">
-                      {isOpen ? 'Abierto • 11:00 - 00:00' : 'Cerrado • Abre a las 11:00'}
-                    </span>
-                  </div>
-                )}
+                <div className={`flex items-center gap-2 transition-opacity duration-300 ${dynamicIsland.show ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+                  <span className={`w-2.5 h-2.5 rounded-full animate-pulse ${isOpen ? 'bg-emerald-400' : 'bg-red-500'}`}></span>
+                  <span className="text-[11px] font-semibold tracking-wider uppercase text-white/95">
+                    {isOpen ? 'Abierto • 11:00 - 00:00' : 'Cerrado • Abre a las 11:00'}
+                  </span>
+                </div>
 
                 <div className="w-8"></div>
               </div>
@@ -989,20 +914,15 @@
               </div>
 
               {/* 3. Main Hero Section con layouts separados e intactos para móvil y escritorio amplio */}
-              <main className="flex-1 flex items-center justify-center px-4 md:px-8 lg:px-20 py-2 lg:py-6 z-10 w-full overflow-hidden fullscreen-main-area">
+              <main className="flex-1 flex items-center justify-center px-4 md:px-8 lg:px-20 py-2 lg:py-6 z-10 w-full overflow-hidden">
                 <div className="max-w-[1600px] w-full grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-16 items-center mx-auto my-auto">
                   
-                  {/* Columna Izquierda (Escritorio): Título con precio alineado, Descripción, Selectores y Botón de Añadir al Carrito con borde negro */}
+                  {/* Columna Izquierda (Escritorio): Título, Descripción, Selectores y Botón de Añadir al Carrito con borde negro */}
                   <div className="lg:col-span-5 hidden lg:flex flex-col justify-center space-y-6 order-1 text-left">
                     <div className={`space-y-4 lg:space-y-6 transition-all duration-300 ease-out ${animating ? 'opacity-0 -translate-x-6 scale-95' : 'opacity-100 translate-x-0 scale-100'}`}>
-                      <div className="flex items-baseline justify-between gap-4 flex-wrap">
-                        <h1 className="text-4xl lg:text-7xl font-extrabold tracking-tight leading-tight drop-shadow-sm">
-                          <span>{selectedItem.title}</span>
-                        </h1>
-                        <div className="text-4xl lg:text-6xl font-extrabold tracking-tight text-orange-400 drop-shadow-sm">
-                          {selectedItem.price}
-                        </div>
-                      </div>
+                      <h1 className="text-4xl lg:text-7xl font-extrabold tracking-tight leading-tight drop-shadow-sm">
+                        <span>{selectedItem.title}</span>
+                      </h1>
                       
                       <p className={`text-base lg:text-xl leading-relaxed max-w-xl font-medium ${isLight ? 'text-stone-900/90' : 'text-white/95'} drop-shadow`}>
                         {selectedItem.description}
@@ -1097,7 +1017,7 @@
 
                   {/* Columna Central: Imagen del Producto Hero (Imagen significativamente ampliada en Modo Normal PC) */}
                   <div className="lg:col-span-4 relative flex flex-col items-center justify-center order-2">
-                    <div className="relative w-full h-[180px] sm:h-[220px] lg:h-[650px] flex items-center justify-center my-0 fullscreen-hero-img-box">
+                    <div className="relative w-full h-[180px] sm:h-[220px] lg:h-[650px] flex items-center justify-center my-0">
                       <div className={`absolute w-44 h-44 sm:w-64 sm:h-64 lg:w-[560px] lg:h-[560px] ${isLight ? 'bg-white/60' : 'bg-white/20'} rounded-full blur-3xl pointer-events-none transition-all duration-500`}></div>
                       
                       <img 
@@ -1108,7 +1028,7 @@
                         onMouseDown={() => setIsImageZoomed(true)}
                         onMouseUp={() => setIsImageZoomed(false)}
                         onMouseLeave={() => setIsImageZoomed(false)}
-                        className={`max-h-[160px] sm:max-h-[200px] lg:max-h-[640px] max-w-full object-contain drop-shadow-[0_20px_20px_rgba(0,0,0,0.5)] lg:drop-shadow-[0_40px_45px_rgba(0,0,0,0.8)] transition-all duration-300 ease-out cursor-pointer select-none fullscreen-hero-img ${
+                        className={`max-h-[160px] sm:max-h-[200px] lg:max-h-[640px] max-w-full object-contain drop-shadow-[0_20px_20px_rgba(0,0,0,0.5)] lg:drop-shadow-[0_40px_45px_rgba(0,0,0,0.8)] transition-all duration-300 ease-out cursor-pointer select-none ${
                           isImageZoomed ? 'scale-135 sm:scale-150 lg:scale-150 rotate-1' : 'scale-115 sm:scale-130 lg:scale-125'
                         } ${animating ? 'opacity-0 scale-75 rotate-3 translate-y-4' : 'opacity-100 translate-y-0'}`}
                         onError={(e)=>{
@@ -1244,8 +1164,14 @@
 
                   </div>
 
-                  {/* Columna Derecha: Miniaturas inferiores perfectamente espaciadas */}
+                  {/* Columna Derecha: Precio (alineado de forma armónica a la altura del título) y Miniaturas inferiores */}
                   <div className="lg:col-span-3 flex flex-col justify-center items-center lg:items-end space-y-3 lg:space-y-6 order-3 pb-2 sm:pb-3 lg:pb-0">
+                    <div className={`hidden lg:flex flex-col text-center lg:text-right space-y-1 transition-all duration-300 ease-out ${animating ? 'opacity-0 scale-90 translate-y-2' : 'opacity-100 scale-100 translate-y-0'}`}>
+                      <div className="text-5xl lg:text-6xl font-extrabold tracking-tight text-white drop-shadow-sm leading-tight lg:pt-3">
+                        {selectedItem.price}
+                      </div>
+                    </div>
+
                     <div className={`flex lg:hidden text-3xl font-extrabold text-white drop-shadow-md my-1 transition-all duration-300 ease-out ${animating ? 'opacity-0' : 'opacity-100'}`}>
                       {selectedItem.price}
                     </div>
