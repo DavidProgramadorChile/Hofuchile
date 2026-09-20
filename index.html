@@ -387,14 +387,8 @@
           const [searchQuery, setSearchQuery] = useState('');
           const [cartOpen, setCartOpen] = useState(false);
 
-          const [cart, setCart] = useState(() => {
-            try {
-              const savedCart = localStorage.getItem('hofu_cart');
-              return savedCart ? JSON.parse(savedCart) : [];
-            } catch (e) {
-              return [];
-            }
-          });
+          // Carrito en memoria limpia (Sin persistencia en localStorage)
+          const [cart, setCart] = useState([]);
 
           const [orderSuccess, setOrderSuccess] = useState(false);
           const [badgePulsing, setBadgePulsing] = useState(false);
@@ -494,12 +488,6 @@
             setSoyaCount(quantity);
             setTeriyakiCount(0);
           }, [quantity]);
-
-          useEffect(() => {
-            try {
-              localStorage.setItem('hofu_cart', JSON.stringify(cart));
-            } catch (e) {}
-          }, [cart]);
 
           useEffect(() => {
             function handleClickOutside(event) {
@@ -675,7 +663,6 @@
 
           const clearCart = () => {
             setCart([]);
-            try { localStorage.removeItem('hofu_cart'); } catch (e) {}
           };
 
           const allProducts = Object.values(categoriesData).flatMap(cat => cat.items);
@@ -738,7 +725,6 @@
               window.open(whatsappUrl, '_blank');
               setOrderSuccess(false);
               setCart([]);
-              try { localStorage.removeItem('hofu_cart'); } catch (e) {}
               setCartOpen(false);
               setFormData({ fullName: '', address: '', comuna: 'Santiago', phone: '', paymentMethod: 'Efectivo' });
             }, 2000);
