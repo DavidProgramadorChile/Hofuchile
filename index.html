@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>HŌFU - Menu Master</title>
+    <title>HŌFU - Menu</title>
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -114,7 +114,7 @@
             animation: badgePop 0.3s ease-in-out;
         }
 
-        /* Estilos de bienvenida universal cinematográfica de alta gama (Blanco puro, viñeteados oscuros intensificados y zoom suave) */
+        /* Estilos de bienvenida universal cinematográfica de alta gama (Blanco puro, viñeteados oscuros intensificados y estática sin zoom) */
         .cinematic-universal-bg {
             background-color: #ffffff; /* Blanco puro y elegante */
             background-image: 
@@ -122,38 +122,13 @@
                 radial-gradient(circle at 100% 100%, rgba(0, 0, 0, 0.6) 0%, transparent 55%);
         }
 
-        @keyframes cinematicZoomIn {
-            0% { opacity: 0; transform: scale(0.75); filter: blur(14px); }
-            100% { opacity: 1; transform: scale(1); filter: blur(0); }
-        }
         .cinematic-logo-text-deep {
-            animation: cinematicZoomIn 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             color: #09090b; /* Negro sólido */
             text-shadow: 
                 0 0 4px rgba(0, 0, 0, 0.45),
                 0 0 25px rgba(0, 0, 0, 0.25),
                 0 20px 45px rgba(0, 0, 0, 0.35),
                 4px 4px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Animación para el subtítulo y el sello de marca con aparición suave */
-        @keyframes fadeInElements {
-            0% { opacity: 0; transform: translateY(10px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-        .intro-fade-in {
-            animation: fadeInElements 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
-            opacity: 0;
-        }
-
-        /* Animación para estirar la línea divisoria ultra fina */
-        @keyframes lineStretch {
-            0% { width: 0%; opacity: 0; }
-            100% { width: 120px; opacity: 1; }
-        }
-        .intro-line-stretch {
-            animation: lineStretch 1s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
-            width: 0%;
         }
 
         @keyframes cinematicFadeOut {
@@ -443,10 +418,9 @@
         const METODOS_PAGO = ["Efectivo", "Tarjeta"];
 
         function HofuLanding() {
-          // Estados para la pantalla de bienvenida universal de alta gama (10 segundos, botón X neumórfico y efecto ondulado de agua)
+          // Estados para la pantalla de bienvenida universal (10 segundos fijos y botón X neumórfico, sin zoom ni efectos de agua)
           const [showUniversalWelcome, setShowUniversalWelcome] = useState(true);
           const [isUniversalWelcomeExiting, setIsUniversalWelcomeExiting] = useState(false);
-          const [rippleTransform, setRippleTransform] = useState({ x: 0, y: 0, scale: 1 });
 
           useEffect(() => {
             const timer = setTimeout(() => {
@@ -467,24 +441,6 @@
             setTimeout(() => {
               setShowUniversalWelcome(false);
             }, 600);
-          };
-
-          // Efecto de ondas de agua interactivo (Water Ripple Effect) al mover cursor o arrastrar dedo
-          const handleWaterMove = (e) => {
-            const clientX = e.clientX !== undefined ? e.clientX : (e.touches && e.touches[0] ? e.touches[0].clientX : window.innerWidth / 2);
-            const clientY = e.clientY !== undefined ? e.clientY : (e.touches && e.touches[0] ? e.touches[0].clientY : window.innerHeight / 2);
-            
-            const centerX = window.innerWidth / 2;
-            const centerY = window.innerHeight / 2;
-            
-            const moveX = (clientX - centerX) / 35;
-            const moveY = (clientY - centerY) / 35;
-
-            setRippleTransform({ x: moveX, y: moveY, scale: 1.02 });
-          };
-
-          const handleWaterLeave = () => {
-            setRippleTransform({ x: 0, y: 0, scale: 1 });
           };
 
           const [activeCategory, setActiveCategory] = useState('favoritos');
@@ -871,15 +827,9 @@
           return (
             <div className={`h-full w-full bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-hidden select-none relative`}>
               
-              {/* Pantalla de Bienvenida / Intro Universal de Alta Gama (10s, Botón X neumórfico y efecto ondulado de agua) */}
+              {/* Pantalla de Bienvenida / Intro Universal de Alta Gama (10 segundos fijos, estática, sin zoom, sin efecto de agua y con botón X neumórfico) */}
               {showUniversalWelcome && (
-                <div 
-                  onMouseMove={handleWaterMove}
-                  onTouchMove={handleWaterMove}
-                  onMouseLeave={handleWaterLeave}
-                  onTouchEnd={handleWaterLeave}
-                  className={`flex fixed inset-0 z-50 cinematic-universal-bg items-center justify-center overflow-hidden ${isUniversalWelcomeExiting ? 'cinematic-exit' : ''}`}
-                >
+                <div className={`flex fixed inset-0 z-50 cinematic-universal-bg items-center justify-center overflow-hidden ${isUniversalWelcomeExiting ? 'cinematic-exit' : ''}`}>
                   
                   {/* Botón X Neumórfico de alta gama ubicado en la esquina superior derecha */}
                   <button 
@@ -895,19 +845,16 @@
                     SANTIAGO DE CHILE
                   </div>
 
-                  <div 
-                    style={{ transform: `translate(${rippleTransform.x}px, ${rippleTransform.y}px) scale(${rippleTransform.scale})`, transition: 'transform 0.15s cubic-bezier(0, 0, 0.2, 1)' }}
-                    className="relative w-full max-w-[1600px] px-6 sm:px-12 lg:px-16 flex flex-col items-center justify-center h-full text-center pointer-events-none"
-                  >
+                  <div className="relative w-full max-w-[1600px] px-6 sm:px-12 lg:px-16 flex flex-col items-center justify-center h-full text-center pointer-events-none">
                     <h1 className="text-6xl sm:text-9xl lg:text-[15rem] font-black tracking-[0.2em] uppercase cinematic-logo-text-deep select-none leading-none">
                       HŌFU
                     </h1>
                     
-                    {/* Línea divisoria animada ultra fina */}
-                    <div className="h-[1.5px] bg-stone-900/40 my-4 sm:my-6 intro-line-stretch mx-auto"></div>
+                    {/* Línea divisoria estática */}
+                    <div className="w-[120px] h-[1.5px] bg-stone-900/40 my-4 sm:my-6 mx-auto"></div>
 
                     {/* Subtítulo actualizado exactamente a "SUSHI & GOHAN" */}
-                    <p className="text-[10px] sm:text-sm lg:text-base tracking-[0.4em] font-semibold text-stone-900/80 uppercase intro-fade-in select-none">
+                    <p className="text-[10px] sm:text-sm lg:text-base tracking-[0.4em] font-semibold text-stone-900/80 uppercase select-none">
                       SUSHI &amp; GOHAN
                     </p>
                   </div>
