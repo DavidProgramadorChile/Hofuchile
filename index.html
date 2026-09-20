@@ -173,6 +173,11 @@
             transform: scale(0.92);
         }
 
+        /* Sombreado negro elegante, profundo y difuminado exclusivo para el Onigiri y Favoritos (#D7FF44) */
+        .onigiri-deep-shadow {
+            filter: drop-shadow(0 25px 45px rgba(0, 0, 0, 0.35)) drop-shadow(0 10px 20px rgba(0, 0, 0, 0.25));
+        }
+
         /* Ocultar barras de scroll por defecto y mostrarlas con un estilo ultra sutil al hacer scroll */
         .categories-scroll::-webkit-scrollbar {
             height: 2px;
@@ -208,7 +213,7 @@
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
-        // Estructura completa de categorías y productos con colores de acento/neón dedicados para la Dynamic Island
+        // Estructura completa de categorías y productos con #D7FF44 para Favoritos / Onigiri
         const categoriesData = {
           favoritos: {
             name: 'FAVORITOS',
@@ -220,9 +225,9 @@
                 description: 'Base de Arroz • Palta • Queso Crema • Cebollín',
                 price: '$3.990',
                 rawPrice: 3990,
-                bgGradient: 'from-emerald-700 via-teal-800 to-stone-950',
-                islandColor: '#10b981', // Verde esmeralda vivo
-                isLight: false,
+                bgGradient: 'bg-[#D7FF44]',
+                islandColor: '#65a30d', // Verde oliva intenso
+                isLight: true,
                 image: 'img/onigiri.png',
                 hasProteinSelector: true,
                 proteinas: ["Pollo apanado", "Camarón apanado", "Salmón", "Champiñón salteado"] // Sin Kanikama para Onigiri
@@ -233,9 +238,9 @@
                 description: 'Base de Arroz • Queso Crema • Cebollín',
                 price: '$3.300',
                 rawPrice: 3300,
-                bgGradient: 'from-rose-600 via-pink-700 to-stone-950',
-                islandColor: '#f43f5e', // Rosa fucsia vibrante
-                isLight: false,
+                bgGradient: 'bg-[#D7FF44]',
+                islandColor: '#65a30d',
+                isLight: true,
                 image: 'img/handroll.png',
                 hasProteinSelector: true,
                 proteinas: ["Pollo apanado", "Camarón apanado", "Salmón", "Kanikama", "Champiñón salteado"]
@@ -251,7 +256,7 @@
                 description: 'Base de Arroz • Salmón • Palta • Queso Crema • Cebollín',
                 price: '$6.500',
                 rawPrice: 6500,
-                bgGradient: 'from-amber-600 via-orange-700 to-stone-950',
+                bgGradient: 'bg-gradient-to-br from-amber-600 via-orange-700 to-stone-950',
                 islandColor: '#f97316', // Naranja ámbar
                 isLight: false,
                 image: 'img/gohansalmon.png',
@@ -262,7 +267,7 @@
                 description: 'Base de Arroz • Camarón Apanado • Palta • Queso Crema • Cebollín',
                 price: '$6.000',
                 rawPrice: 6000,
-                bgGradient: 'from-[#8F3FD5] via-purple-800 to-stone-950',
+                bgGradient: 'bg-gradient-to-br from-[#8F3FD5] via-purple-800 to-stone-950',
                 islandColor: '#a855f7', // Morado brillante
                 isLight: false,
                 image: 'img/gohancamaron.png',
@@ -273,7 +278,7 @@
                 description: 'Base de Arroz • Pollo Apanado • Palta • Queso Crema • Cebollín',
                 price: '$5.500',
                 rawPrice: 5500,
-                bgGradient: 'from-amber-400 via-yellow-500 to-stone-950',
+                bgGradient: 'bg-gradient-to-br from-amber-400 via-yellow-500 to-stone-950',
                 islandColor: '#eab308', // Amarillo oro
                 isLight: true,
                 image: 'img/gohanpollo.png',
@@ -289,7 +294,7 @@
                 description: 'Camarón Apanado • Palta • Queso Crema',
                 price: '$4.800',
                 rawPrice: 4800,
-                bgGradient: 'from-amber-500 via-orange-600 to-stone-950',
+                bgGradient: 'bg-gradient-to-br from-amber-500 via-orange-600 to-stone-950',
                 islandColor: '#fb923c', // Naranja cálido
                 isLight: false,
                 image: 'img/tempuraroll.png',
@@ -300,7 +305,7 @@
                 description: 'Camarón • Palta • Queso Crema',
                 price: '$4.600',
                 rawPrice: 4600,
-                bgGradient: 'from-teal-600 via-cyan-700 to-stone-950',
+                bgGradient: 'bg-gradient-to-br from-teal-600 via-cyan-700 to-stone-950',
                 islandColor: '#06b6d4', // Turquesa cian
                 isLight: false,
                 image: 'img/eskimalroll.png',
@@ -316,7 +321,7 @@
                 description: 'Pollo teriyaki - queso crema - cebollín - apanado en panko',
                 price: '$5.000',
                 rawPrice: 5000,
-                bgGradient: 'from-red-800 via-orange-600 to-stone-950',
+                bgGradient: 'bg-gradient-to-br from-red-800 via-orange-600 to-stone-950',
                 islandColor: '#ef4444', // Rojo fuego
                 isLight: false,
                 image: 'img/torihot.png',
@@ -332,7 +337,7 @@
                 description: 'Bebida formato familiar 1.5 Litros bien fría para acompañar',
                 price: '$2.500',
                 rawPrice: 2500,
-                bgGradient: 'from-[#CE2029] via-[#851117] to-stone-950',
+                bgGradient: 'bg-gradient-to-br from-[#CE2029] via-[#851117] to-stone-950',
                 islandColor: '#CE2029', // Rojo corporativo exacto #CE2029
                 isLight: false,
                 image: 'img/bebida1.5.png',
@@ -344,7 +349,7 @@
                 description: 'Bebida en lata individual 350 cc refrescante',
                 price: '$1.500',
                 rawPrice: 1500,
-                bgGradient: 'from-blue-700 via-indigo-600 to-stone-950',
+                bgGradient: 'bg-gradient-to-br from-blue-700 via-indigo-600 to-stone-950',
                 islandColor: '#3b82f6', // Azul eléctrico
                 isLight: false,
                 image: 'img/bebidaslata.png',
@@ -361,7 +366,7 @@
                 description: 'Porción adicional de salsa de soya tradicional',
                 price: '$500',
                 rawPrice: 500,
-                bgGradient: 'from-amber-700 via-orange-600 to-stone-950',
+                bgGradient: 'bg-gradient-to-br from-amber-700 via-orange-600 to-stone-950',
                 islandColor: '#d97706', // Ámbar tostado
                 isLight: false,
                 image: 'img/soyaextra.png',
@@ -372,7 +377,7 @@
                 description: 'Salsa dulce de anguila caramelizada adicional',
                 price: '$800',
                 rawPrice: 800,
-                bgGradient: 'from-amber-700 via-orange-600 to-stone-950',
+                bgGradient: 'bg-gradient-to-br from-amber-700 via-orange-600 to-stone-950',
                 islandColor: '#f59e0b', // Dorado cálido
                 isLight: false,
                 image: 'img/unaguiextra.png',
@@ -383,7 +388,7 @@
                 description: 'Extra de palta fresca en láminas',
                 price: '$1.200',
                 rawPrice: 1200,
-                bgGradient: 'from-emerald-600 via-teal-600 to-stone-950',
+                bgGradient: 'bg-gradient-to-br from-emerald-600 via-teal-600 to-stone-950',
                 islandColor: '#34d399', // Verde palta fresco
                 isLight: false,
                 image: 'img/porcionpalta.png',
@@ -394,7 +399,7 @@
                 description: 'Porción adicional de queso crema Philadelphia',
                 price: '$1.000',
                 rawPrice: 1000,
-                bgGradient: 'from-yellow-600 via-amber-600 to-stone-950',
+                bgGradient: 'bg-gradient-to-br from-yellow-600 via-amber-600 to-stone-950',
                 islandColor: '#facc15', // Amarillo crema
                 isLight: false,
                 image: 'img/quesocremaextra.png',
@@ -813,8 +818,7 @@
           const totalCartAmount = cart.reduce((acc, item) => acc + (item.rawPrice * item.quantity), 0);
 
           // Sistema de Contraste Inteligente Dinámico para la pantalla del carrito / resumen de pedido
-          const gradientStr = selectedItem.bgGradient;
-          const isBackgroundLuminous = gradientStr.includes('amber-400') || gradientStr.includes('yellow-500') || gradientStr.includes('orange-400');
+          const isBackgroundLuminous = isLight;
           
           const dynamicPriceColor = isBackgroundLuminous ? 'text-stone-950 font-extrabold' : 'text-white font-extrabold';
           const dynamicIconContainerBg = isBackgroundLuminous ? 'bg-black/15 text-stone-950 hover:bg-black/25' : 'bg-white/15 text-white hover:bg-white/25';
@@ -825,7 +829,7 @@
           const activeNeonColor = selectedItem.islandColor || '#10b981';
 
           return (
-            <div className={`h-full w-full bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-hidden select-none relative`}>
+            <div className={`h-full w-full ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-hidden select-none relative`}>
               
               {/* Pantalla de Bienvenida / Intro Universal de Alta Gama (10 segundos fijos, estática, sin zoom, sin efecto de agua y con botón X neumórfico) */}
               {showUniversalWelcome && (
@@ -1172,7 +1176,7 @@
                     </h1>
                   </div>
 
-                  {/* Columna Central: Imagen del Producto Hero (Imagen significativamente ampliada en Modo Normal PC) */}
+                  {/* Columna Central: Imagen del Producto Hero (con sombreado profundo difuminado exclusivo para Onigiri) */}
                   <div className="lg:col-span-4 relative flex flex-col items-center justify-center order-2">
                     <div className="relative w-full h-[150px] sm:h-[190px] lg:h-[650px] flex items-center justify-center my-0">
                       <div className={`absolute w-36 h-36 sm:w-56 sm:h-56 lg:w-[560px] lg:h-[560px] ${isLight ? 'bg-white/60' : 'bg-white/20'} rounded-full blur-3xl pointer-events-none transition-all duration-500`}></div>
@@ -1185,7 +1189,7 @@
                         onMouseDown={() => setIsImageZoomed(true)}
                         onMouseUp={() => setIsImageZoomed(false)}
                         onMouseLeave={() => setIsImageZoomed(false)}
-                        className={`max-h-[135px] sm:max-h-[175px] lg:max-h-[640px] max-w-full object-contain drop-shadow-[0_20px_20px_rgba(0,0,0,0.5)] lg:drop-shadow-[0_40px_45px_rgba(0,0,0,0.8)] transition-all duration-300 ease-out cursor-pointer select-none ${
+                        className={`max-h-[135px] sm:max-h-[175px] lg:max-h-[640px] max-w-full object-contain ${selectedItem.id === 'onigiri' ? 'onigiri-deep-shadow' : 'drop-shadow-[0_20px_20px_rgba(0,0,0,0.5)] lg:drop-shadow-[0_40px_45px_rgba(0,0,0,0.8)]'} transition-all duration-300 ease-out cursor-pointer select-none ${
                           isImageZoomed ? 'scale-135 sm:scale-150 lg:scale-150 rotate-1' : 'scale-115 sm:scale-130 lg:scale-125'
                         } ${animating ? 'opacity-0 scale-75 rotate-3 translate-y-4' : 'opacity-100 translate-y-0'}`}
                         onError={(e)=>{
@@ -1324,12 +1328,12 @@
                   {/* Columna Derecha: Precio (alineado de forma armónica a la altura del título) y Miniaturas inferiores */}
                   <div className="lg:col-span-3 flex flex-col justify-center items-center lg:items-end space-y-3 lg:space-y-6 order-3 pb-1 sm:pb-2 lg:pb-0">
                     <div className={`hidden lg:flex flex-col text-center lg:text-right space-y-1 transition-all duration-300 ease-out ${animating ? 'opacity-0 scale-90 translate-y-2' : 'opacity-100 scale-100 translate-y-0'}`}>
-                      <div className="text-5xl lg:text-6xl font-extrabold tracking-tight text-white drop-shadow-sm leading-tight lg:pt-3">
+                      <div className={`text-5xl lg:text-6xl font-extrabold tracking-tight ${isLight ? 'text-stone-950' : 'text-white'} drop-shadow-sm leading-tight lg:pt-3`}>
                         {selectedItem.price}
                       </div>
                     </div>
 
-                    <div className={`flex lg:hidden text-2xl font-extrabold text-white drop-shadow-md my-0 transition-all duration-300 ease-out ${animating ? 'opacity-0' : 'opacity-100'}`}>
+                    <div className={`flex lg:hidden text-2xl font-extrabold ${isLight ? 'text-stone-950' : 'text-white'} drop-shadow-md my-0 transition-all duration-300 ease-out ${animating ? 'opacity-0' : 'opacity-100'}`}>
                       {selectedItem.price}
                     </div>
 
