@@ -114,34 +114,36 @@
             animation: badgePop 0.3s ease-in-out;
         }
 
-        /* Estilos cinematográficos para la pantalla de bienvenida / intro de PC */
-        .cinematic-welcome-bg {
-            background-color: #facc15; /* Amarillo brillante y cálido */
+        /* Estilos de bienvenida oscura sofisticada para PC (Negro carbón / grafito oscuro con viñeteado) */
+        .dark-welcome-bg {
+            background-color: #09090b; /* Negro carbón profundo */
             background-image: 
-                radial-gradient(circle at 0% 0%, rgba(0, 0, 0, 0.55) 0%, transparent 45%),
-                radial-gradient(circle at 100% 100%, rgba(0, 0, 0, 0.6) 0%, transparent 50%);
+                radial-gradient(circle at 50% 50%, rgba(24, 24, 27, 0.8) 0%, rgba(9, 9, 11, 0.98) 100%),
+                radial-gradient(circle at 0% 0%, rgba(0, 0, 0, 0.7) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(0, 0, 0, 0.75) 0%, transparent 55%);
         }
 
-        @keyframes cinematicScaleIn {
+        @keyframes darkWelcomeScaleIn {
             0% { opacity: 0; transform: scale(0.85); filter: blur(12px); }
             100% { opacity: 1; transform: scale(1); filter: blur(0); }
         }
-        .cinematic-logo-text {
-            animation: cinematicScaleIn 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            color: #0c0a09; /* Negro elegante */
+        .dark-welcome-logo-text {
+            animation: darkWelcomeScaleIn 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            color: #ffffff; /* Blanco brillante */
             text-shadow: 
-                0 0 3px rgba(0, 0, 0, 0.85),
-                0 0 12px rgba(0, 0, 0, 0.45),
-                0 20px 40px rgba(0, 0, 0, 0.35),
-                2px 2px 0px rgba(255, 255, 255, 0.35);
+                0 0 3px rgba(0, 0, 0, 0.95),
+                0 0 20px rgba(0, 0, 0, 0.8),
+                0 0 40px rgba(0, 0, 0, 0.6),
+                0 15px 35px rgba(0, 0, 0, 0.9),
+                2px 2px 4px rgba(0, 0, 0, 0.9);
         }
 
-        @keyframes cinematicFadeOut {
+        @keyframes darkWelcomeFadeOut {
             0% { opacity: 1; transform: scale(1); }
             100% { opacity: 0; transform: scale(1.06); pointer-events: none; }
         }
-        .cinematic-exit {
-            animation: cinematicFadeOut 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        .dark-welcome-exit {
+            animation: darkWelcomeFadeOut 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
         @keyframes progressBarCountdown {
@@ -397,22 +399,22 @@
         const METODOS_PAGO = ["Efectivo", "Tarjeta"];
 
         function HofuLanding() {
-          // Estados para la pantalla de bienvenida cinematográfica de PC (10 segundos con barra de progreso y botón X)
-          const [showCinematicPC, setShowCinematicPC] = useState(true);
-          const [isCinematicExiting, setIsCinematicExiting] = useState(false);
+          // Estados para la pantalla de bienvenida oscura sofisticada de PC (10 segundos con barra de progreso y botón X)
+          const [showDarkWelcomePC, setShowDarkWelcomePC] = useState(true);
+          const [isDarkWelcomeExiting, setIsDarkWelcomeExiting] = useState(false);
 
           useEffect(() => {
             const timer = setTimeout(() => {
-              handleCloseCinematic();
+              handleCloseDarkWelcome();
             }, 10000);
 
             return () => clearTimeout(timer);
           }, []);
 
-          const handleCloseCinematic = () => {
-            setIsCinematicExiting(true);
+          const handleCloseDarkWelcome = () => {
+            setIsDarkWelcomeExiting(true);
             setTimeout(() => {
-              setShowCinematicPC(false);
+              setShowDarkWelcomePC(false);
             }, 600);
           };
 
@@ -800,28 +802,28 @@
           return (
             <div className={`h-full w-full bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-hidden select-none relative`}>
               
-              {/* Pantalla de Bienvenida / Intro Cinemática EXCLUSIVAMENTE PARA PC (Fondo amarillo con viñeteado, HŌFU central con relieve Glass Glow, barra de progreso y botón X) */}
-              {showCinematicPC && (
-                <div className={`hidden lg:flex fixed inset-0 z-50 cinematic-welcome-bg items-center justify-center overflow-hidden ${isCinematicExiting ? 'cinematic-exit' : ''}`}>
+              {/* Pantalla de Bienvenida / Intro Oscura Sofisticada EXCLUSIVAMENTE PARA PC (Fondo negro carbón, viñeteado, HŌFU central en blanco con sombreado oscuro 3D, barra de progreso y botón X) */}
+              {showDarkWelcomePC && (
+                <div className={`hidden lg:flex fixed inset-0 z-50 dark-welcome-bg items-center justify-center overflow-hidden ${isDarkWelcomeExiting ? 'dark-welcome-exit' : ''}`}>
                   
                   {/* Botón de cierre "X" flotante en la esquina superior derecha con microinteracción hover */}
                   <button 
-                    onClick={handleCloseCinematic}
-                    className="absolute top-8 right-8 w-12 h-12 rounded-full bg-black/15 hover:bg-black/30 backdrop-blur-md text-stone-950 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-90 cursor-pointer z-50 shadow-2xl border border-black/25"
+                    onClick={handleCloseDarkWelcome}
+                    className="absolute top-8 right-8 w-12 h-12 rounded-full bg-white/10 hover:bg-white/25 backdrop-blur-md text-white flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-90 cursor-pointer z-50 shadow-2xl border border-white/20"
                     title="Omitir bienvenida"
                   >
                     <i className="fa-solid fa-xmark text-lg"></i>
                   </button>
 
                   <div className="relative w-full max-w-[1600px] px-16 flex items-center justify-center h-full">
-                    <h1 className="text-[12rem] lg:text-[16rem] font-black tracking-[0.2em] uppercase cinematic-logo-text select-none text-center">
+                    <h1 className="text-[12rem] lg:text-[16rem] font-black tracking-[0.2em] uppercase dark-welcome-logo-text select-none text-center">
                       HŌFU
                     </h1>
                   </div>
 
                   {/* Línea o barra de progreso minimalista y delgada en la parte inferior */}
-                  <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-black/10 overflow-hidden">
-                    <div className="h-full bg-stone-950 progress-bar-anim"></div>
+                  <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-white/10 overflow-hidden">
+                    <div className="h-full bg-white progress-bar-anim"></div>
                   </div>
                 </div>
               )}
@@ -1364,7 +1366,7 @@
                     ) : (
                       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
                         
-                        {/* Columna de productos del carrito organizada: Nombre recto completo, salsa justo debajo, sin precio repetido */}
+                        {/* Columna de productos del carrito organizada: Nombre recto completo, salsa justo downregulated, sin precio repetido */}
                         <div className="lg:col-span-6 flex flex-col space-y-4">
                           <div className="flex items-center justify-between border-b pb-3 border-white/15">
                             <span className="text-xs uppercase tracking-wider font-bold opacity-95">Productos en tu bolsa</span>
