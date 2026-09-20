@@ -84,6 +84,24 @@
             pointer-events: none;
         }
 
+        /* Tamaño optimizado de Dynamic Island adaptativo: Compacto en Móvil, Más ancho y largo en Escritorio (PC) */
+        .dynamic-island-content {
+            padding-left: 1rem;
+            padding-right: 1rem;
+            padding-top: 0.375rem;
+            padding-bottom: 0.375rem;
+            font-size: 0.7rem;
+        }
+        @media (min-width: 1024px) {
+            .dynamic-island-content {
+                padding-left: 1.5rem;
+                padding-right: 1.5rem;
+                padding-top: 0.6rem;
+                padding-bottom: 0.6rem;
+                font-size: 0.875rem;
+            }
+        }
+
         /* Loader Circular de Puntos - Estilo Minimalista Oscuro / Negro Elegante */
         @keyframes circularLoaderSpin {
             0% { transform: rotate(0deg); }
@@ -630,7 +648,9 @@
           const addToCart = () => {
             setBadgePulsing(true);
             setLoaderActive(true);
-            triggerCustomDynamicIsland("¡Añadido con éxito! 🍣", "fa-solid fa-check");
+            
+            // Nombre del producto incluido dinámicamente en la notificación para PC y móvil
+            triggerCustomDynamicIsland(`¡Añadido: ${selectedItem.title}! 🍣`, "fa-solid fa-check");
 
             setTimeout(() => {
               setBadgePulsing(false);
@@ -772,16 +792,16 @@
           return (
             <div className={`h-full w-full bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-hidden select-none relative ${isFullscreenActive ? 'fullscreen-active' : ''}`}>
               
-              {/* Notificación tipo Dynamic Island con Border Beam e Icono interior sincronizados en tiempo real al color del tema */}
+              {/* Notificación tipo Dynamic Island optimizada: tamaño adaptativo en PC y con nombre de producto incluido */}
               {dynamicIsland.show && (
                 <div className="fixed dynamic-island-wrapper left-0 right-0 z-50 flex justify-center pointer-events-none px-4">
                   <div 
                     style={{ '--island-glow-color': activeNeonColor }}
-                    className={`dynamic-island-border-beam px-4 py-1.5 flex items-center gap-2.5 text-[11px] font-semibold tracking-wide ${dynamicIsland.leaving ? 'dynamic-island-exit' : 'dynamic-island-enter'}`}
+                    className={`dynamic-island-border-beam dynamic-island-content flex items-center gap-2.5 font-semibold tracking-wide ${dynamicIsland.leaving ? 'dynamic-island-exit' : 'dynamic-island-enter'}`}
                   >
                     <span 
                       style={{ backgroundColor: activeNeonColor }}
-                      className="w-4 h-4 rounded-full text-white flex items-center justify-center text-[9px] shadow-sm shrink-0 relative z-10"
+                      className="w-4 h-4 lg:w-5 lg:h-5 rounded-full text-white flex items-center justify-center text-[9px] lg:text-[11px] shadow-sm shrink-0 relative z-10"
                     >
                       <i className={dynamicIsland.icon}></i>
                     </span>
