@@ -417,7 +417,7 @@
         const METODOS_PAGO = ["Efectivo", "Tarjeta"];
 
         function HofuLanding() {
-          // Estados para la pantalla de bienvenida universal de alta gama (7.5 segundos, sin botón X, subtítulo, línea y sello)
+          // Estados para la pantalla de bienvenida universal de alta gama (7.5 segundos, sin texto en esquina, subtítulo actualizado a "SUSHI & GOHAN")
           const [showUniversalWelcome, setShowUniversalWelcome] = useState(true);
           const [isUniversalWelcomeExiting, setIsUniversalWelcomeExiting] = useState(false);
 
@@ -816,15 +816,11 @@
           return (
             <div className={`h-full w-full bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-hidden select-none relative`}>
               
-              {/* Pantalla de Bienvenida / Intro Universal de Alta Gama (7.5s, subtítulo elegante, línea animada, sello de marca y barra de lujo) */}
+              {/* Pantalla de Bienvenida / Intro Universal de Alta Gama (7.5s, sin texto en esquina, subtítulo "SUSHI & GOHAN") */}
               {showUniversalWelcome && (
                 <div className={`flex fixed inset-0 z-50 cinematic-universal-bg items-center justify-center overflow-hidden ${isUniversalWelcomeExiting ? 'cinematic-exit' : ''}`}>
                   
-                  {/* Sello de marca minimalista en la esquina superior izquierda / inferior */}
-                  <div className="absolute top-6 left-6 sm:top-10 sm:left-10 text-[9px] sm:text-xs tracking-[0.3em] font-medium uppercase text-stone-900/60 select-none hidden sm:block">
-                    EST. 2026 • HŌFU MASTER
-                  </div>
-
+                  {/* Sello de ubicación minimalista inferior */}
                   <div className="absolute bottom-8 right-8 text-[9px] sm:text-xs tracking-[0.3em] font-medium uppercase text-stone-900/60 select-none">
                     SANTIAGO DE CHILE
                   </div>
@@ -837,9 +833,9 @@
                     {/* Línea divisoria animada ultra fina */}
                     <div className="h-[1.5px] bg-stone-900/40 my-4 sm:my-6 intro-line-stretch mx-auto"></div>
 
-                    {/* Subtítulo elegante y secundario */}
+                    {/* Subtítulo actualizado exactamente a "SUSHI & GOHAN" */}
                     <p className="text-[10px] sm:text-sm lg:text-base tracking-[0.4em] font-semibold text-stone-900/80 uppercase intro-fade-in select-none">
-                      JAPANESE FOOD &amp; SUSHI
+                      SUSHI &amp; GOHAN
                     </p>
                   </div>
 
