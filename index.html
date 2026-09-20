@@ -114,36 +114,34 @@
             animation: badgePop 0.3s ease-in-out;
         }
 
-        /* Estilos de bienvenida oscura sofisticada para PC (Negro carbón / grafito oscuro con viñeteado) */
-        .dark-welcome-bg {
-            background-color: #09090b; /* Negro carbón profundo */
+        /* Estilos de bienvenida blanca elegante con esquinas oscuras para PC */
+        .white-welcome-bg {
+            background-color: #ffffff; /* Blanco puro y elegante */
             background-image: 
-                radial-gradient(circle at 50% 50%, rgba(24, 24, 27, 0.8) 0%, rgba(9, 9, 11, 0.98) 100%),
-                radial-gradient(circle at 0% 0%, rgba(0, 0, 0, 0.7) 0%, transparent 50%),
-                radial-gradient(circle at 100% 100%, rgba(0, 0, 0, 0.75) 0%, transparent 55%);
+                radial-gradient(circle at 0% 0%, rgba(0, 0, 0, 0.35) 0%, transparent 45%),
+                radial-gradient(circle at 100% 100%, rgba(0, 0, 0, 0.4) 0%, transparent 50%);
         }
 
-        @keyframes darkWelcomeScaleIn {
+        @keyframes whiteWelcomeScaleIn {
             0% { opacity: 0; transform: scale(0.85); filter: blur(12px); }
             100% { opacity: 1; transform: scale(1); filter: blur(0); }
         }
-        .dark-welcome-logo-text {
-            animation: darkWelcomeScaleIn 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            color: #ffffff; /* Blanco brillante */
+        .white-welcome-logo-text {
+            animation: whiteWelcomeScaleIn 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            color: #09090b; /* Negro sólido */
             text-shadow: 
-                0 0 3px rgba(0, 0, 0, 0.95),
-                0 0 20px rgba(0, 0, 0, 0.8),
-                0 0 40px rgba(0, 0, 0, 0.6),
-                0 15px 35px rgba(0, 0, 0, 0.9),
-                2px 2px 4px rgba(0, 0, 0, 0.9);
+                0 0 3px rgba(0, 0, 0, 0.3),
+                0 0 20px rgba(0, 0, 0, 0.15),
+                0 15px 35px rgba(0, 0, 0, 0.25),
+                2px 2px 4px rgba(0, 0, 0, 0.2);
         }
 
-        @keyframes darkWelcomeFadeOut {
+        @keyframes whiteWelcomeFadeOut {
             0% { opacity: 1; transform: scale(1); }
             100% { opacity: 0; transform: scale(1.06); pointer-events: none; }
         }
-        .dark-welcome-exit {
-            animation: darkWelcomeFadeOut 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        .white-welcome-exit {
+            animation: whiteWelcomeFadeOut 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
         @keyframes progressBarCountdown {
@@ -399,22 +397,22 @@
         const METODOS_PAGO = ["Efectivo", "Tarjeta"];
 
         function HofuLanding() {
-          // Estados para la pantalla de bienvenida oscura sofisticada de PC (10 segundos con barra de progreso y botón X)
-          const [showDarkWelcomePC, setShowDarkWelcomePC] = useState(true);
-          const [isDarkWelcomeExiting, setIsDarkWelcomeExiting] = useState(false);
+          // Estados para la pantalla de bienvenida blanca elegante de PC (10 segundos con barra de progreso y botón X)
+          const [showWhiteWelcomePC, setShowWhiteWelcomePC] = useState(true);
+          const [isWhiteWelcomeExiting, setIsWhiteWelcomeExiting] = useState(false);
 
           useEffect(() => {
             const timer = setTimeout(() => {
-              handleCloseDarkWelcome();
+              handleCloseWhiteWelcome();
             }, 10000);
 
             return () => clearTimeout(timer);
           }, []);
 
-          const handleCloseDarkWelcome = () => {
-            setIsDarkWelcomeExiting(true);
+          const handleCloseWhiteWelcome = () => {
+            setIsWhiteWelcomeExiting(true);
             setTimeout(() => {
-              setShowDarkWelcomePC(false);
+              setShowWhiteWelcomePC(false);
             }, 600);
           };
 
@@ -802,28 +800,28 @@
           return (
             <div className={`h-full w-full bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-hidden select-none relative`}>
               
-              {/* Pantalla de Bienvenida / Intro Oscura Sofisticada EXCLUSIVAMENTE PARA PC (Fondo negro carbón, viñeteado, HŌFU central en blanco con sombreado oscuro 3D, barra de progreso y botón X) */}
-              {showDarkWelcomePC && (
-                <div className={`hidden lg:flex fixed inset-0 z-50 dark-welcome-bg items-center justify-center overflow-hidden ${isDarkWelcomeExiting ? 'dark-welcome-exit' : ''}`}>
+              {/* Pantalla de Bienvenida / Intro Blanca Elegante EXCLUSIVAMENTE PARA PC (Fondo blanco puro, esquinas con viñeteado oscuro, HŌFU central en negro con sombreado profundo, barra de progreso y botón X) */}
+              {showWhiteWelcomePC && (
+                <div className={`hidden lg:flex fixed inset-0 z-50 white-welcome-bg items-center justify-center overflow-hidden ${isWhiteWelcomeExiting ? 'white-welcome-exit' : ''}`}>
                   
                   {/* Botón de cierre "X" flotante en la esquina superior derecha con microinteracción hover */}
                   <button 
-                    onClick={handleCloseDarkWelcome}
-                    className="absolute top-8 right-8 w-12 h-12 rounded-full bg-white/10 hover:bg-white/25 backdrop-blur-md text-white flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-90 cursor-pointer z-50 shadow-2xl border border-white/20"
+                    onClick={handleCloseWhiteWelcome}
+                    className="absolute top-8 right-8 w-12 h-12 rounded-full bg-black/10 hover:bg-black/20 backdrop-blur-md text-stone-950 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-90 cursor-pointer z-50 shadow-2xl border border-black/15"
                     title="Omitir bienvenida"
                   >
                     <i className="fa-solid fa-xmark text-lg"></i>
                   </button>
 
                   <div className="relative w-full max-w-[1600px] px-16 flex items-center justify-center h-full">
-                    <h1 className="text-[12rem] lg:text-[16rem] font-black tracking-[0.2em] uppercase dark-welcome-logo-text select-none text-center">
+                    <h1 className="text-[12rem] lg:text-[16rem] font-black tracking-[0.2em] uppercase white-welcome-logo-text select-none text-center">
                       HŌFU
                     </h1>
                   </div>
 
                   {/* Línea o barra de progreso minimalista y delgada en la parte inferior */}
-                  <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-white/10 overflow-hidden">
-                    <div className="h-full bg-white progress-bar-anim"></div>
+                  <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-black/10 overflow-hidden">
+                    <div className="h-full bg-stone-950 progress-bar-anim"></div>
                   </div>
                 </div>
               )}
@@ -1366,7 +1364,7 @@
                     ) : (
                       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
                         
-                        {/* Columna de productos del carrito organizada: Nombre recto completo, salsa justo downregulated, sin precio repetido */}
+                        {/* Columna de productos del carrito organizada: Nombre recto completo, salsa justo debajo, sin precio repetido */}
                         <div className="lg:col-span-6 flex flex-col space-y-4">
                           <div className="flex items-center justify-between border-b pb-3 border-white/15">
                             <span className="text-xs uppercase tracking-wider font-bold opacity-95">Productos en tu bolsa</span>
