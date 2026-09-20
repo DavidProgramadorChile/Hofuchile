@@ -114,34 +114,34 @@
             animation: badgePop 0.3s ease-in-out;
         }
 
-        /* Estilos de bienvenida blanca elegante con esquinas oscuras para PC */
-        .white-welcome-bg {
+        /* Estilos de bienvenida universal de alta gama (Blanco puro con viñeteados oscuros y efecto Zoom en ambas plataformas) */
+        .universal-welcome-bg {
             background-color: #ffffff; /* Blanco puro y elegante */
             background-image: 
                 radial-gradient(circle at 0% 0%, rgba(0, 0, 0, 0.35) 0%, transparent 45%),
                 radial-gradient(circle at 100% 100%, rgba(0, 0, 0, 0.4) 0%, transparent 50%);
         }
 
-        @keyframes whiteWelcomeScaleIn {
-            0% { opacity: 0; transform: scale(0.85); filter: blur(12px); }
+        @keyframes universalWelcomeZoomIn {
+            0% { opacity: 0; transform: scale(0.75); filter: blur(12px); }
             100% { opacity: 1; transform: scale(1); filter: blur(0); }
         }
-        .white-welcome-logo-text {
-            animation: whiteWelcomeScaleIn 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        .universal-welcome-logo-text {
+            animation: universalWelcomeZoomIn 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             color: #09090b; /* Negro sólido */
             text-shadow: 
-                0 0 3px rgba(0, 0, 0, 0.3),
-                0 0 20px rgba(0, 0, 0, 0.15),
-                0 15px 35px rgba(0, 0, 0, 0.25),
-                2px 2px 4px rgba(0, 0, 0, 0.2);
+                0 0 3px rgba(0, 0, 0, 0.35),
+                0 0 20px rgba(0, 0, 0, 0.18),
+                0 15px 35px rgba(0, 0, 0, 0.28),
+                3px 3px 6px rgba(0, 0, 0, 0.25);
         }
 
-        @keyframes whiteWelcomeFadeOut {
+        @keyframes universalWelcomeFadeOut {
             0% { opacity: 1; transform: scale(1); }
             100% { opacity: 0; transform: scale(1.06); pointer-events: none; }
         }
-        .white-welcome-exit {
-            animation: whiteWelcomeFadeOut 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        .universal-welcome-exit {
+            animation: universalWelcomeFadeOut 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
         @keyframes progressBarCountdown {
@@ -397,22 +397,22 @@
         const METODOS_PAGO = ["Efectivo", "Tarjeta"];
 
         function HofuLanding() {
-          // Estados para la pantalla de bienvenida blanca elegante de PC (10 segundos con barra de progreso y botón X)
-          const [showWhiteWelcomePC, setShowWhiteWelcomePC] = useState(true);
-          const [isWhiteWelcomeExiting, setIsWhiteWelcomeExiting] = useState(false);
+          // Estados para la pantalla de bienvenida universal (en ambas plataformas: PC y Móvil durante 10 segundos)
+          const [showUniversalWelcome, setShowUniversalWelcome] = useState(true);
+          const [isUniversalWelcomeExiting, setIsUniversalWelcomeExiting] = useState(false);
 
           useEffect(() => {
             const timer = setTimeout(() => {
-              handleCloseWhiteWelcome();
+              handleCloseUniversalWelcome();
             }, 10000);
 
             return () => clearTimeout(timer);
           }, []);
 
-          const handleCloseWhiteWelcome = () => {
-            setIsWhiteWelcomeExiting(true);
+          const handleCloseUniversalWelcome = () => {
+            setIsUniversalWelcomeExiting(true);
             setTimeout(() => {
-              setShowWhiteWelcomePC(false);
+              setShowUniversalWelcome(false);
             }, 600);
           };
 
@@ -800,21 +800,21 @@
           return (
             <div className={`h-full w-full bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-hidden select-none relative`}>
               
-              {/* Pantalla de Bienvenida / Intro Blanca Elegante EXCLUSIVAMENTE PARA PC (Fondo blanco puro, esquinas con viñeteado oscuro, HŌFU central en negro con sombreado profundo, barra de progreso y botón X) */}
-              {showWhiteWelcomePC && (
-                <div className={`hidden lg:flex fixed inset-0 z-50 white-welcome-bg items-center justify-center overflow-hidden ${isWhiteWelcomeExiting ? 'white-welcome-exit' : ''}`}>
+              {/* Pantalla de Bienvenida / Intro Universal de Alta Gama (Aplicada en ambas plataformas: PC y Móvil, con blanco puro, viñeteados oscuros, zoom suave, barra de progreso y botón "X" minimalista y fino) */}
+              {showUniversalWelcome && (
+                <div className={`flex fixed inset-0 z-50 universal-welcome-bg items-center justify-center overflow-hidden ${isUniversalWelcomeExiting ? 'universal-welcome-exit' : ''}`}>
                   
-                  {/* Botón de cierre "X" flotante en la esquina superior derecha con microinteracción hover */}
+                  {/* Botón de cierre "X" minimalista, estético y fino en la esquina superior derecha con transición fluida */}
                   <button 
-                    onClick={handleCloseWhiteWelcome}
-                    className="absolute top-8 right-8 w-12 h-12 rounded-full bg-black/10 hover:bg-black/20 backdrop-blur-md text-stone-950 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-90 cursor-pointer z-50 shadow-2xl border border-black/15"
+                    onClick={handleCloseUniversalWelcome}
+                    className="absolute top-5 right-5 sm:top-8 sm:right-8 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/10 hover:bg-black/20 backdrop-blur-md text-stone-950 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-90 cursor-pointer z-50 shadow-xl border border-black/15"
                     title="Omitir bienvenida"
                   >
-                    <i className="fa-solid fa-xmark text-lg"></i>
+                    <i className="fa-solid fa-xmark text-sm sm:text-lg"></i>
                   </button>
 
-                  <div className="relative w-full max-w-[1600px] px-16 flex items-center justify-center h-full">
-                    <h1 className="text-[12rem] lg:text-[16rem] font-black tracking-[0.2em] uppercase white-welcome-logo-text select-none text-center">
+                  <div className="relative w-full max-w-[1600px] px-6 sm:px-12 lg:px-16 flex items-center justify-center h-full">
+                    <h1 className="text-6xl sm:text-9xl lg:text-[16rem] font-black tracking-[0.2em] uppercase universal-welcome-logo-text select-none text-center">
                       HŌFU
                     </h1>
                   </div>
