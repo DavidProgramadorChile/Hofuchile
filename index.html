@@ -773,12 +773,22 @@
                 </div>
               )}
 
-              {/* 1. Mini-barra superior móvil ultra delgada con luz roja pura si está cerrado y horario exacto */}
-              <div className="w-full bg-black/60 backdrop-blur-md px-4 py-1 flex items-center justify-center z-40 border-b border-white/10 shrink-0">
-                <div className={`flex items-center gap-1.5 transition-opacity duration-300 ${dynamicIsland.show ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
-                  <span className={`w-2 h-2 rounded-full animate-pulse ${isOpen ? 'bg-emerald-400' : 'bg-red-600 shadow-[0_0_8px_rgba(220,38,38,0.9)]'}`}></span>
-                  <span className="text-[10px] font-semibold tracking-wider uppercase text-white/95">
-                    {isOpen ? 'Abierto • Abre a las 12:00 PM • Cierra a las 11:30 PM' : 'Cerrado • Abre a las 12:00 PM • Cierra a las 11:30 PM'}
+              {/* 1. Versión Móvil: Mini-barra superior ultra delgada, fondo negro sólido y oscuro con formato resumido y luz palpitante verde/roja pura */}
+              <div className="flex md:hidden w-full bg-black px-4 py-1.5 items-center justify-center z-40 border-b border-white/10 shrink-0">
+                <div className={`flex items-center gap-2 transition-opacity duration-300 ${dynamicIsland.show ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+                  <span className={`w-2 h-2 rounded-full animate-pulse ${isOpen ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.9)]' : 'bg-red-600 shadow-[0_0_8px_rgba(220,38,38,0.9)]'}`}></span>
+                  <span className="text-[10px] font-bold tracking-widest uppercase text-white/95">
+                    {isOpen ? 'ABIERTO • 12:00 PM - 11:30 PM' : 'CERRADO • 12:00 PM - 11:30 PM'}
+                  </span>
+                </div>
+              </div>
+
+              {/* 1. Versión PC: Intacta (Sin alteraciones) */}
+              <div className="hidden md:flex w-full bg-black/60 backdrop-blur-md px-6 py-2 items-center justify-center z-40 border-b border-white/10 shrink-0">
+                <div className={`flex items-center gap-2 transition-opacity duration-300 ${dynamicIsland.show ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+                  <span className={`w-2.5 h-2.5 rounded-full animate-pulse ${isOpen ? 'bg-emerald-400' : 'bg-red-500'}`}></span>
+                  <span className="text-[11px] font-semibold tracking-wider uppercase text-white/95">
+                    {isOpen ? 'Abierto • 11:00 - 00:00' : 'Cerrado • Abre a las 11:00'}
                   </span>
                 </div>
               </div>
