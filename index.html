@@ -125,17 +125,42 @@
             animation: badgePop 0.3s ease-in-out;
         }
 
-        /* Animaciones para la Pantalla de Bienvenida Megastore (Solo PC) de 25 segundos con salida suave */
-        @keyframes megastoreFadeIn {
-            0% { opacity: 0; transform: scale(0.96); }
-            100% { opacity: 1; transform: scale(1); }
+        /* Animaciones y estilos específicos para la Intro de PC (Fondo amarillo brillante y viñeteado oscuro) */
+        .megastore-bg {
+            background-color: #facc15; /* Amarillo brillante */
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(0, 0, 0, 0.55) 0%, transparent 45%),
+                radial-gradient(circle at 100% 100%, rgba(0, 0, 0, 0.6) 0%, transparent 50%);
         }
+
+        @keyframes bounceInDown {
+            0% { opacity: 0; transform: translateY(-100px) scale(0.8); }
+            60% { opacity: 1; transform: translateY(20px) scale(1.05); }
+            80% { transform: translateY(-10px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .animate-bounce-in {
+            animation: bounceInDown 0.8s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
+        }
+
+        @keyframes fadeSlideUp {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeSlideOutUp {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-40px); }
+        }
+        .animate-fade-up {
+            animation: fadeSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .animate-fade-out-up {
+            animation: fadeSlideOutUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
         @keyframes megastoreFadeOut {
             0% { opacity: 1; transform: scale(1); }
             100% { opacity: 0; transform: scale(1.05); pointer-events: none; }
-        }
-        .megastore-overlay {
-            animation: megastoreFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         .megastore-exit {
             animation: megastoreFadeOut 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
@@ -386,25 +411,31 @@
         const METODOS_PAGO = ["Efectivo", "Tarjeta"];
 
         function HofuLanding() {
-          // Estados para la Pantalla de Bienvenida Megastore (Solo PC, duración ~25s con botón de cierre X)
+          // Estados para la pantalla de bienvenida / intro de PC (~25s con secuencia de texto exacta y botón X)
           const [showMegastoreWelcome, setShowMegastoreWelcome] = useState(true);
           const [isMegastoreExiting, setIsMegastoreExiting] = useState(false);
-          const [megastoreStage, setMegastoreStage] = useState(1); // 1: Central con Gohan, 2: Slide hacia la izquierda con título grande derecha
+          const [megastoreStage, setMegastoreStage] = useState(1); // 1: "Gohan" rebote, 2: "Bienvenido", 3: Slide a la izquierda y "Gohan Pollo" rotado
 
           useEffect(() => {
-            // Transición automática de etapa 1 a la 2 tras 2.0s
+            // Paso 1 a Paso 2: tras 2.2s cambia de "Gohan" a "Bienvenido"
             const timer1 = setTimeout(() => {
               setMegastoreStage(2);
-            }, 2000);
+            }, 2200);
 
-            // Cierre automático de la bienvenida tras 25 segundos
+            // Paso 2 a Paso 3: tras 4.2s desliza el Gohan a la izquierda y muestra "Gohan Pollo" rotado
             const timer2 = setTimeout(() => {
+              setMegastoreStage(3);
+            }, 4200);
+
+            // Cierre automático completo tras 25 segundos
+            const timer3 = setTimeout(() => {
               handleCloseMegastore();
             }, 25000);
 
             return () => {
               clearTimeout(timer1);
               clearTimeout(timer2);
+              clearTimeout(timer3);
             };
           }, []);
 
@@ -796,52 +827,68 @@
           // Color neón e icono interior sincronizados exactamente con el color del producto/tema activo actual
           const activeNeonColor = selectedItem.islandColor || '#10b981';
 
-          // Producto Gohan Salmón destacado para la bienvenida Megastore (Solo PC, sin precios)
-          const featuredGohan = categoriesData.gohan.items[0];
+          // Plato Gohan destacado para la intro de PC
+          const featuredGohan = categoriesData.gohan.items[2]; // Gohan Pollo
 
           return (
             <div className={`h-full w-full bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-hidden select-none relative`}>
               
-              {/* Pantalla de Bienvenida / Intro Megastore EXCLUSIVAMENTE PARA PC (Duración ~25s con botón X de cierre) */}
+              {/* Pantalla de Bienvenida / Intro EXCLUSIVAMENTE PARA PC (Fondo amarillo, viñeteado oscuro, Gohan central y secuencia de texto exacta sin precios) */}
               {showMegastoreWelcome && (
-                <div className={`hidden lg:flex fixed inset-0 z-50 bg-gradient-to-br from-amber-600 via-orange-700 to-stone-950 text-white items-center justify-center overflow-hidden ${isMegastoreExiting ? 'megastore-exit' : 'megastore-overlay'}`}>
-                  <div className="absolute inset-0 bg-black/40 backdrop-blur-xl pointer-events-none"></div>
+                <div className={`hidden lg:flex fixed inset-0 z-50 megastore-bg text-black items-center justify-center overflow-hidden ${isMegastoreExiting ? 'megastore-exit' : ''}`}>
                   
                   {/* Botón de cierre "X" visible en la esquina superior derecha */}
                   <button 
                     onClick={handleCloseMegastore}
-                    className="absolute top-8 right-8 w-12 h-12 rounded-full bg-white/15 hover:bg-white/30 backdrop-blur-md text-white flex items-center justify-center transition active:scale-90 cursor-pointer z-50 shadow-2xl border border-white/20"
+                    className="absolute top-8 right-8 w-12 h-12 rounded-full bg-black/15 hover:bg-black/30 backdrop-blur-md text-stone-950 flex items-center justify-center transition active:scale-90 cursor-pointer z-50 shadow-2xl border border-black/20"
                     title="Omitir bienvenida"
                   >
                     <i className="fa-solid fa-xmark text-lg"></i>
                   </button>
 
-                  <div className="relative w-full max-w-[1650px] px-16 flex items-center justify-center">
+                  <div className="relative w-full max-w-[1650px] px-16 flex items-center justify-center h-full">
                     
-                    {/* Etapa 1: Producto Gohan centrado con tipografía masiva en español "BIENVENIDO A HŌFU" */}
+                    {/* Paso 1: "Gohan" ingresando desde arriba con rebote elástico y Gohan central */}
                     {megastoreStage === 1 && (
-                      <div className="flex flex-col items-center justify-center space-y-6 transition-all duration-700 ease-out">
-                        <span className="text-sm uppercase tracking-[0.5em] font-extrabold text-orange-300 drop-shadow">BIENVENIDO A HŌFU</span>
-                        <h2 className="text-7xl font-black tracking-wider uppercase drop-shadow-lg">GOHAN SALMÓN</h2>
-                        <div className="relative w-96 h-96 flex items-center justify-center">
-                          <div className="absolute w-80 h-80 bg-white/20 rounded-full blur-3xl"></div>
-                          <img src={featuredGohan.image} alt={featuredGohan.title} className="max-h-96 object-contain drop-shadow-[0_30px_40px_rgba(0,0,0,0.8)] scale-110" />
+                      <div className="flex flex-col items-center justify-center space-y-4">
+                        <h1 className="text-9xl font-black tracking-tighter uppercase text-stone-950 drop-shadow-md animate-bounce-in">
+                          GOHAN
+                        </h1>
+                        <div className="relative w-[450px] h-[450px] flex items-center justify-center">
+                          <div className="absolute w-96 h-96 bg-black/10 rounded-full blur-2xl"></div>
+                          <img src={featuredGohan.image} alt={featuredGohan.title} className="max-h-[420px] object-contain drop-shadow-[0_30px_40px_rgba(0,0,0,0.6)] animate-bounce-in" />
                         </div>
                       </div>
                     )}
 
-                    {/* Etapa 2: Transición fluida tipo slide/encogimiento hacia la izquierda con aparición llamativa del texto tipográfico masivo a la derecha */}
+                    {/* Paso 2: "Gohan" sube desvaneciéndose y aparece suavemente "Bienvenido" */}
                     {megastoreStage === 2 && (
-                      <div className="w-full grid grid-cols-12 gap-12 items-center transition-all duration-700 ease-out transform translate-x-0">
-                        <div className="col-span-5 flex justify-center transform -translate-x-12 scale-90 transition-all duration-700 ease-out">
-                          <img src={featuredGohan.image} alt={featuredGohan.title} className="max-h-[500px] object-contain drop-shadow-[0_35px_40px_rgba(0,0,0,0.9)]" />
+                      <div className="flex flex-col items-center justify-center space-y-4">
+                        <h1 className="text-8xl font-black tracking-tighter uppercase text-stone-950 drop-shadow-md animate-fade-out-up absolute top-32">
+                          GOHAN
+                        </h1>
+                        <h2 className="text-8xl font-black tracking-tight uppercase text-stone-950 drop-shadow-md animate-fade-up">
+                          BIENVENIDO
+                        </h2>
+                        <div className="relative w-[450px] h-[450px] flex items-center justify-center mt-6">
+                          <div className="absolute w-96 h-96 bg-black/10 rounded-full blur-2xl"></div>
+                          <img src={featuredGohan.image} alt={featuredGohan.title} className="max-h-[420px] object-contain drop-shadow-[0_30px_40px_rgba(0,0,0,0.6)]" />
                         </div>
-                        <div className="col-span-7 flex flex-col items-start justify-center space-y-6 transform translate-x-8 opacity-100 transition-all duration-700 ease-out">
-                          <span className="text-base uppercase tracking-[0.4em] font-extrabold text-orange-300">BIENVENIDO A HŌFU</span>
-                          <h1 className="text-7xl lg:text-8xl font-black tracking-tight leading-none uppercase drop-shadow-2xl">
-                            EXPERIENCIA <br/><span className="text-orange-400">GOHAN & SUSHI</span>
+                      </div>
+                    )}
+
+                    {/* Paso 3: Gohan se desliza a la izquierda y aparece "Gohan Pollo" en tipografía masiva rotada */}
+                    {megastoreStage === 3 && (
+                      <div className="w-full grid grid-cols-12 gap-12 items-center transition-all duration-700 ease-out transform translate-x-0">
+                        <div className="col-span-5 flex justify-center transform -translate-x-12 scale-105 transition-all duration-700 ease-out">
+                          <img src={featuredGohan.image} alt={featuredGohan.title} className="max-h-[520px] object-contain drop-shadow-[0_35px_45px_rgba(0,0,0,0.7)]" />
+                        </div>
+                        <div className="col-span-7 flex flex-col items-start justify-center space-y-4 transform translate-x-8 transition-all duration-700 ease-out">
+                          <span className="text-lg uppercase tracking-[0.4em] font-extrabold text-stone-900">MENÚ EXCLUSIVO</span>
+                          <h1 className="text-8xl lg:text-9xl font-black tracking-tighter leading-none uppercase text-stone-950 drop-shadow-2xl transform rotate-[-3deg] origin-left">
+                            GOHAN POLLO
                           </h1>
-                          <p className="text-lg opacity-90 max-w-xl font-medium leading-relaxed">
+                          <p className="text-xl text-stone-900 font-bold max-w-xl leading-relaxed pt-2">
                             {featuredGohan.description}
                           </p>
                         </div>
