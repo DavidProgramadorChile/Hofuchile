@@ -173,18 +173,15 @@
             transform: scale(0.92);
         }
 
-        /* Fondo específico para Onigiri con viñeteado elegante y sombreado negro profundo en esquinas/bordes */
-        .onigiri-bg-vignette {
+        /* Fondo específico para Onigiri (#D7FF44) con sombreado interno difuminado de alta gama en esquinas y contornos */
+        .onigiri-custom-bg {
             background-color: #D7FF44;
-            background-image: 
-                radial-gradient(circle at 0% 0%, rgba(0, 0, 0, 0.35) 0%, transparent 45%),
-                radial-gradient(circle at 100% 100%, rgba(0, 0, 0, 0.4) 0%, transparent 50%),
-                radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.08) 0%, transparent 80%);
+            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.18), inset 0 0 20px rgba(0, 0, 0, 0.12);
         }
 
-        /* Sombreado negro profundo, difuminado y elegante para la imagen y tarjeta del Onigiri */
+        /* Sombreado negro profundo, difuminado y sofisticado idéntico al estándar general de las tarjetas */
         .onigiri-deep-shadow {
-            filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.45)) drop-shadow(0 10px 25px rgba(0, 0, 0, 0.3));
+            filter: drop-shadow(0 25px 45px rgba(0, 0, 0, 0.35)) drop-shadow(0 10px 20px rgba(0, 0, 0, 0.25));
         }
 
         /* Ocultar barras de scroll por defecto y mostrarlas con un estilo ultra sutil al hacer scroll */
@@ -222,7 +219,7 @@
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
-        // Estructura completa de categorías y productos con Onigiri usando bg específico y viñeteado oscuro elegante
+        // Estructura completa de categorías y productos con Onigiri usando #D7FF44 y sombreado profundo en esquinas/bordes
         const categoriesData = {
           favoritos: {
             name: 'FAVORITOS',
@@ -234,7 +231,7 @@
                 description: 'Base de Arroz • Palta • Queso Crema • Cebollín',
                 price: '$3.990',
                 rawPrice: 3990,
-                bgGradient: 'onigiri-bg-vignette',
+                bgGradient: 'onigiri-custom-bg',
                 islandColor: '#65a30d', // Verde oliva intenso
                 isLight: true,
                 image: 'img/onigiri.png',
