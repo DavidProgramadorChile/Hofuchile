@@ -403,14 +403,18 @@
           // Estado para la notificación tipo Dynamic Island
           const [dynamicIsland, setDynamicIsland] = useState({ show: false, leaving: false, message: '¡Añadido con éxito! 🍣', icon: 'fa-solid fa-check' });
 
-          // Lógica en tiempo real para el estado del local (11:00 AM a 00:00 AM)
+          // Lógica en tiempo real para el estado del local (12:00 PM a 11:30 PM)
           const [isOpen, setIsOpen] = useState(true);
 
           useEffect(() => {
             const checkStoreStatus = () => {
               const now = new Date();
               const hours = now.getHours();
-              const currentlyOpen = hours >= 11 && hours < 24;
+              const minutes = now.getMinutes();
+              const currentTimeMinutes = hours * 60 + minutes;
+              const openTimeMinutes = 12 * 60; // 12:00 PM
+              const closeTimeMinutes = 23 * 60 + 30; // 11:30 PM (23:30)
+              const currentlyOpen = currentTimeMinutes >= openTimeMinutes && currentTimeMinutes < closeTimeMinutes;
               setIsOpen(currentlyOpen);
             };
 
@@ -605,7 +609,7 @@
               // Notificación detallada para productos normales en PC
               triggerCustomDynamicIsland(`¡Añadido: ${selectedItem.title}! 🍣`, "fa-solid fa-check");
             } else {
-              // Versión móvil intacta: estándar
+              // Versión móvil estándar
               triggerCustomDynamicIsland(`¡Añadido con éxito! 🍣`, "fa-solid fa-check");
             }
 
@@ -769,18 +773,18 @@
                 </div>
               )}
 
-              {/* 1. Mini-barra superior (Top Bar) con horario condicional y sin botón de pantalla completa en ningún dispositivo */}
-              <div className="w-full bg-black/60 backdrop-blur-md px-6 py-2 flex items-center justify-center z-40 border-b border-white/10 shrink-0">
-                <div className={`flex items-center gap-2 transition-opacity duration-300 ${dynamicIsland.show ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
-                  <span className={`w-2.5 h-2.5 rounded-full animate-pulse ${isOpen ? 'bg-emerald-400' : 'bg-red-500'}`}></span>
-                  <span className="text-[11px] font-semibold tracking-wider uppercase text-white/95">
-                    {isOpen ? 'Abierto • 11:00 - 00:00' : 'Cerrado • Abre a las 11:00'}
+              {/* 1. Mini-barra superior móvil ultra delgada con luz roja pura si está cerrado y horario exacto */}
+              <div className="w-full bg-black/60 backdrop-blur-md px-4 py-1 flex items-center justify-center z-40 border-b border-white/10 shrink-0">
+                <div className={`flex items-center gap-1.5 transition-opacity duration-300 ${dynamicIsland.show ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+                  <span className={`w-2 h-2 rounded-full animate-pulse ${isOpen ? 'bg-emerald-400' : 'bg-red-600 shadow-[0_0_8px_rgba(220,38,38,0.9)]'}`}></span>
+                  <span className="text-[10px] font-semibold tracking-wider uppercase text-white/95">
+                    {isOpen ? 'Abierto • Abre a las 12:00 PM • Cierra a las 11:30 PM' : 'Cerrado • Abre a las 12:00 PM • Cierra a las 11:30 PM'}
                   </span>
                 </div>
               </div>
 
-              {/* 2. Navbar Principal con Buscador Predictivo (Logo HŌFU con escala aumentada en Modo Normal PC) */}
-              <header className="w-full px-6 lg:px-16 py-3 lg:py-5 flex items-center justify-between z-30 max-w-[1600px] mx-auto relative shrink-0">
+              {/* 2. Navbar Principal con Buscador Predictivo corregido para móvil (nunca tapa ni desplaza la bolsa) */}
+              <header className="w-full px-4 lg:px-16 py-3 lg:py-5 flex items-center justify-between z-30 max-w-[1600px] mx-auto relative shrink-0">
                 <div className="flex items-center cursor-pointer">
                   <span className={`font-black tracking-[0.35em] text-2xl sm:text-3xl lg:text-5xl uppercase drop-shadow-md ${isLight ? 'text-stone-950' : 'text-white'}`}>
                     HŌFU
@@ -808,33 +812,33 @@
                   })}
                 </nav>
 
-                <div className="flex items-center gap-3 lg:gap-4" ref={searchContainerRef}>
+                <div className="flex items-center gap-2.5 lg:gap-4 relative" ref={searchContainerRef}>
                   <div className="flex items-center relative">
                     {!searchOpen ? (
                       <button 
                         onClick={() => setSearchOpen(true)}
-                        className={`w-10 h-10 lg:w-11 lg:h-11 rounded-full ${isLight ? 'bg-black/10 border-stone-900/20 text-stone-900 hover:bg-black/20' : 'bg-black/20 border-white/20 text-white hover:bg-black/30'} backdrop-blur-md flex items-center justify-center border transition active:scale-95 cursor-pointer shadow-md`}
+                        className={`w-9 h-9 sm:w-10 sm:h-10 lg:w-11 lg:h-11 rounded-full ${isLight ? 'bg-black/10 border-stone-900/20 text-stone-900 hover:bg-black/20' : 'bg-black/20 border-white/20 text-white hover:bg-black/30'} backdrop-blur-md flex items-center justify-center border transition active:scale-95 cursor-pointer shadow-md`}
                         title="Buscar producto"
                       >
                         <i className="fa-solid fa-search text-xs"></i>
                       </button>
                     ) : (
-                      <div className={`flex items-center gap-2.5 px-4 py-2 rounded-full border ${isLight ? 'bg-white text-stone-950 border-stone-300' : 'bg-stone-900 text-white border-white/20'} shadow-lg transition-all duration-300 w-52 lg:w-80`}>
-                        <i className="fa-solid fa-search text-xs opacity-50 shrink-0"></i>
+                      <div className={`flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border ${isLight ? 'bg-white text-stone-950 border-stone-300' : 'bg-stone-900 text-white border-white/20'} shadow-lg transition-all duration-300 w-44 sm:w-52 lg:w-80`}>
+                        <i className="fa-solid fa-search text-[11px] opacity-50 shrink-0"></i>
                         <input 
                           type="text" 
-                          placeholder="Buscar en el menú..." 
+                          placeholder="Buscar..." 
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
                           autoFocus
-                          className="bg-transparent w-full text-xs outline-none placeholder-current placeholder-opacity-50"
+                          className="bg-transparent w-full text-xs outline-none placeholder-current placeholder-opacity-50 min-w-0"
                         />
                         <button 
                           onClick={() => {
                             setSearchOpen(false);
                             setSearchQuery('');
                           }}
-                          className="w-5 h-5 rounded-full flex items-center justify-center opacity-60 hover:opacity-100 transition active:scale-95 cursor-pointer text-xs"
+                          className="w-4 h-4 rounded-full flex items-center justify-center opacity-60 hover:opacity-100 transition active:scale-95 cursor-pointer text-xs shrink-0"
                         >
                           <i className="fa-solid fa-xmark text-xs"></i>
                         </button>
@@ -842,7 +846,7 @@
                     )}
 
                     {searchOpen && searchQuery.trim() !== '' && (
-                      <div className={`absolute right-0 top-14 w-80 ${isLight ? 'bg-white text-stone-950 border-stone-300' : 'bg-stone-900 text-white border-white/10'} p-3 rounded-2xl shadow-2xl border z-40`}>
+                      <div className={`absolute right-0 top-12 sm:top-14 w-64 sm:w-80 ${isLight ? 'bg-white text-stone-950 border-stone-300' : 'bg-stone-900 text-white border-white/10'} p-2.5 sm:p-3 rounded-2xl shadow-2xl border z-40`}>
                         <div className="max-h-56 overflow-y-auto space-y-1 no-scrollbar">
                           {filteredProducts.length > 0 ? (
                             filteredProducts.map(prod => (
@@ -851,11 +855,11 @@
                                 onClick={() => selectSearchedItem(prod)}
                                 className={`flex items-center justify-between p-2.5 rounded-xl ${isLight ? 'hover:bg-stone-100' : 'hover:bg-white/10'} cursor-pointer transition text-xs active:scale-98`}
                               >
-                                <div className="flex items-center gap-2.5">
-                                  <img src={prod.image} alt={prod.title} className="w-9 h-9 object-cover rounded-lg" />
-                                  <span className="font-semibold">{prod.title}</span>
+                                <div className="flex items-center gap-2.5 min-w-0 flex-1 pr-2">
+                                  <img src={prod.image} alt={prod.title} className="w-8 h-8 object-cover rounded-lg shrink-0" />
+                                  <span className="font-semibold truncate">{prod.title}</span>
                                 </div>
-                                <span className="font-bold text-orange-400">{prod.price}</span>
+                                <span className="font-bold text-orange-400 shrink-0">{prod.price}</span>
                               </div>
                             ))
                           ) : (
@@ -868,7 +872,7 @@
 
                   <button 
                     onClick={() => setCartOpen(true)}
-                    className={`w-10 h-10 lg:w-11 lg:h-11 rounded-full ${isLight ? 'bg-black/10 border-stone-900/20 text-stone-900 hover:bg-black/20' : 'bg-black/20 border-white/20 text-white hover:bg-black/30'} backdrop-blur-md flex items-center justify-center border transition relative active:scale-95 cursor-pointer shadow-md`}
+                    className={`w-9 h-9 sm:w-10 sm:h-10 lg:w-11 lg:h-11 rounded-full ${isLight ? 'bg-black/10 border-stone-900/20 text-stone-900 hover:bg-black/20' : 'bg-black/20 border-white/20 text-white hover:bg-black/30'} backdrop-blur-md flex items-center justify-center border transition relative active:scale-95 cursor-pointer shadow-md shrink-0`}
                   >
                     {loaderActive && <div className="cart-loader-ring"></div>}
                     <i className="fa-solid fa-bag-shopping text-xs"></i>
@@ -1225,7 +1229,7 @@
                     {!isOpen && (
                       <div className="mb-6 bg-amber-500/20 border border-amber-400/40 p-3.5 rounded-2xl text-xs lg:text-sm flex items-center gap-3 text-amber-200">
                         <i className="fa-solid fa-clock text-amber-400 text-base"></i>
-                        <span>El local se encuentra cerrado en este momento. Tu pedido se enviará programado para la próxima apertura (11:00 AM).</span>
+                        <span>El local se encuentra cerrado en este momento. Tu pedido se enviará programado para la próxima apertura (12:00 PM).</span>
                       </div>
                     )}
 
