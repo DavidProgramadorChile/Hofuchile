@@ -911,49 +911,33 @@
           const activeNeonColor = selectedItem.islandColor || '#10b981';
           const glassClass = isLight ? 'advanced-glass-light text-stone-950 shadow-xl shadow-black/30' : 'advanced-glass text-white shadow-xl shadow-black/30';
 
-          // Estilo de botones circulares adaptativos con soporte para estado disabled
-          const baseCircularBtn = isLight 
-            ? 'w-6 h-6 rounded-full bg-black text-white flex items-center justify-center text-[10px] font-extrabold transition shadow-md' 
-            : 'w-6 h-6 rounded-full bg-white text-black flex items-center justify-center text-[10px] font-extrabold transition shadow-md';
-
+          // Clases para botones de cantidad y salsas: Gris elegante en reposo/inactivo, Negro sólido al interactuar/activo con texto blanco
           const getCircularBtnClass = (isDisabled) => {
             if (isDisabled) {
-              return `${baseCircularBtn} opacity-30 cursor-not-allowed pointer-events-none`;
+              return 'w-6 h-6 rounded-full bg-stone-600 text-white/50 flex items-center justify-center text-[10px] font-extrabold transition shadow-md opacity-30 cursor-not-allowed pointer-events-none';
             }
-            return `${baseCircularBtn} ${isLight ? 'hover:bg-stone-800' : 'hover:bg-stone-200'} active:scale-90 cursor-pointer`;
+            return 'w-6 h-6 rounded-full bg-stone-500 text-white hover:bg-black active:bg-black active:scale-90 transition cursor-pointer shadow-md flex items-center justify-center text-[10px] font-extrabold';
           };
-
-          const baseCircularMobileBtn = isLight 
-            ? 'w-5 h-5 rounded-full bg-black text-white flex items-center justify-center text-[9px] font-extrabold transition shadow-sm' 
-            : 'w-5 h-5 rounded-full bg-white text-black flex items-center justify-center text-[9px] font-extrabold transition shadow-sm';
 
           const getCircularMobileBtnClass = (isDisabled) => {
             if (isDisabled) {
-              return `${baseCircularMobileBtn} opacity-30 cursor-not-allowed pointer-events-none`;
+              return 'w-5 h-5 rounded-full bg-stone-600 text-white/50 flex items-center justify-center text-[9px] font-extrabold transition shadow-sm opacity-30 cursor-not-allowed pointer-events-none';
             }
-            return `${baseCircularMobileBtn} ${isLight ? 'hover:bg-stone-800' : 'hover:bg-stone-200'} active:scale-90 cursor-pointer`;
+            return 'w-5 h-5 rounded-full bg-stone-500 text-white hover:bg-black active:bg-black active:scale-90 transition cursor-pointer shadow-sm flex items-center justify-center text-[9px] font-extrabold';
           };
-
-          const baseQtyBtn = isLight
-            ? 'w-8 h-8 rounded-full bg-black text-white flex items-center justify-center font-bold text-base transition shadow-md'
-            : 'w-8 h-8 rounded-full bg-white text-black flex items-center justify-center font-bold text-base transition shadow-md';
 
           const getQtyBtnClass = (isDisabled) => {
             if (isDisabled) {
-              return `${baseQtyBtn} opacity-30 cursor-not-allowed pointer-events-none`;
+              return 'w-8 h-8 rounded-full bg-stone-600 text-white/50 flex items-center justify-center font-bold text-base transition shadow-md opacity-30 cursor-not-allowed pointer-events-none';
             }
-            return `${baseQtyBtn} ${isLight ? 'hover:bg-stone-800' : 'hover:bg-stone-200'} active:scale-90 cursor-pointer`;
+            return 'w-8 h-8 rounded-full bg-stone-500 text-white hover:bg-black active:bg-black active:scale-90 transition cursor-pointer shadow-md flex items-center justify-center font-bold text-base';
           };
-
-          const baseQtyMobileBtn = isLight
-            ? 'w-5 h-5 rounded-full bg-black text-white flex items-center justify-center font-bold text-[10px] transition shadow-sm'
-            : 'w-5 h-5 rounded-full bg-white text-black flex items-center justify-center font-bold text-[10px] transition shadow-sm';
 
           const getQtyMobileBtnClass = (isDisabled) => {
             if (isDisabled) {
-              return `${baseQtyMobileBtn} opacity-30 cursor-not-allowed pointer-events-none`;
+              return 'w-5 h-5 rounded-full bg-stone-600 text-white/50 flex items-center justify-center font-bold text-[10px] transition shadow-sm opacity-30 cursor-not-allowed pointer-events-none';
             }
-            return `${baseQtyMobileBtn} ${isLight ? 'hover:bg-stone-800' : 'hover:bg-stone-200'} active:scale-90 cursor-pointer`;
+            return 'w-5 h-5 rounded-full bg-stone-500 text-white hover:bg-black active:bg-black active:scale-90 transition cursor-pointer shadow-sm flex items-center justify-center font-bold text-[10px]';
           };
 
           return (
