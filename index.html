@@ -466,7 +466,7 @@
 
           const [isOpen, setIsOpen] = useState(true);
 
-          // Estados para la notificación flotante de bienvenida por horario
+          // Estado para la notificación flotante de bienvenida por horario
           const [welcomeNotification, setWelcomeNotification] = useState({ show: false, leaving: false, message: '' });
 
           useEffect(() => {
@@ -856,7 +856,7 @@
           return (
             <div className={`h-full w-full ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-hidden select-none relative`}>
               
-              {/* NOTIFICACIÓN FLOTANTE DE BIENVENIDA (TIPO ISLA / ALERTA) */}
+              {/* NOTIFICACIÓN FLOTANTE DE BIENVENIDA */}
               {welcomeNotification.show && (
                 <div className="fixed dynamic-island-wrapper left-0 right-0 z-50 flex justify-center pointer-events-none px-4">
                   <div 
@@ -1201,7 +1201,8 @@
 
                   <div className="lg:col-span-4 relative flex flex-col items-center justify-center order-2">
                     <div className="relative w-full h-[200px] sm:h-[250px] lg:h-[680px] flex items-center justify-center my-0">
-                      <div className={`absolute w-44 h-44 sm:w-64 sm:h-64 lg:w-[600px] lg:h-[600px] ${isLight ? 'bg-white/60' : 'bg-white/20'} rounded-full blur-3xl pointer-events-none transition-all duration-500`}></div>
+                      {/* EFECTO DE SOMBRA DIFUMINADA OSCURA / TONO HUMO TRAS LA IMAGEN */}
+                      <div className="absolute w-44 h-44 sm:w-64 sm:h-64 lg:w-[600px] lg:h-[600px] bg-black/55 rounded-full blur-3xl pointer-events-none transition-all duration-500"></div>
                       
                       <img 
                         src={selectedItem.image} 
