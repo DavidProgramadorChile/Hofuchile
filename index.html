@@ -143,20 +143,24 @@
             scrollbar-width: none;
         }
 
-        /* ANIMACIONES COLIBRÍES ORIGAMI DE PAPEL GEOMÉTRICO */
-        @keyframes flapOrigami {
-            0% { transform: rotate(0deg) scaleY(1) skewX(0deg); }
-            100% { transform: rotate(-42deg) scaleY(0.12) skewX(-20deg); }
+        /* ANIMACIÓN DE ALETEO Y VUELO CON IMAGEN COLIBRI.PNG */
+        @keyframes imageFlap {
+            0% { transform: scaleY(1) scaleX(1) rotate(0deg); }
+            50% { transform: scaleY(0.25) scaleX(0.95) rotate(-10deg); }
+            100% { transform: scaleY(1) scaleX(1) rotate(0deg); }
         }
 
-        .colibri-wing-1 {
-            animation: flapOrigami 0.12s infinite alternate ease-in-out;
+        .colibri-img-flap-1 {
+            animation: imageFlap 0.13s infinite ease-in-out;
+            transform-origin: center center;
         }
-        .colibri-wing-2 {
-            animation: flapOrigami 0.16s infinite alternate ease-in-out;
+        .colibri-img-flap-2 {
+            animation: imageFlap 0.17s infinite ease-in-out;
+            transform-origin: center center;
         }
-        .colibri-wing-3 {
-            animation: flapOrigami 0.14s infinite alternate ease-in-out;
+        .colibri-img-flap-3 {
+            animation: imageFlap 0.15s infinite ease-in-out;
+            transform-origin: center center;
         }
 
         @keyframes colibriFlight1 {
@@ -869,89 +873,33 @@
           return (
             <div className={`h-full w-full ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-hidden select-none relative`}>
               
-              {/* ANIMACIÓN COLIBRÍES ORIGAMI DE PAPEL GEOMÉTRICO (PC) */}
-              <div className="hidden md:block fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-80 select-none">
-                {/* Colibrí Origami 1 */}
+              {/* ANIMACIÓN COLIBRÍES CON IMAGAMEN DEDICADA fondo/colibri.png (PC) */}
+              <div className="hidden md:block fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-85 select-none">
+                {/* Colibrí 1 */}
                 <div className="absolute hummingbird-1">
-                  <svg viewBox="0 0 100 100" className="w-24 h-24 lg:w-32 lg:h-32 overflow-visible drop-shadow-[4px_6px_8px_rgba(0,0,0,0.5)]">
-                    <g id="body-origami-1">
-                      {/* Pico */}
-                      <path d="M 65 35 L 98 22 L 68 38 Z" fill="#050505" />
-                      {/* Cabeza y cuello faceteados */}
-                      <path d="M 52 32 L 65 35 L 68 38 Z" fill="#2e2e2e" />
-                      <path d="M 52 32 L 68 38 L 58 44 Z" fill="#1f1f1f" />
-                      <path d="M 68 38 L 58 44 L 52 50 Z" fill="#3a3a3a" />
-                      {/* Pecho y cuerpo faceteados */}
-                      <path d="M 52 32 L 58 44 L 45 46 Z" fill="#121212" />
-                      <path d="M 58 44 L 52 50 L 45 46 Z" fill="#2e2e2e" />
-                      <path d="M 52 50 L 38 62 L 45 46 Z" fill="#121212" />
-                      <path d="M 52 50 L 32 68 L 38 62 Z" fill="#3a3a3a" />
-                      {/* Cola origami recortada */}
-                      <path d="M 38 62 L 12 92 L 25 76 Z" fill="#050505" />
-                      <path d="M 38 62 L 25 76 L 32 68 Z" fill="#1f1f1f" />
-                      <path d="M 25 76 L 8 86 L 12 92 Z" fill="#121212" />
-                    </g>
-                    {/* Capa de alas geométricas animadas */}
-                    <g className="colibri-wing-1" style={{ transformOrigin: '50px 38px' }}>
-                      <path d="M 50 38 L 30 8 L 42 20 Z" fill="#050505" />
-                      <path d="M 50 38 L 22 2 L 38 18 Z" fill="#3a3a3a" />
-                      <path d="M 50 38 L 38 18 L 56 25 Z" fill="#2e2e2e" />
-                      <path d="M 50 38 L 22 2 L 12 16 Z" fill="#1f1f1f" />
-                      <path d="M 50 38 L 12 16 L 32 30 Z" fill="#121212" />
-                    </g>
-                  </svg>
+                  <img 
+                    src="fondo/colibri.png" 
+                    alt="Colibrí de papel" 
+                    className="w-20 lg:w-28 h-auto colibri-img-flap-1 drop-shadow-[4px_6px_8px_rgba(0,0,0,0.5)] object-contain"
+                  />
                 </div>
 
-                {/* Colibrí Origami 2 */}
+                {/* Colibrí 2 */}
                 <div className="absolute hummingbird-2">
-                  <svg viewBox="0 0 100 100" className="w-20 h-20 lg:w-28 lg:h-28 overflow-visible drop-shadow-[4px_6px_8px_rgba(0,0,0,0.5)]">
-                    <g id="body-origami-2">
-                      <path d="M 65 35 L 98 22 L 68 38 Z" fill="#050505" />
-                      <path d="M 52 32 L 65 35 L 68 38 Z" fill="#2e2e2e" />
-                      <path d="M 52 32 L 68 38 L 58 44 Z" fill="#1f1f1f" />
-                      <path d="M 68 38 L 58 44 L 52 50 Z" fill="#3a3a3a" />
-                      <path d="M 52 32 L 58 44 L 45 46 Z" fill="#121212" />
-                      <path d="M 58 44 L 52 50 L 45 46 Z" fill="#2e2e2e" />
-                      <path d="M 52 50 L 38 62 L 45 46 Z" fill="#121212" />
-                      <path d="M 52 50 L 32 68 L 38 62 Z" fill="#3a3a3a" />
-                      <path d="M 38 62 L 12 92 L 25 76 Z" fill="#050505" />
-                      <path d="M 38 62 L 25 76 L 32 68 Z" fill="#1f1f1f" />
-                      <path d="M 25 76 L 8 86 L 12 92 Z" fill="#121212" />
-                    </g>
-                    <g className="colibri-wing-2" style={{ transformOrigin: '50px 38px' }}>
-                      <path d="M 50 38 L 30 8 L 42 20 Z" fill="#050505" />
-                      <path d="M 50 38 L 22 2 L 38 18 Z" fill="#3a3a3a" />
-                      <path d="M 50 38 L 38 18 L 56 25 Z" fill="#2e2e2e" />
-                      <path d="M 50 38 L 22 2 L 12 16 Z" fill="#1f1f1f" />
-                      <path d="M 50 38 L 12 16 L 32 30 Z" fill="#121212" />
-                    </g>
-                  </svg>
+                  <img 
+                    src="fondo/colibri.png" 
+                    alt="Colibrí de papel" 
+                    className="w-16 lg:w-24 h-auto colibri-img-flap-2 drop-shadow-[4px_6px_8px_rgba(0,0,0,0.5)] object-contain"
+                  />
                 </div>
 
-                {/* Colibrí Origami 3 */}
+                {/* Colibrí 3 */}
                 <div className="absolute hummingbird-3">
-                  <svg viewBox="0 0 100 100" className="w-28 h-28 lg:w-36 lg:h-36 overflow-visible drop-shadow-[4px_6px_8px_rgba(0,0,0,0.5)]">
-                    <g id="body-origami-3">
-                      <path d="M 65 35 L 98 22 L 68 38 Z" fill="#050505" />
-                      <path d="M 52 32 L 65 35 L 68 38 Z" fill="#2e2e2e" />
-                      <path d="M 52 32 L 68 38 L 58 44 Z" fill="#1f1f1f" />
-                      <path d="M 68 38 L 58 44 L 52 50 Z" fill="#3a3a3a" />
-                      <path d="M 52 32 L 58 44 L 45 46 Z" fill="#121212" />
-                      <path d="M 58 44 L 52 50 L 45 46 Z" fill="#2e2e2e" />
-                      <path d="M 52 50 L 38 62 L 45 46 Z" fill="#121212" />
-                      <path d="M 52 50 L 32 68 L 38 62 Z" fill="#3a3a3a" />
-                      <path d="M 38 62 L 12 92 L 25 76 Z" fill="#050505" />
-                      <path d="M 38 62 L 25 76 L 32 68 Z" fill="#1f1f1f" />
-                      <path d="M 25 76 L 8 86 L 12 92 Z" fill="#121212" />
-                    </g>
-                    <g className="colibri-wing-3" style={{ transformOrigin: '50px 38px' }}>
-                      <path d="M 50 38 L 30 8 L 42 20 Z" fill="#050505" />
-                      <path d="M 50 38 L 22 2 L 38 18 Z" fill="#3a3a3a" />
-                      <path d="M 50 38 L 38 18 L 56 25 Z" fill="#2e2e2e" />
-                      <path d="M 50 38 L 22 2 L 12 16 Z" fill="#1f1f1f" />
-                      <path d="M 50 38 L 12 16 L 32 30 Z" fill="#121212" />
-                    </g>
-                  </svg>
+                  <img 
+                    src="fondo/colibri.png" 
+                    alt="Colibrí de papel" 
+                    className="w-24 lg:w-32 h-auto colibri-img-flap-3 drop-shadow-[4px_6px_8px_rgba(0,0,0,0.5)] object-contain"
+                  />
                 </div>
               </div>
 
