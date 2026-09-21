@@ -142,6 +142,53 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+
+        /* ANIMACIONES COLIBRÍES DE PAPEL */
+        @keyframes flap {
+            0% { transform: rotate(0deg) scaleY(1) skewX(0deg); }
+            100% { transform: rotate(-38deg) scaleY(0.12) skewX(-15deg); }
+        }
+
+        .colibri-wing-1 {
+            animation: flap 0.12s infinite alternate ease-in-out;
+        }
+        .colibri-wing-2 {
+            animation: flap 0.16s infinite alternate ease-in-out;
+        }
+        .colibri-wing-3 {
+            animation: flap 0.14s infinite alternate ease-in-out;
+        }
+
+        @keyframes colibriFlight1 {
+            0% { transform: translate(-10vw, 75vh) rotate(-10deg); }
+            25% { transform: translate(25vw, 35vh) rotate(15deg); }
+            60% { transform: translate(65vw, 55vh) rotate(-5deg); }
+            100% { transform: translate(110vw, 15vh) rotate(-20deg); }
+        }
+
+        @keyframes colibriFlight2 {
+            0% { transform: translate(110vw, 80vh) rotate(190deg) scaleX(-1); }
+            35% { transform: translate(65vw, 25vh) rotate(205deg) scaleX(-1); }
+            70% { transform: translate(25vw, 60vh) rotate(175deg) scaleX(-1); }
+            100% { transform: translate(-15vw, 20vh) rotate(190deg) scaleX(-1); }
+        }
+
+        @keyframes colibriFlight3 {
+            0% { transform: translate(-15vw, 15vh) rotate(15deg); }
+            40% { transform: translate(45vw, 65vh) rotate(-10deg); }
+            80% { transform: translate(80vw, 30vh) rotate(10deg); }
+            100% { transform: translate(110vw, 50vh) rotate(0deg); }
+        }
+
+        .hummingbird-1 {
+            animation: colibriFlight1 18s infinite ease-in-out;
+        }
+        .hummingbird-2 {
+            animation: colibriFlight2 22s infinite ease-in-out 4s;
+        }
+        .hummingbird-3 {
+            animation: colibriFlight3 26s infinite ease-in-out 9s;
+        }
     </style>
 </head>
 <body class="bg-stone-950 text-white selection:bg-orange-500 selection:text-white">
@@ -822,6 +869,57 @@
           return (
             <div className={`h-full w-full ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-hidden select-none relative`}>
               
+              {/* ANIMACIÓN COLIBRÍES DE PAPEL EN SEGUNDO PLANO (PC) */}
+              <div className="hidden md:block fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-25 select-none">
+                {/* Colibrí 1 */}
+                <div className="absolute hummingbird-1">
+                  <svg viewBox="0 0 100 80" className="w-16 h-16 lg:w-20 lg:h-20 overflow-visible drop-shadow-[3px_6px_8px_rgba(0,0,0,0.35)]">
+                    <g fill="#121212">
+                      <path d="M 62 30 L 92 20 L 64 33 Z" />
+                      <path d="M 62 30 L 45 38 L 28 48 L 20 65 L 26 50 L 40 43 L 64 33 Z" />
+                      <path d="M 28 48 L 8 68 L 15 58 L 22 52 Z" />
+                      <path d="M 45 38 L 52 46 L 38 45 Z" fill="#222222" />
+                    </g>
+                    <g className="colibri-wing-1" style={{ transformOrigin: '48px 36px' }}>
+                      <path d="M 48 36 L 32 2 L 52 14 L 56 32 Z" fill="#181818" />
+                      <path d="M 48 36 L 32 2 L 44 20 Z" fill="#2d2d2d" />
+                    </g>
+                  </svg>
+                </div>
+
+                {/* Colibrí 2 */}
+                <div className="absolute hummingbird-2">
+                  <svg viewBox="0 0 100 80" className="w-14 h-14 lg:w-16 lg:h-16 overflow-visible drop-shadow-[3px_6px_8px_rgba(0,0,0,0.35)]">
+                    <g fill="#121212">
+                      <path d="M 62 30 L 92 20 L 64 33 Z" />
+                      <path d="M 62 30 L 45 38 L 28 48 L 20 65 L 26 50 L 40 43 L 64 33 Z" />
+                      <path d="M 28 48 L 8 68 L 15 58 L 22 52 Z" />
+                      <path d="M 45 38 L 52 46 L 38 45 Z" fill="#222222" />
+                    </g>
+                    <g className="colibri-wing-2" style={{ transformOrigin: '48px 36px' }}>
+                      <path d="M 48 36 L 32 2 L 52 14 L 56 32 Z" fill="#181818" />
+                      <path d="M 48 36 L 32 2 L 44 20 Z" fill="#2d2d2d" />
+                    </g>
+                  </svg>
+                </div>
+
+                {/* Colibrí 3 */}
+                <div className="absolute hummingbird-3">
+                  <svg viewBox="0 0 100 80" className="w-20 h-20 lg:w-24 lg:h-24 overflow-visible drop-shadow-[3px_6px_8px_rgba(0,0,0,0.35)]">
+                    <g fill="#121212">
+                      <path d="M 62 30 L 92 20 L 64 33 Z" />
+                      <path d="M 62 30 L 45 38 L 28 48 L 20 65 L 26 50 L 40 43 L 64 33 Z" />
+                      <path d="M 28 48 L 8 68 L 15 58 L 22 52 Z" />
+                      <path d="M 45 38 L 52 46 L 38 45 Z" fill="#222222" />
+                    </g>
+                    <g className="colibri-wing-3" style={{ transformOrigin: '48px 36px' }}>
+                      <path d="M 48 36 L 32 2 L 52 14 L 56 32 Z" fill="#181818" />
+                      <path d="M 48 36 L 32 2 L 44 20 Z" fill="#2d2d2d" />
+                    </g>
+                  </svg>
+                </div>
+              </div>
+
               {dynamicIsland.show && (
                 <div className="fixed dynamic-island-wrapper left-0 right-0 z-50 flex justify-center pointer-events-none px-4">
                   <div 
