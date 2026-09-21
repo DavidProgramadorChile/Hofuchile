@@ -142,38 +142,6 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
-
-        /* ANIMACIONES DE VUELO Y PLANEO SUAVE DE COLIBRÍES (PC) */
-        @keyframes colibriFlight1 {
-            0% { transform: translate(-10vw, 70vh) rotate(-8deg); }
-            25% { transform: translate(25vw, 30vh) rotate(6deg); }
-            65% { transform: translate(65vw, 55vh) rotate(-4deg); }
-            100% { transform: translate(110vw, 15vh) rotate(8deg); }
-        }
-
-        @keyframes colibriFlight2 {
-            0% { transform: translate(110vw, 75vh) rotate(8deg) scaleX(-1); }
-            35% { transform: translate(60vw, 20vh) rotate(-6deg) scaleX(-1); }
-            70% { transform: translate(20vw, 60vh) rotate(4deg) scaleX(-1); }
-            100% { transform: translate(-15vw, 25vh) rotate(-8deg) scaleX(-1); }
-        }
-
-        @keyframes colibriFlight3 {
-            0% { transform: translate(-15vw, 20vh) rotate(6deg); }
-            45% { transform: translate(45vw, 65vh) rotate(-8deg); }
-            80% { transform: translate(80vw, 30vh) rotate(4deg); }
-            100% { transform: translate(110vw, 50vh) rotate(-2deg); }
-        }
-
-        .hummingbird-1 {
-            animation: colibriFlight1 22s infinite ease-in-out;
-        }
-        .hummingbird-2 {
-            animation: colibriFlight2 26s infinite ease-in-out 4s;
-        }
-        .hummingbird-3 {
-            animation: colibriFlight3 30s infinite ease-in-out 10s;
-        }
     </style>
 </head>
 <body class="bg-stone-950 text-white selection:bg-orange-500 selection:text-white">
@@ -853,39 +821,6 @@
           return (
             <div className={`h-full w-full ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-hidden select-none relative`}>
               
-              {/* CAPA DE FONDO FIJA EXCLUSIVA PC CON SINTAXIS Y RUTA CORREGIDA */}
-              <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden hidden md:block">
-                {/* Colibrí 1 */}
-                <div className="absolute hummingbird-1">
-                  <img 
-                    src="fondo/colibri.png" 
-                    alt="Colibrí" 
-                    onError={(e) => { e.target.style.display = 'none'; }}
-                    className="w-24 h-auto opacity-40 drop-shadow-[3px_5px_8px_rgba(0,0,0,0.4)] pointer-events-none object-contain block" 
-                  />
-                </div>
-
-                {/* Colibrí 2 */}
-                <div className="absolute hummingbird-2">
-                  <img 
-                    src="fondo/colibri.png" 
-                    alt="Colibrí" 
-                    onError={(e) => { e.target.style.display = 'none'; }}
-                    className="w-20 h-auto opacity-40 drop-shadow-[3px_5px_8px_rgba(0,0,0,0.4)] pointer-events-none object-contain block" 
-                  />
-                </div>
-
-                {/* Colibrí 3 */}
-                <div className="absolute hummingbird-3">
-                  <img 
-                    src="fondo/colibri.png" 
-                    alt="Colibrí" 
-                    onError={(e) => { e.target.style.display = 'none'; }}
-                    className="w-28 h-auto opacity-40 drop-shadow-[3px_5px_8px_rgba(0,0,0,0.4)] pointer-events-none object-contain block" 
-                  />
-                </div>
-              </div>
-
               {dynamicIsland.show && (
                 <div className="fixed dynamic-island-wrapper left-0 right-0 z-50 flex justify-center pointer-events-none px-4">
                   <div 
