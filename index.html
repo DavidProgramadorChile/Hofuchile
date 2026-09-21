@@ -853,12 +853,12 @@
           return (
             <div className={`h-full w-full ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-hidden select-none relative`}>
               
-              {/* CONTENEDOR FIJO DE COLIBRÍES CON RUTA './fondo/colibri.png' Y MANEJO DE ERRORES (EXCLUSIVO PC) */}
+              {/* CAPA DE FONDO FIJA EXCLUSIVA PC CON SINTAXIS Y RUTA CORREGIDA */}
               <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden hidden md:block">
                 {/* Colibrí 1 */}
                 <div className="absolute hummingbird-1">
                   <img 
-                    src="./fondo/colibri.png" 
+                    src="fondo/colibri.png" 
                     alt="Colibrí" 
                     onError={(e) => { e.target.style.display = 'none'; }}
                     className="w-24 h-auto opacity-40 drop-shadow-[3px_5px_8px_rgba(0,0,0,0.4)] pointer-events-none object-contain block" 
@@ -868,7 +868,7 @@
                 {/* Colibrí 2 */}
                 <div className="absolute hummingbird-2">
                   <img 
-                    src="./fondo/colibri.png" 
+                    src="fondo/colibri.png" 
                     alt="Colibrí" 
                     onError={(e) => { e.target.style.display = 'none'; }}
                     className="w-20 h-auto opacity-40 drop-shadow-[3px_5px_8px_rgba(0,0,0,0.4)] pointer-events-none object-contain block" 
@@ -878,7 +878,7 @@
                 {/* Colibrí 3 */}
                 <div className="absolute hummingbird-3">
                   <img 
-                    src="./fondo/colibri.png" 
+                    src="fondo/colibri.png" 
                     alt="Colibrí" 
                     onError={(e) => { e.target.style.display = 'none'; }}
                     className="w-28 h-auto opacity-40 drop-shadow-[3px_5px_8px_rgba(0,0,0,0.4)] pointer-events-none object-contain block" 
