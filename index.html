@@ -143,55 +143,36 @@
             scrollbar-width: none;
         }
 
-        /* ANIMACIÓN DE ALETEO Y VUELO CON IMAGEN COLIBRI.PNG */
-        @keyframes imageFlap {
-            0% { transform: scaleY(1) scaleX(1) rotate(0deg); }
-            50% { transform: scaleY(0.25) scaleX(0.95) rotate(-10deg); }
-            100% { transform: scaleY(1) scaleX(1) rotate(0deg); }
-        }
-
-        .colibri-img-flap-1 {
-            animation: imageFlap 0.13s infinite ease-in-out;
-            transform-origin: center center;
-        }
-        .colibri-img-flap-2 {
-            animation: imageFlap 0.17s infinite ease-in-out;
-            transform-origin: center center;
-        }
-        .colibri-img-flap-3 {
-            animation: imageFlap 0.15s infinite ease-in-out;
-            transform-origin: center center;
-        }
-
+        /* ANIMACIONES DE VUELO Y PLANEO ELEGANTE CON CSS BACKGROUND */
         @keyframes colibriFlight1 {
-            0% { transform: translate(-10vw, 75vh) rotate(-10deg); }
-            25% { transform: translate(25vw, 35vh) rotate(15deg); }
-            60% { transform: translate(65vw, 55vh) rotate(-5deg); }
-            100% { transform: translate(110vw, 15vh) rotate(-20deg); }
+            0% { transform: translate(-10vw, 70vh) rotate(-8deg); }
+            25% { transform: translate(25vw, 30vh) rotate(6deg); }
+            65% { transform: translate(65vw, 55vh) rotate(-4deg); }
+            100% { transform: translate(110vw, 15vh) rotate(8deg); }
         }
 
         @keyframes colibriFlight2 {
-            0% { transform: translate(110vw, 80vh) rotate(190deg) scaleX(-1); }
-            35% { transform: translate(65vw, 25vh) rotate(205deg) scaleX(-1); }
-            70% { transform: translate(25vw, 60vh) rotate(175deg) scaleX(-1); }
-            100% { transform: translate(-15vw, 20vh) rotate(190deg) scaleX(-1); }
+            0% { transform: translate(110vw, 75vh) rotate(8deg) scaleX(-1); }
+            35% { transform: translate(60vw, 20vh) rotate(-6deg) scaleX(-1); }
+            70% { transform: translate(20vw, 60vh) rotate(4deg) scaleX(-1); }
+            100% { transform: translate(-15vw, 25vh) rotate(-8deg) scaleX(-1); }
         }
 
         @keyframes colibriFlight3 {
-            0% { transform: translate(-15vw, 15vh) rotate(15deg); }
-            40% { transform: translate(45vw, 65vh) rotate(-10deg); }
-            80% { transform: translate(80vw, 30vh) rotate(10deg); }
-            100% { transform: translate(110vw, 50vh) rotate(0deg); }
+            0% { transform: translate(-15vw, 20vh) rotate(6deg); }
+            45% { transform: translate(45vw, 65vh) rotate(-8deg); }
+            80% { transform: translate(80vw, 30vh) rotate(4deg); }
+            100% { transform: translate(110vw, 50vh) rotate(-2deg); }
         }
 
         .hummingbird-1 {
-            animation: colibriFlight1 18s infinite ease-in-out;
+            animation: colibriFlight1 22s infinite ease-in-out;
         }
         .hummingbird-2 {
-            animation: colibriFlight2 22s infinite ease-in-out 4s;
+            animation: colibriFlight2 26s infinite ease-in-out 4s;
         }
         .hummingbird-3 {
-            animation: colibriFlight3 26s infinite ease-in-out 9s;
+            animation: colibriFlight3 30s infinite ease-in-out 10s;
         }
     </style>
 </head>
@@ -569,7 +550,6 @@
 
           const allowCustomizations = activeCategory !== 'bebidas' && activeCategory !== 'extras';
           
-          // Flags específicos para categorías
           const isExtra = activeCategory === 'extras';
           const isGohan = activeCategory === 'gohan';
 
@@ -873,32 +853,29 @@
           return (
             <div className={`h-full w-full ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-hidden select-none relative`}>
               
-              {/* ANIMACIÓN COLIBRÍES CON IMAGAMEN DEDICADA fondo/colibri.png (PC) */}
-              <div className="hidden md:block fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-85 select-none">
+              {/* FONDO ANIMADO CON CARGA CSS (fondo/colibri.png) SOLO PARA PC */}
+              <div className="hidden md:block fixed inset-0 pointer-events-none -z-10 overflow-hidden opacity-40 select-none">
                 {/* Colibrí 1 */}
                 <div className="absolute hummingbird-1">
-                  <img 
-                    src="fondo/colibri.png" 
-                    alt="Colibrí de papel" 
-                    className="w-20 lg:w-28 h-auto colibri-img-flap-1 drop-shadow-[4px_6px_8px_rgba(0,0,0,0.5)] object-contain"
+                  <div 
+                    className="w-20 h-20 lg:w-24 lg:h-24 bg-contain bg-no-repeat bg-center drop-shadow-[3px_5px_8px_rgba(0,0,0,0.35)]"
+                    style={{ backgroundImage: "url('./fondo/colibri.png')" }}
                   />
                 </div>
 
                 {/* Colibrí 2 */}
                 <div className="absolute hummingbird-2">
-                  <img 
-                    src="fondo/colibri.png" 
-                    alt="Colibrí de papel" 
-                    className="w-16 lg:w-24 h-auto colibri-img-flap-2 drop-shadow-[4px_6px_8px_rgba(0,0,0,0.5)] object-contain"
+                  <div 
+                    className="w-16 h-16 lg:w-20 lg:h-20 bg-contain bg-no-repeat bg-center drop-shadow-[3px_5px_8px_rgba(0,0,0,0.35)]"
+                    style={{ backgroundImage: "url('./fondo/colibri.png')" }}
                   />
                 </div>
 
                 {/* Colibrí 3 */}
                 <div className="absolute hummingbird-3">
-                  <img 
-                    src="fondo/colibri.png" 
-                    alt="Colibrí de papel" 
-                    className="w-24 lg:w-32 h-auto colibri-img-flap-3 drop-shadow-[4px_6px_8px_rgba(0,0,0,0.5)] object-contain"
+                  <div 
+                    className="w-24 h-24 lg:w-28 lg:h-28 bg-contain bg-no-repeat bg-center drop-shadow-[3px_5px_8px_rgba(0,0,0,0.35)]"
+                    style={{ backgroundImage: "url('./fondo/colibri.png')" }}
                   />
                 </div>
               </div>
