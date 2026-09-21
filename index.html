@@ -25,30 +25,10 @@
             margin: 0;
             padding: 0;
             overflow: hidden;
-            touch-action: manipulation;
         }
 
         .native-transition {
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        /* Glassmorphism Avanzado con Sombreado Tridimensional Profundo */
-        .advanced-glass {
-            background: rgba(20, 20, 20, 0.55);
-            backdrop-filter: blur(28px);
-            -webkit-backdrop-filter: blur(28px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-top: 1px solid rgba(255, 255, 255, 0.28);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        }
-
-        .advanced-glass-light {
-            background: rgba(255, 255, 255, 0.22);
-            backdrop-filter: blur(28px);
-            -webkit-backdrop-filter: blur(28px);
-            border: 1px solid rgba(255, 255, 255, 0.35);
-            border-top: 1px solid rgba(255, 255, 255, 0.6);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.5);
         }
         
         @keyframes islandMorph {
@@ -162,15 +142,6 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
-
-        /* Contenedor con efecto de desvanecimiento elegante para móvil */
-        .fade-mask-container {
-            mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
-            touch-action: pan-y;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-        }
     </style>
 </head>
 <body class="bg-stone-950 text-white selection:bg-orange-500 selection:text-white">
@@ -183,7 +154,7 @@
         const categoriesData = {
           favoritos: {
             name: 'FAVORITOS',
-            icon: 'fa-solid fa-heart text-white text-lg',
+            icon: 'fa-solid fa-heart text-black text-lg',
             items: [
               {
                 id: 'onigiri',
@@ -480,8 +451,6 @@
 
           const [soyaCount, setSoyaCount] = useState(1);
           const [teriyakiCount, setTeriyakiCount] = useState(0);
-          const [wasabiCount, setWasabiCount] = useState(0);
-          const [jengibreCount, setJengibreCount] = useState(0);
 
           const [searchOpen, setSearchOpen] = useState(false);
           const [searchQuery, setSearchQuery] = useState('');
@@ -497,8 +466,6 @@
 
           const [isOpen, setIsOpen] = useState(true);
 
-          const [welcomeNotification, setWelcomeNotification] = useState({ show: false, leaving: false, message: '' });
-
           useEffect(() => {
             const checkStoreStatus = () => {
               const now = new Date();
@@ -513,38 +480,8 @@
 
             checkStoreStatus();
             const interval = setInterval(checkStoreStatus, 60000);
-
-            const currentHour = new Date().getHours();
-            let greetingText = "";
-            if (currentHour >= 6 && currentHour < 12) {
-              greetingText = "¡Buenos días! ☀️ ¿Qué vas a pedir hoy en HŌFU?";
-            } else if (currentHour >= 12 && currentHour < 19) {
-              greetingText = "¡Buenas tardes! 🍣 Disfruta tu almuerzo o tarde HŌFU";
-            } else {
-              greetingText = "¡Buenas noches! 🌙 Disfruta tu cena HŌFU";
-            }
-
-            setWelcomeNotification({ show: true, leaving: false, message: greetingText });
-
-            const timer = setTimeout(() => {
-              setWelcomeNotification(prev => ({ ...prev, leaving: true }));
-              setTimeout(() => {
-                setWelcomeNotification({ show: false, leaving: false, message: '' });
-              }, 350);
-            }, 5000);
-
-            return () => {
-              clearInterval(interval);
-              clearTimeout(timer);
-            };
+            return () => clearInterval(interval);
           }, []);
-
-          const dismissWelcomeNotification = () => {
-            setWelcomeNotification(prev => ({ ...prev, leaving: true }));
-            setTimeout(() => {
-              setWelcomeNotification({ show: false, leaving: false, message: '' });
-            }, 350);
-          };
 
           const [formData, setFormData] = useState({ 
             fullName: '', 
@@ -580,8 +517,8 @@
           };
 
           const allowCustomizations = activeCategory !== 'bebidas' && activeCategory !== 'extras';
-          const showWasabiJengibre = activeCategory === 'rolls' || activeCategory === 'tempurarolls';
           
+          // Flags específicos para categorías
           const isExtra = activeCategory === 'extras';
           const isGohan = activeCategory === 'gohan';
 
@@ -651,8 +588,6 @@
             setQuantity(1);
             setSoyaCount(1);
             setTeriyakiCount(0);
-            setWasabiCount(0);
-            setJengibreCount(0);
             setSpecialNotes('');
             setTimeout(() => setAnimating(false), 350);
           };
@@ -670,8 +605,6 @@
             setQuantity(1);
             setSoyaCount(1);
             setTeriyakiCount(0);
-            setWasabiCount(0);
-            setJengibreCount(0);
             setSpecialNotes('');
             setTimeout(() => setAnimating(false), 350);
           };
@@ -684,8 +617,6 @@
                 if (soyaCount > 0) setSoyaCount(prev => Math.max(0, prev - 1));
                 else if (teriyakiCount > 0) setTeriyakiCount(prev => Math.max(0, prev - 1));
               }
-              if (wasabiCount > newQty) setWasabiCount(newQty);
-              if (jengibreCount > newQty) setJengibreCount(newQty);
             }
           };
 
@@ -708,22 +639,6 @@
               if (soyaCount + teriyakiCount < quantity) setTeriyakiCount(prev => prev + 1);
             } else {
               if (teriyakiCount > 0) setTeriyakiCount(prev => prev - 1);
-            }
-          };
-
-          const updateWasabi = (delta) => {
-            if (delta > 0) {
-              if (wasabiCount < quantity) setWasabiCount(prev => prev + 1);
-            } else {
-              if (wasabiCount > 0) setWasabiCount(prev => prev - 1);
-            }
-          };
-
-          const updateJengibre = (delta) => {
-            if (delta > 0) {
-              if (jengibreCount < quantity) setJengibreCount(prev => prev + 1);
-            } else {
-              if (jengibreCount > 0) setJengibreCount(prev => prev - 1);
             }
           };
 
@@ -769,19 +684,15 @@
               variantTitle += ` [Envoltura: ${selectedEnvoltura}]`;
             }
             
-            let extrasParts = [];
+            let saucesParts = [];
             if (allowCustomizations) {
-              if (soyaCount > 0) extrasParts.push(`${soyaCount} Soya`);
-              if (teriyakiCount > 0) extrasParts.push(`${teriyakiCount} Teriyaki`);
+              if (soyaCount > 0) saucesParts.push(`${soyaCount} Soya`);
+              if (teriyakiCount > 0) saucesParts.push(`${teriyakiCount} Teriyaki`);
             }
-            if (showWasabiJengibre) {
-              if (wasabiCount > 0) extrasParts.push(`${wasabiCount} Wasabi`);
-              if (jengibreCount > 0) extrasParts.push(`${jengibreCount} Jengibre`);
-            }
-            const extrasText = extrasParts.length > 0 ? `Adicionales: ${extrasParts.join(', ')}` : '';
+            const saucesText = saucesParts.length > 0 ? `Salsas: ${saucesParts.join(', ')}` : '';
             const notesText = (allowCustomizations && specialNotes.trim() !== '') ? `Nota: "${specialNotes.trim()}"` : '';
 
-            const cartItemId = `${selectedItem.id}|${variantTitle}|S${soyaCount}T${teriyakiCount}W${wasabiCount}J${jengibreCount}|N${specialNotes}`;
+            const cartItemId = `${selectedItem.id}|${variantTitle}|S${soyaCount}T${teriyakiCount}|N${specialNotes}`;
 
             setCart(prevCart => {
               const existingIndex = prevCart.findIndex(item => item.cartItemId === cartItemId);
@@ -794,7 +705,7 @@
                   ...selectedItem, 
                   cartItemId, 
                   cleanTitle: variantTitle,
-                  extrasText,
+                  saucesText,
                   notesText,
                   quantity 
                 }];
@@ -803,8 +714,6 @@
             setQuantity(1);
             setSoyaCount(1);
             setTeriyakiCount(0);
-            setWasabiCount(0);
-            setJengibreCount(0);
             setSpecialNotes('');
           };
 
@@ -851,8 +760,6 @@
             setQuantity(1);
             setSoyaCount(1);
             setTeriyakiCount(0);
-            setWasabiCount(0);
-            setJengibreCount(0);
             setSpecialNotes('');
             setSearchOpen(false);
             setSearchQuery('');
@@ -872,7 +779,7 @@
             message += `*📋 DETALLE DE LA ORDEN:*\n`;
             cart.forEach((item, idx) => {
               let fullDesc = item.cleanTitle;
-              if (item.extrasText) fullDesc += ` [${item.extrasText}]`;
+              if (item.saucesText) fullDesc += ` [${item.saucesText}]`;
               if (item.notesText) fullDesc += ` [${item.notesText}]`;
               message += `${idx + 1}. ${fullDesc} x${item.quantity} - $${(item.rawPrice * item.quantity).toLocaleString('es-CL')}\n`;
             });
@@ -907,83 +814,14 @@
           const isBackgroundLuminous = isLight;
           const dynamicPriceColor = isBackgroundLuminous ? 'text-stone-950 font-extrabold' : 'text-white font-extrabold';
           const dynamicIconContainerBg = isBackgroundLuminous ? 'bg-black/15 text-stone-950 hover:bg-black/25' : 'bg-white/15 text-white hover:bg-white/25';
-          const dynamicClosedBannerBg = 'advanced-glass text-white shadow-xl shadow-black/30';
+          const dynamicClosedBannerBg = 'bg-black/40 backdrop-blur-md border border-white/10 shadow-lg';
           const dynamicClosedBannerText = isBackgroundLuminous ? 'text-white' : 'text-white';
 
           const activeNeonColor = selectedItem.islandColor || '#10b981';
-          const glassClass = isLight ? 'advanced-glass-light text-stone-950 shadow-xl shadow-black/30' : 'advanced-glass text-white shadow-xl shadow-black/30';
-
-          const baseCircularBtn = isLight 
-            ? 'w-6 h-6 rounded-full bg-black text-white flex items-center justify-center text-[10px] font-extrabold transition shadow-md' 
-            : 'w-6 h-6 rounded-full bg-white text-black flex items-center justify-center text-[10px] font-extrabold transition shadow-md';
-
-          const getCircularBtnClass = (isDisabled) => {
-            if (isDisabled) {
-              return `${baseCircularBtn} opacity-30 cursor-not-allowed pointer-events-none`;
-            }
-            return `${baseCircularBtn} ${isLight ? 'hover:bg-stone-800' : 'hover:bg-stone-200'} active:scale-90 cursor-pointer`;
-          };
-
-          const baseCircularMobileBtn = isLight 
-            ? 'w-5 h-5 rounded-full bg-black text-white flex items-center justify-center text-[9px] font-extrabold transition shadow-sm' 
-            : 'w-5 h-5 rounded-full bg-white text-black flex items-center justify-center text-[9px] font-extrabold transition shadow-sm';
-
-          const getCircularMobileBtnClass = (isDisabled) => {
-            if (isDisabled) {
-              return `${baseCircularMobileBtn} opacity-30 cursor-not-allowed pointer-events-none`;
-            }
-            return `${baseCircularMobileBtn} ${isLight ? 'hover:bg-stone-800' : 'hover:bg-stone-200'} active:scale-90 cursor-pointer`;
-          };
-
-          const baseQtyBtn = isLight
-            ? 'w-8 h-8 rounded-full bg-black text-white flex items-center justify-center font-bold text-base transition shadow-md'
-            : 'w-8 h-8 rounded-full bg-white text-black flex items-center justify-center font-bold text-base transition shadow-md';
-
-          const getQtyBtnClass = (isDisabled) => {
-            if (isDisabled) {
-              return `${baseQtyBtn} opacity-30 cursor-not-allowed pointer-events-none`;
-            }
-            return `${baseQtyBtn} ${isLight ? 'hover:bg-stone-800' : 'hover:bg-stone-200'} active:scale-90 cursor-pointer`;
-          };
-
-          const baseQtyMobileBtn = isLight
-            ? 'w-5 h-5 rounded-full bg-black text-white flex items-center justify-center font-bold text-[10px] transition shadow-sm'
-            : 'w-5 h-5 rounded-full bg-white text-black flex items-center justify-center font-bold text-[10px] transition shadow-sm';
-
-          const getQtyMobileBtnClass = (isDisabled) => {
-            if (isDisabled) {
-              return `${baseQtyMobileBtn} opacity-30 cursor-not-allowed pointer-events-none`;
-            }
-            return `${baseQtyMobileBtn} ${isLight ? 'hover:bg-stone-800' : 'hover:bg-stone-200'} active:scale-90 cursor-pointer`;
-          };
 
           return (
             <div className={`h-full w-full ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-hidden select-none relative`}>
               
-              {welcomeNotification.show && (
-                <div className="fixed dynamic-island-wrapper left-0 right-0 z-50 flex justify-center pointer-events-none px-4">
-                  <div 
-                    style={{ '--island-glow-color': activeNeonColor }}
-                    className={`dynamic-island-border-beam dynamic-island-content flex items-center gap-3 font-semibold tracking-wide pointer-events-auto bg-stone-950/90 text-white shadow-2xl ${welcomeNotification.leaving ? 'dynamic-island-exit' : 'dynamic-island-enter'}`}
-                  >
-                    <span 
-                      style={{ backgroundColor: activeNeonColor }}
-                      className="w-4 h-4 lg:w-5 lg:h-5 rounded-full text-white flex items-center justify-center text-[9px] lg:text-[11px] shadow-sm shrink-0 relative z-10"
-                    >
-                      <i className="fa-solid fa-bell"></i>
-                    </span>
-                    <span className="truncate relative z-10 text-white text-xs lg:text-sm font-medium">{welcomeNotification.message}</span>
-                    <button 
-                      onClick={dismissWelcomeNotification}
-                      className="w-5 h-5 rounded-full bg-white/10 hover:bg-white/25 flex items-center justify-center text-white/80 hover:text-white transition active:scale-90 cursor-pointer text-[10px] shrink-0 relative z-10 ml-1"
-                      title="Cerrar notificación"
-                    >
-                      <i className="fa-solid fa-xmark"></i>
-                    </button>
-                  </div>
-                </div>
-              )}
-
               {dynamicIsland.show && (
                 <div className="fixed dynamic-island-wrapper left-0 right-0 z-50 flex justify-center pointer-events-none px-4">
                   <div 
@@ -1001,9 +839,9 @@
                 </div>
               )}
 
-              <div className="w-full advanced-glass px-3 lg:px-6 py-1.5 flex items-center justify-center z-40 border-b border-white/15 shrink-0 shadow-xl shadow-black/20">
+              <div className="w-full bg-black/35 backdrop-blur-md px-3 lg:px-6 py-1 flex items-center justify-center z-40 border-b border-white/10 shrink-0">
                 <div className={`flex items-center gap-1.5 transition-opacity duration-300 ${dynamicIsland.show ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
-                  <span className={`w-1.5 h-1.5 lg:w-2 lg:h-2 rounded-full animate-pulse ${isOpen ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.9)]' : 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.9)]'}`}></span>
+                  <span className={`w-1.5 h-1.5 lg:w-2 lg:h-2 rounded-full animate-pulse ${isOpen ? 'bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.9)]' : 'bg-red-600 shadow-[0_0_6px_rgba(220,38,38,0.9)]'}`}></span>
                   <i className="fa-solid fa-clock text-[9px] lg:text-[10px] text-white/70 ml-0.5"></i>
                   <span className="text-[9px] lg:text-[10px] font-bold tracking-widest uppercase text-white/95">
                     {isOpen ? 'ABIERTO • 12:00 PM - 11:30 PM' : 'CERRADO • 12:00 PM - 11:30 PM'}
@@ -1018,7 +856,7 @@
                   </span>
                 </div>
 
-                <nav className={`hidden md:flex items-center gap-1.5 ${isLight ? 'advanced-glass-light text-stone-950' : 'advanced-glass text-white'} px-5 py-2 rounded-full text-xs tracking-wider font-medium shadow-2xl shadow-black/30`}>
+                <nav className={`hidden md:flex items-center gap-1.5 ${isLight ? 'bg-black/10 border-stone-900/20 text-stone-900' : 'bg-black/20 border-white/20 text-white'} backdrop-blur-md px-5 py-2 rounded-full border text-xs tracking-wider font-medium shadow-md`}>
                   {Object.keys(categoriesData).map((catKey) => {
                     const isActive = activeCategory === catKey;
                     const cat = categoriesData[catKey];
@@ -1028,7 +866,7 @@
                         onClick={() => handleCategoryChange(catKey)}
                         className={`px-4 lg:px-5 py-2 rounded-full transition-all duration-300 cursor-pointer tracking-wider flex items-center gap-2 active:scale-95 ${
                           isActive 
-                            ? `${isLight ? 'bg-stone-950 text-white font-bold shadow-lg' : 'bg-white/35 text-white font-bold shadow-lg'} scale-105` 
+                            ? `${isLight ? 'bg-stone-950 text-white' : 'bg-white/25 text-white'} shadow-sm font-bold scale-105` 
                             : `${isLight ? 'hover:text-stone-950 text-stone-900/80' : 'hover:text-white text-white/80'}`
                         }`}
                       >
@@ -1044,14 +882,14 @@
                     {!searchOpen ? (
                       <button 
                         onClick={() => setSearchOpen(true)}
-                        className={`w-9 h-9 sm:w-10 sm:h-10 lg:w-11 lg:h-11 rounded-full ${glassClass} flex items-center justify-center transition active:scale-95 cursor-pointer shadow-xl`}
+                        className={`w-9 h-9 sm:w-10 sm:h-10 lg:w-11 lg:h-11 rounded-full ${isLight ? 'bg-black/10 border-stone-900/20 text-stone-900 hover:bg-black/20' : 'bg-black/20 border-white/20 text-white hover:bg-black/30'} backdrop-blur-md flex items-center justify-center border transition active:scale-95 cursor-pointer shadow-md`}
                         title="Buscar producto"
                       >
                         <i className="fa-solid fa-search text-xs"></i>
                       </button>
                     ) : (
-                      <div className={`flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full ${glassClass} shadow-2xl transition-all duration-300 w-44 sm:w-52 lg:w-80`}>
-                        <i className="fa-solid fa-search text-[11px] opacity-60 shrink-0"></i>
+                      <div className={`flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border ${isLight ? 'bg-white text-stone-950 border-stone-300' : 'bg-stone-900 text-white border-white/20'} shadow-lg transition-all duration-300 w-44 sm:w-52 lg:w-80`}>
+                        <i className="fa-solid fa-search text-[11px] opacity-50 shrink-0"></i>
                         <input 
                           type="text" 
                           placeholder="Buscar..." 
@@ -1073,14 +911,14 @@
                     )}
 
                     {searchOpen && searchQuery.trim() !== '' && (
-                      <div className={`absolute right-0 top-12 sm:top-14 w-64 sm:w-80 ${glassClass} p-2.5 sm:p-3 rounded-2xl shadow-2xl z-40`}>
+                      <div className={`absolute right-0 top-12 sm:top-14 w-64 sm:w-80 ${isLight ? 'bg-white text-stone-950 border-stone-300' : 'bg-stone-900 text-white border-white/10'} p-2.5 sm:p-3 rounded-2xl shadow-2xl border z-40`}>
                         <div className="max-h-56 overflow-y-auto space-y-1 no-scrollbar">
                           {filteredProducts.length > 0 ? (
                             filteredProducts.map(prod => (
                               <div 
                                 key={prod.id}
                                 onClick={() => selectSearchedItem(prod)}
-                                className={`flex items-center justify-between p-2.5 rounded-xl ${isLight ? 'hover:bg-black/10' : 'hover:bg-white/10'} cursor-pointer transition text-xs active:scale-98`}
+                                className={`flex items-center justify-between p-2.5 rounded-xl ${isLight ? 'hover:bg-stone-100' : 'hover:bg-white/10'} cursor-pointer transition text-xs active:scale-98`}
                               >
                                 <div className="flex items-center gap-2.5 min-w-0 flex-1 pr-2">
                                   <img src={prod.image} alt={prod.title} className="w-8 h-8 object-cover rounded-lg shrink-0" />
@@ -1090,7 +928,7 @@
                               </div>
                             ))
                           ) : (
-                            <div className="p-3 text-center text-xs opacity-60">No hay coincidencias en el menú</div>
+                            <div className="p-3 text-center text-xs opacity-50">No hay coincidencias en el menú</div>
                           )}
                         </div>
                       </div>
@@ -1099,12 +937,12 @@
 
                   <button 
                     onClick={() => setCartOpen(true)}
-                    className={`w-9 h-9 sm:w-10 sm:h-10 lg:w-11 lg:h-11 rounded-full ${glassClass} flex items-center justify-center transition relative active:scale-95 cursor-pointer shadow-xl shrink-0`}
+                    className={`w-9 h-9 sm:w-10 sm:h-10 lg:w-11 lg:h-11 rounded-full ${isLight ? 'bg-black/10 border-stone-900/20 text-stone-900 hover:bg-black/20' : 'bg-black/20 border-white/20 text-white hover:bg-black/30'} backdrop-blur-md flex items-center justify-center border transition relative active:scale-95 cursor-pointer shadow-md shrink-0`}
                   >
                     {loaderActive && <div className="cart-loader-ring"></div>}
                     <i className="fa-solid fa-bag-shopping text-xs"></i>
                     {totalCartItems > 0 && (
-                      <span className={`absolute -top-1.5 -right-1.5 px-1.5 py-0.5 bg-stone-950/90 backdrop-blur-md border border-white/30 text-white rounded-full text-[9px] font-semibold tracking-tighter shadow-md flex items-center justify-center ${badgePulsing ? 'badge-bounce' : ''}`}>
+                      <span className={`absolute -top-1.5 -right-1.5 px-1.5 py-0.5 bg-stone-950/85 backdrop-blur-md border border-white/20 text-white rounded-full text-[9px] font-semibold tracking-tighter shadow-md flex items-center justify-center ${badgePulsing ? 'badge-bounce' : ''}`}>
                         {totalCartItems}
                       </span>
                     )}
@@ -1117,7 +955,7 @@
                 onScroll={handleCategoriesScroll}
                 onTouchStart={() => { isUserInteractingRef.current = true; }}
                 onTouchEnd={() => { setTimeout(() => { isUserInteractingRef.current = false; }, 2500); }}
-                className={`flex md:hidden overflow-x-auto px-4 py-2 gap-2 z-20 ${glassClass} justify-start shrink-0 categories-scroll shadow-xl shadow-black/20 ${isScrollingCategories ? 'is-scrolling' : ''}`}
+                className={`flex md:hidden overflow-x-auto px-4 py-1.5 gap-2 z-20 ${isLight ? 'bg-black/5 text-stone-900' : 'bg-black/15 text-white'} backdrop-blur-md justify-start shrink-0 categories-scroll ${isScrollingCategories ? 'is-scrolling' : ''}`}
               >
                 {Object.keys(categoriesData).map((catKey) => {
                   const isActive = activeCategory === catKey;
@@ -1126,9 +964,9 @@
                     <button
                       key={catKey}
                       onClick={() => handleCategoryChange(catKey)}
-                      className={`px-3.5 py-1.5 rounded-full text-[10px] tracking-wider whitespace-nowrap transition-all duration-300 cursor-pointer flex items-center gap-1.5 shrink-0 active:scale-95 ${
+                      className={`px-3.5 py-1 rounded-full text-[10px] tracking-wider whitespace-nowrap transition-all duration-300 cursor-pointer flex items-center gap-1.5 shrink-0 active:scale-95 ${
                         isActive 
-                          ? `${isLight ? 'bg-stone-950 text-white font-bold shadow-md' : 'bg-white/35 text-white font-bold shadow-md'} scale-105` 
+                          ? `${isLight ? 'bg-stone-950 text-white font-bold' : 'bg-white/30 text-white font-bold'} scale-105 shadow-sm` 
                           : `${isLight ? 'text-stone-900/80' : 'text-white/80'}`
                       }`}
                     >
@@ -1155,17 +993,17 @@
                       </p>
 
                       {selectedItem.hasFlavorSelector && (
-                        <div className={`space-y-2 mt-4 w-full max-w-md ${glassClass} p-4 rounded-3xl shadow-xl shadow-black/30`}>
-                          <label className="text-[10px] lg:text-xs font-bold uppercase tracking-wider opacity-90 block">Elige tu sabor:</label>
+                        <div className="space-y-2 mt-4 w-full max-w-md bg-black/25 p-3 rounded-2xl border border-white/10 backdrop-blur-md">
+                          <label className="text-[10px] lg:text-xs font-bold uppercase tracking-wider text-white/90 block">Elige tu sabor:</label>
                           <div className="flex flex-wrap items-center gap-1.5 lg:gap-2">
                             {SABORES_BEBIDAS.map((flavor) => (
                               <button
                                 key={flavor}
                                 onClick={() => setSelectedFlavor(flavor)}
-                                className={`px-3.5 py-1.5 rounded-2xl text-xs font-bold border transition-all active:scale-95 cursor-pointer whitespace-nowrap ${
+                                className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-all active:scale-95 cursor-pointer whitespace-nowrap ${
                                   selectedFlavor === flavor
-                                    ? 'bg-stone-950 border-stone-800 text-white shadow-xl scale-105'
-                                    : `${isLight ? 'bg-black/10 border-black/10 text-stone-900' : 'bg-white/10 border-white/20 text-white'} hover:bg-white/20`
+                                    ? 'bg-stone-950 border-black text-white shadow-lg scale-105'
+                                    : 'bg-black/40 border-white/20 text-white hover:bg-black/60'
                                 }`}
                               >
                                 {flavor}
@@ -1176,17 +1014,17 @@
                       )}
 
                       {selectedItem.hasProteinSelector && selectedItem.proteinas && (
-                        <div className={`space-y-2 w-full max-w-md ${glassClass} p-4 rounded-3xl shadow-xl shadow-black/30`}>
+                        <div className="space-y-2 pt-1">
                           <label className="text-xs font-bold uppercase tracking-wider opacity-90 block">Elige tu proteína:</label>
                           <div className="flex flex-wrap gap-2">
                             {selectedItem.proteinas.map((protein) => (
                               <button
                                 key={protein}
                                 onClick={() => setSelectedProtein(protein)}
-                                className={`px-3.5 py-2 rounded-2xl text-xs font-semibold border transition-all active:scale-95 cursor-pointer ${
+                                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold border transition-all active:scale-95 cursor-pointer ${
                                   selectedProtein === protein
-                                    ? 'bg-stone-950 border-stone-800 text-white font-bold shadow-xl scale-105'
-                                    : `${isLight ? 'bg-black/10 border-black/10 text-stone-900' : 'bg-white/10 border-white/20 text-white/90'} hover:bg-white/20`
+                                    ? 'bg-stone-950 border-black text-white font-bold shadow-md scale-105'
+                                    : `${isLight ? 'bg-black/5 border-stone-900/20 text-stone-900 hover:bg-black/10' : 'bg-black/30 border-white/20 text-white/90 hover:bg-black/50'}`
                                 }`}
                               >
                                 {protein}
@@ -1197,8 +1035,8 @@
                       )}
 
                       {selectedItem.hasEnvolturaSelector && selectedItem.envolturas && (
-                        <div className={`space-y-2 mt-4 w-full max-w-md ${glassClass} p-4 rounded-3xl shadow-xl shadow-black/30`}>
-                          <label className="text-[10px] lg:text-xs font-bold uppercase tracking-wider opacity-90 block">Elige tu envoltura favorita:</label>
+                        <div className="space-y-2 mt-4 w-full max-w-md bg-black/25 p-3 rounded-2xl border border-white/10 backdrop-blur-md">
+                          <label className="text-[10px] lg:text-xs font-bold uppercase tracking-wider text-white/90 block">Elige tu envoltura favorita:</label>
                           <div className="flex flex-wrap gap-2.5">
                             {selectedItem.envolturas.map((env) => (
                               <button
@@ -1206,8 +1044,8 @@
                                 onClick={() => setSelectedEnvoltura(env)}
                                 className={`px-5 py-2.5 rounded-2xl text-xs lg:text-sm font-bold border transition-all active:scale-95 cursor-pointer ${
                                   selectedEnvoltura === env
-                                    ? 'bg-stone-950 border-stone-800 text-white shadow-xl scale-105'
-                                    : `${isLight ? 'bg-black/10 border-black/10 text-stone-900' : 'bg-white/10 border-white/20 text-white'} hover:bg-white/20`
+                                    ? 'bg-stone-950 border-black text-white shadow-lg scale-105'
+                                    : 'bg-black/40 border-white/20 text-white hover:bg-black/60'
                                 }`}
                               >
                                 {env}
@@ -1218,115 +1056,48 @@
                       )}
 
                       {allowCustomizations && (
-                        <div className="space-y-1.5 pt-1 w-full max-w-md">
+                        <div className="space-y-1.5 pt-1">
                           <label className="text-xs font-bold uppercase tracking-wider opacity-90 block">Notas especiales (opcional):</label>
                           <input 
                             type="text" 
                             placeholder="Ej. Sin cebollín, salsa extra..."
                             value={specialNotes}
                             onChange={(e) => setSpecialNotes(e.target.value)}
-                            className={`w-full ${glassClass} rounded-2xl px-4 py-3 text-xs lg:text-sm outline-none focus:border-white/50 transition shadow-xl`}
+                            className={`w-full max-w-md ${isLight ? 'bg-black/5 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/30 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-2xl px-4 py-2.5 text-xs lg:text-sm outline-none focus:border-stone-950 transition`}
                           />
                         </div>
                       )}
 
                       {allowCustomizations && (
-                        <div className={`space-y-2.5 w-full max-w-md ${glassClass} p-4 rounded-3xl shadow-xl shadow-black/30`}>
+                        <div className="space-y-2 w-full max-w-md bg-black/25 p-3.5 rounded-2xl border border-white/10 backdrop-blur-md">
                           <div className="flex justify-between items-center px-1">
-                            <span className="text-xs font-bold uppercase tracking-wider">Elige tus salsas</span>
-                            <span className={`text-xs font-bold ${soyaCount + teriyakiCount === quantity ? 'text-emerald-500 font-extrabold' : 'text-orange-600 font-extrabold'}`}>
+                            <span className="text-xs font-bold uppercase tracking-wider text-white/90">Elige tu salsa favorita</span>
+                            <span className={`text-xs font-bold ${soyaCount + teriyakiCount === quantity ? 'text-emerald-400' : 'text-orange-300'}`}>
                               {soyaCount + teriyakiCount === quantity ? '¡Completo!' : `${soyaCount + teriyakiCount}/${quantity} asignadas`}
                             </span>
                           </div>
                           <div className="grid grid-cols-2 gap-2.5">
-                            <div className={`flex items-center justify-between ${isLight ? 'bg-black/10 border-black/10' : 'bg-white/10 border-white/15'} px-3.5 py-2 rounded-2xl border`}>
-                              <span className="text-xs font-bold">Soya</span>
+                            <div className="flex items-center justify-between bg-black/30 px-3.5 py-2 rounded-xl border border-white/10">
+                              <span className="text-xs font-bold text-white">Soya</span>
                               <div className="flex items-center gap-2">
-                                <button 
-                                  onClick={() => updateSoya(-1)} 
-                                  disabled={soyaCount === 0}
-                                  className={getCircularBtnClass(soyaCount === 0)}
-                                >
-                                  <i className="fa-solid fa-minus text-[9px]"></i>
+                                <button onClick={() => updateSoya(-1)} className="w-7 h-7 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-xs font-bold active:scale-90 cursor-pointer text-white">
+                                  <i className="fa-solid fa-minus text-[10px]"></i>
                                 </button>
-                                <span className={`text-xs w-4 text-center ${isLight ? 'text-stone-950 font-extrabold' : 'text-white font-bold'}`}>{soyaCount}</span>
-                                <button 
-                                  onClick={() => updateSoya(1)} 
-                                  disabled={soyaCount + teriyakiCount >= quantity}
-                                  className={getCircularBtnClass(soyaCount + teriyakiCount >= quantity)}
-                                >
-                                  <i className="fa-solid fa-plus text-[9px]"></i>
+                                <span className="text-xs font-bold w-4 text-center text-white">{soyaCount}</span>
+                                <button onClick={() => updateSoya(1)} className="w-7 h-7 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-xs font-bold active:scale-90 cursor-pointer text-white">
+                                  <i className="fa-solid fa-plus text-[10px]"></i>
                                 </button>
                               </div>
                             </div>
-                            <div className={`flex items-center justify-between ${isLight ? 'bg-black/10 border-black/10' : 'bg-white/10 border-white/15'} px-3.5 py-2 rounded-2xl border`}>
-                              <span className="text-xs font-bold">Teriyaki</span>
+                            <div className="flex items-center justify-between bg-black/30 px-3.5 py-2 rounded-xl border border-white/10">
+                              <span className="text-xs font-bold text-white">Teriyaki</span>
                               <div className="flex items-center gap-2">
-                                <button 
-                                  onClick={() => updateTeriyaki(-1)} 
-                                  disabled={teriyakiCount === 0}
-                                  className={getCircularBtnClass(teriyakiCount === 0)}
-                                >
-                                  <i className="fa-solid fa-minus text-[9px]"></i>
+                                <button onClick={() => updateTeriyaki(-1)} className="w-7 h-7 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-xs font-bold active:scale-90 cursor-pointer text-white">
+                                  <i className="fa-solid fa-minus text-[10px]"></i>
                                 </button>
-                                <span className={`text-xs w-4 text-center ${isLight ? 'text-stone-950 font-extrabold' : 'text-white font-bold'}`}>{teriyakiCount}</span>
-                                <button 
-                                  onClick={() => updateTeriyaki(1)} 
-                                  disabled={soyaCount + teriyakiCount >= quantity}
-                                  className={getCircularBtnClass(soyaCount + teriyakiCount >= quantity)}
-                                >
-                                  <i className="fa-solid fa-plus text-[9px]"></i>
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      {showWasabiJengibre && (
-                        <div className={`space-y-2.5 w-full max-w-md ${glassClass} p-4 rounded-3xl shadow-xl shadow-black/30`}>
-                          <div className="flex justify-between items-center px-1">
-                            <span className="text-xs font-bold uppercase tracking-wider">Wasabi y Jengibre</span>
-                            <span className="text-xs font-bold opacity-80">Máx. {quantity} c/u</span>
-                          </div>
-                          <div className="grid grid-cols-2 gap-2.5">
-                            <div className={`flex items-center justify-between ${isLight ? 'bg-black/10 border-black/10' : 'bg-white/10 border-white/15'} px-3.5 py-2 rounded-2xl border`}>
-                              <span className="text-xs font-bold">Wasabi</span>
-                              <div className="flex items-center gap-2">
-                                <button 
-                                  onClick={() => updateWasabi(-1)} 
-                                  disabled={wasabiCount === 0}
-                                  className={getCircularBtnClass(wasabiCount === 0)}
-                                >
-                                  <i className="fa-solid fa-minus text-[9px]"></i>
-                                </button>
-                                <span className={`text-xs w-4 text-center ${isLight ? 'text-stone-950 font-extrabold' : 'text-white font-bold'}`}>{wasabiCount}</span>
-                                <button 
-                                  onClick={() => updateWasabi(1)} 
-                                  disabled={wasabiCount >= quantity}
-                                  className={getCircularBtnClass(wasabiCount >= quantity)}
-                                >
-                                  <i className="fa-solid fa-plus text-[9px]"></i>
-                                </button>
-                              </div>
-                            </div>
-                            <div className={`flex items-center justify-between ${isLight ? 'bg-black/10 border-black/10' : 'bg-white/10 border-white/15'} px-3.5 py-2 rounded-2xl border`}>
-                              <span className="text-xs font-bold">Jengibre</span>
-                              <div className="flex items-center gap-2">
-                                <button 
-                                  onClick={() => updateJengibre(-1)} 
-                                  disabled={jengibreCount === 0}
-                                  className={getCircularBtnClass(jengibreCount === 0)}
-                                >
-                                  <i className="fa-solid fa-minus text-[9px]"></i>
-                                </button>
-                                <span className={`text-xs w-4 text-center ${isLight ? 'text-stone-950 font-extrabold' : 'text-white font-bold'}`}>{jengibreCount}</span>
-                                <button 
-                                  onClick={() => updateJengibre(1)} 
-                                  disabled={jengibreCount >= quantity}
-                                  className={getCircularBtnClass(jengibreCount >= quantity)}
-                                >
-                                  <i className="fa-solid fa-plus text-[9px]"></i>
+                                <span className="text-xs font-bold w-4 text-center text-white">{teriyakiCount}</span>
+                                <button onClick={() => updateTeriyaki(1)} className="w-7 h-7 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-xs font-bold active:scale-90 cursor-pointer text-white">
+                                  <i className="fa-solid fa-plus text-[10px]"></i>
                                 </button>
                               </div>
                             </div>
@@ -1335,19 +1106,12 @@
                       )}
 
                       <div className="pt-2 flex items-center gap-6">
-                        <div className={`flex items-center rounded-full border px-4 py-2 ${glassClass} shadow-xl`}>
-                          <button 
-                            onClick={decreaseQty} 
-                            disabled={quantity === 1}
-                            className={getQtyBtnClass(quantity === 1)}
-                          >
+                        <div className={`flex items-center rounded-full border px-4 py-2 ${isLight ? 'bg-black/5 border-stone-900/20' : 'bg-black/30 border-white/25'} backdrop-blur-md shadow-md`}>
+                          <button onClick={decreaseQty} className="w-8 h-8 flex items-center justify-center font-bold text-base active:scale-90 transition cursor-pointer">
                             <i className="fa-solid fa-minus text-xs"></i>
                           </button>
-                          <span className={`w-10 text-center font-bold text-base ${isLight ? 'text-stone-950 font-extrabold' : 'text-white'}`}>{quantity}</span>
-                          <button 
-                            onClick={increaseQty} 
-                            className={getQtyBtnClass(false)}
-                          >
+                          <span className="w-10 text-center font-bold text-base">{quantity}</span>
+                          <button onClick={increaseQty} className="w-8 h-8 flex items-center justify-center font-bold text-base active:scale-90 transition cursor-pointer">
                             <i className="fa-solid fa-plus text-xs"></i>
                           </button>
                         </div>
@@ -1355,7 +1119,7 @@
                         <button 
                           onClick={addToCart}
                           disabled={allowCustomizations && (soyaCount + teriyakiCount !== quantity)}
-                          className={`font-semibold px-10 py-3.5 rounded-full flex items-center gap-3 transition active:scale-95 shadow-2xl text-sm lg:text-base group cursor-pointer border bg-stone-950 text-white border-stone-800 hover:bg-stone-900 ${
+                          className={`font-semibold px-10 py-3.5 rounded-full flex items-center gap-3 transition active:scale-95 shadow-2xl text-sm lg:text-base group cursor-pointer border bg-stone-950 text-white border-black hover:bg-stone-900 ${
                             allowCustomizations && (soyaCount + teriyakiCount !== quantity)
                               ? 'opacity-50 cursor-not-allowed bg-stone-800 text-white/50 border-white/10' 
                               : ''
@@ -1377,9 +1141,8 @@
                   </div>
 
                   <div className="lg:col-span-4 relative flex flex-col items-center justify-center order-2">
-                    <div className="relative w-full h-[140px] sm:h-[170px] lg:h-[680px] flex items-center justify-center my-0">
-                      
-                      <div className="absolute bottom-2 lg:bottom-6 w-36 sm:w-56 lg:w-96 h-8 sm:h-12 lg:h-16 bg-[radial-gradient(ellipse_at_center,_rgba(0,0,0,0.75)_0%,_rgba(0,0,0,0.35)_45%,_transparent_75%)] rounded-[100%] blur-xl pointer-events-none transition-all duration-500 scale-105"></div>
+                    <div className="relative w-full h-[200px] sm:h-[250px] lg:h-[680px] flex items-center justify-center my-0">
+                      <div className={`absolute w-44 h-44 sm:w-64 sm:h-64 lg:w-[600px] lg:h-[600px] ${isLight ? 'bg-white/60' : 'bg-white/20'} rounded-full blur-3xl pointer-events-none transition-all duration-500`}></div>
                       
                       <img 
                         src={selectedItem.image} 
@@ -1389,7 +1152,7 @@
                         onMouseDown={() => setIsImageZoomed(true)}
                         onMouseUp={() => setIsImageZoomed(false)}
                         onMouseLeave={() => setIsImageZoomed(false)}
-                        className={`max-h-[125px] sm:max-h-[155px] lg:max-h-[660px] max-w-full object-contain ${selectedItem.id === 'onigiri' ? 'onigiri-deep-shadow' : 'drop-shadow-[0_20px_20px_rgba(0,0,0,0.5)] lg:drop-shadow-[0_40px_45px_rgba(0,0,0,0.8)]'} transition-all duration-300 ease-out cursor-pointer select-none relative z-10 ${
+                        className={`max-h-[185px] sm:max-h-[235px] lg:max-h-[660px] max-w-full object-contain ${selectedItem.id === 'onigiri' ? 'onigiri-deep-shadow' : 'drop-shadow-[0_20px_20px_rgba(0,0,0,0.5)] lg:drop-shadow-[0_40px_45px_rgba(0,0,0,0.8)]'} transition-all duration-300 ease-out cursor-pointer select-none ${
                           isImageZoomed ? 'scale-140 sm:scale-160 lg:scale-155 rotate-1' : 'scale-125 sm:scale-140 lg:scale-135'
                         } ${animating ? 'opacity-0 scale-75 rotate-3 translate-y-4' : 'opacity-100 translate-y-0'}`}
                         onError={(e)=>{
@@ -1398,211 +1161,132 @@
                       />
                     </div>
 
-                    {/* Contenedor móvil optimizado con desvanecimiento elegante (fade-mask-container) sin scroll rígido */}
-                    <div className={`flex lg:hidden flex-col items-center text-center space-y-1 w-full px-2 mt-0 mb-0 pb-4 transition-all duration-300 ease-out ${animating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
+                    <div className={`flex lg:hidden flex-col items-center text-center space-y-1 w-full px-2 mt-0 mb-1 transition-all duration-300 ease-out ${animating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
                       <p className={`text-[11px] sm:text-xs font-medium leading-tight max-w-xs ${isLight ? 'text-stone-900/90' : 'text-white/95'} drop-shadow ${
-                        isExtra ? 'mt-2 sm:mt-3 mb-1' : isGohan ? 'mt-1.5 sm:mt-2 mb-1' : 'my-0.5'
+                        isExtra ? 'mt-10 sm:mt-12 mb-2' : isGohan ? 'mt-6 sm:mt-8 mb-2' : ''
                       }`}>
                         {selectedItem.description}
                       </p>
 
-                      <div className="w-full max-w-xs relative">
-                        <div className={`w-full ${showWasabiJengibre ? 'max-h-[120px] sm:max-h-[140px] fade-mask-container' : ''} space-y-1.5 px-1.5 py-1 my-0`}>
-                          {selectedItem.hasFlavorSelector && (
-                            <div className={`space-y-0.5 w-full ${glassClass} p-1.5 rounded-2xl shadow-xl shadow-black/30`}>
-                              <label className="text-[10px] font-bold uppercase tracking-wider opacity-90 block text-center">Elige tu sabor:</label>
-                              <div className="flex flex-wrap justify-center items-center gap-1.5">
-                                {SABORES_BEBIDAS.map((flavor) => (
-                                  <button
-                                    key={flavor}
-                                    onClick={() => setSelectedFlavor(flavor)}
-                                    className={`px-2.5 py-0.5 rounded-xl text-[10px] font-bold border transition-all active:scale-95 cursor-pointer whitespace-nowrap ${
-                                      selectedFlavor === flavor
-                                        ? 'bg-stone-950 border-stone-800 text-white shadow-md scale-105'
-                                        : `${isLight ? 'bg-black/10 border-black/10 text-stone-900' : 'bg-white/10 border-white/20 text-white'}`
-                                    }`}
-                                  >
-                                    {flavor}
-                                  </button>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-
-                          {selectedItem.hasProteinSelector && selectedItem.proteinas && (
-                            <div className="space-y-0.5 w-full">
-                              <label className="text-[9px] font-bold uppercase tracking-wider opacity-90 block text-center">Elige tu proteína:</label>
-                              <div className="flex flex-wrap justify-center gap-1">
-                                {selectedItem.proteinas.map((protein) => (
-                                  <button
-                                    key={protein}
-                                    onClick={() => setSelectedProtein(protein)}
-                                    className={`px-2 py-0.5 rounded-xl text-[9px] font-semibold border transition-all active:scale-95 cursor-pointer ${
-                                      selectedProtein === protein
-                                        ? 'bg-stone-950 border-stone-800 text-white font-bold shadow-md scale-105'
-                                        : `${isLight ? 'bg-black/10 border-black/10 text-stone-900' : 'bg-white/10 border-white/20 text-white/90'}`
-                                    }`}
-                                  >
-                                    {protein}
-                                  </button>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-
-                          {selectedItem.hasEnvolturaSelector && selectedItem.envolturas && (
-                            <div className={`space-y-0.5 w-full ${glassClass} p-1.5 rounded-2xl shadow-xl shadow-black/30`}>
-                              <label className="text-[10px] font-bold uppercase tracking-wider opacity-90 block text-center">Elige tu envoltura favorita:</label>
-                              <div className="flex flex-wrap justify-center gap-1.5">
-                                {selectedItem.envolturas.map((env) => (
-                                  <button
-                                    key={env}
-                                    onClick={() => setSelectedEnvoltura(env)}
-                                    className={`px-3.5 py-0.5 rounded-xl text-xs font-bold border transition-all active:scale-95 cursor-pointer ${
-                                      selectedEnvoltura === env
-                                        ? 'bg-stone-950 border-stone-800 text-white shadow-md scale-105'
-                                        : `${isLight ? 'bg-black/10 border-black/10 text-stone-900' : 'bg-white/10 border-white/20 text-white'}`
-                                    }`}
-                                  >
-                                    {env}
-                                  </button>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-
-                          {allowCustomizations && (
-                            <div className="w-full">
-                              <input 
-                                type="text" 
-                                placeholder="Nota (ej. sin cebollín)..."
-                                value={specialNotes}
-                                onChange={(e) => setSpecialNotes(e.target.value)}
-                                className={`w-full ${glassClass} rounded-xl px-2.5 py-1 text-[11px] outline-none focus:border-white/50 transition shadow-lg`}
-                              />
-                            </div>
-                          )}
-
-                          {allowCustomizations && (
-                            <div className={`space-y-0.5 w-full ${glassClass} p-1.5 rounded-2xl shadow-xl shadow-black/30`}>
-                              <div className="flex justify-between items-center px-1">
-                                <span className="text-[10px] font-bold uppercase tracking-wider opacity-90">Elige tus salsas</span>
-                                <span className={`text-[10px] font-bold ${soyaCount + teriyakiCount === quantity ? 'text-emerald-600 font-extrabold' : 'text-orange-600 font-extrabold'}`}>
-                                  {soyaCount + teriyakiCount === quantity ? '¡Completo!' : `${soyaCount + teriyakiCount}/${quantity}`}
-                                </span>
-                              </div>
-                              <div className="grid grid-cols-2 gap-1.5">
-                                <div className={`flex items-center justify-between ${isLight ? 'bg-black/10 border-black/10' : 'bg-white/10 border-white/15'} px-2 py-0.5 rounded-xl border`}>
-                                  <span className="text-[11px] font-bold">Soya</span>
-                                  <div className="flex items-center gap-1.5">
-                                    <button 
-                                      onClick={() => updateSoya(-1)} 
-                                      disabled={soyaCount === 0}
-                                      className={getCircularMobileBtnClass(soyaCount === 0)}
-                                    >
-                                      <i className="fa-solid fa-minus text-[8px]"></i>
-                                    </button>
-                                    <span className={`text-[11px] w-3 text-center ${isLight ? 'text-stone-950 font-extrabold' : 'text-white font-bold'}`}>{soyaCount}</span>
-                                    <button 
-                                      onClick={() => updateSoya(1)} 
-                                      disabled={soyaCount + teriyakiCount >= quantity}
-                                      className={getCircularMobileBtnClass(soyaCount + teriyakiCount >= quantity)}
-                                    >
-                                      <i className="fa-solid fa-plus text-[8px]"></i>
-                                    </button>
-                                  </div>
-                                </div>
-                                <div className={`flex items-center justify-between ${isLight ? 'bg-black/10 border-black/10' : 'bg-white/10 border-white/15'} px-2 py-0.5 rounded-xl border`}>
-                                  <span className="text-[11px] font-bold">Teriyaki</span>
-                                  <div className="flex items-center gap-1.5">
-                                    <button 
-                                      onClick={() => updateTeriyaki(-1)} 
-                                      disabled={teriyakiCount === 0}
-                                      className={getCircularMobileBtnClass(teriyakiCount === 0)}
-                                    >
-                                      <i className="fa-solid fa-minus text-[8px]"></i>
-                                    </button>
-                                    <span className={`text-[11px] w-3 text-center ${isLight ? 'text-stone-950 font-extrabold' : 'text-white font-bold'}`}>{teriyakiCount}</span>
-                                    <button 
-                                      onClick={() => updateTeriyaki(1)} 
-                                      disabled={soyaCount + teriyakiCount >= quantity}
-                                      className={getCircularMobileBtnClass(soyaCount + teriyakiCount >= quantity)}
-                                    >
-                                      <i className="fa-solid fa-plus text-[8px]"></i>
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          )}
-
-                          {showWasabiJengibre && (
-                            <div className={`space-y-0.5 w-full ${glassClass} p-1.5 rounded-2xl shadow-xl shadow-black/30`}>
-                              <div className="flex justify-between items-center px-1">
-                                <span className="text-[10px] font-bold uppercase tracking-wider opacity-90">Wasabi y Jengibre</span>
-                                <span className="text-[10px] font-bold opacity-80">Máx. {quantity} c/u</span>
-                              </div>
-                              <div className="grid grid-cols-2 gap-1.5">
-                                <div className={`flex items-center justify-between ${isLight ? 'bg-black/10 border-black/10' : 'bg-white/10 border-white/15'} px-2 py-0.5 rounded-xl border`}>
-                                  <span className="text-[11px] font-bold">Wasabi</span>
-                                  <div className="flex items-center gap-1.5">
-                                    <button 
-                                      onClick={() => updateWasabi(-1)} 
-                                      disabled={wasabiCount === 0}
-                                      className={getCircularMobileBtnClass(wasabiCount === 0)}
-                                    >
-                                      <i className="fa-solid fa-minus text-[8px]"></i>
-                                    </button>
-                                    <span className={`text-[11px] w-3 text-center ${isLight ? 'text-stone-950 font-extrabold' : 'text-white font-bold'}`}>{wasabiCount}</span>
-                                    <button 
-                                      onClick={() => updateWasabi(1)} 
-                                      disabled={wasabiCount >= quantity}
-                                      className={getCircularMobileBtnClass(wasabiCount >= quantity)}
-                                    >
-                                      <i className="fa-solid fa-plus text-[8px]"></i>
-                                    </button>
-                                  </div>
-                                </div>
-                                <div className={`flex items-center justify-between ${isLight ? 'bg-black/10 border-black/10' : 'bg-white/10 border-white/15'} px-2 py-0.5 rounded-xl border`}>
-                                  <span className="text-[11px] font-bold">Jengibre</span>
-                                  <div className="flex items-center gap-1.5">
-                                    <button 
-                                      onClick={() => updateJengibre(-1)} 
-                                      disabled={jengibreCount === 0}
-                                      className={getCircularMobileBtnClass(jengibreCount === 0)}
-                                    >
-                                      <i className="fa-solid fa-minus text-[8px]"></i>
-                                    </button>
-                                    <span className={`text-[11px] w-3 text-center ${isLight ? 'text-stone-950 font-extrabold' : 'text-white font-bold'}`}>{jengibreCount}</span>
-                                    <button 
-                                      onClick={() => updateJengibre(1)} 
-                                      disabled={jengibreCount >= quantity}
-                                      className={getCircularMobileBtnClass(jengibreCount >= quantity)}
-                                    >
-                                      <i className="fa-solid fa-plus text-[8px]"></i>
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          )}
+                      {selectedItem.hasFlavorSelector && (
+                        <div className="space-y-1.5 w-full max-w-xs bg-black/25 p-2.5 rounded-2xl border border-white/10 backdrop-blur-md mt-2.5 mb-1">
+                          <label className="text-[10px] font-bold uppercase tracking-wider text-white/90 block text-center">Elige tu sabor:</label>
+                          <div className="flex flex-wrap justify-center items-center gap-1.5">
+                            {SABORES_BEBIDAS.map((flavor) => (
+                              <button
+                                key={flavor}
+                                onClick={() => setSelectedFlavor(flavor)}
+                                className={`px-2.5 py-1 rounded-xl text-[10px] font-bold border transition-all active:scale-95 cursor-pointer whitespace-nowrap ${
+                                  selectedFlavor === flavor
+                                    ? 'bg-stone-950 border-black text-white shadow-md scale-105'
+                                    : 'bg-black/40 border-white/20 text-white hover:bg-black/60'
+                                }`}
+                              >
+                                {flavor}
+                              </button>
+                            ))}
+                          </div>
                         </div>
-                      </div>
+                      )}
 
-                      <div className="flex items-center gap-2 pt-1 pb-0">
-                        <div className={`flex items-center rounded-full border px-2.5 py-0.5 ${glassClass} shadow-lg`}>
-                          <button 
-                            onClick={decreaseQty} 
-                            disabled={quantity === 1}
-                            className={getQtyMobileBtnClass(quantity === 1)}
-                          >
+                      {selectedItem.hasProteinSelector && selectedItem.proteinas && (
+                        <div className="space-y-0.5 w-full max-w-xs">
+                          <label className="text-[9px] font-bold uppercase tracking-wider opacity-90 block text-center">Elige tu proteína:</label>
+                          <div className="flex flex-wrap justify-center gap-1">
+                            {selectedItem.proteinas.map((protein) => (
+                              <button
+                                key={protein}
+                                onClick={() => setSelectedProtein(protein)}
+                                className={`px-2 py-0.5 rounded-xl text-[9px] font-semibold border transition-all active:scale-95 cursor-pointer ${
+                                  selectedProtein === protein
+                                    ? 'bg-stone-950 border-black text-white font-bold shadow-md scale-105'
+                                    : `${isLight ? 'bg-black/5 border-stone-900/20 text-stone-900' : 'bg-black/30 border-white/20 text-white/90'}`
+                                }`}
+                              >
+                                {protein}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {selectedItem.hasEnvolturaSelector && selectedItem.envolturas && (
+                        <div className="space-y-1.5 w-full max-w-xs bg-black/25 p-2 rounded-2xl border border-white/10 backdrop-blur-md mt-2.5 mb-1">
+                          <label className="text-[10px] font-bold uppercase tracking-wider text-white/90 block text-center">Elige tu envoltura favorita:</label>
+                          <div className="flex flex-wrap justify-center gap-2">
+                            {selectedItem.envolturas.map((env) => (
+                              <button
+                                key={env}
+                                onClick={() => setSelectedEnvoltura(env)}
+                                className={`px-4 py-1.5 rounded-xl text-xs font-bold border transition-all active:scale-95 cursor-pointer ${
+                                  selectedEnvoltura === env
+                                    ? 'bg-stone-950 border-black text-white shadow-md scale-105'
+                                    : 'bg-black/40 border-white/20 text-white hover:bg-black/60'
+                                }`}
+                              >
+                                {env}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {allowCustomizations && (
+                        <div className="w-full max-w-xs">
+                          <input 
+                            type="text" 
+                            placeholder="Nota (ej. sin cebollín)..."
+                            value={specialNotes}
+                            onChange={(e) => setSpecialNotes(e.target.value)}
+                            className={`w-full ${isLight ? 'bg-black/5 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/30 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-xl px-2.5 py-0.5 text-[11px] outline-none focus:border-stone-950 transition`}
+                          />
+                        </div>
+                      )}
+
+                      {allowCustomizations && (
+                        <div className="space-y-1 w-full max-w-xs bg-black/25 p-2 rounded-2xl border border-white/10 my-1">
+                          <div className="flex justify-between items-center px-1">
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-white/90">Elige tu salsa favorita</span>
+                            <span className={`text-[10px] font-bold ${soyaCount + teriyakiCount === quantity ? 'text-emerald-400' : 'text-orange-300'}`}>
+                              {soyaCount + teriyakiCount === quantity ? '¡Completo!' : `${soyaCount + teriyakiCount}/${quantity}`}
+                            </span>
+                          </div>
+                          <div className="grid grid-cols-2 gap-2">
+                            <div className="flex items-center justify-between bg-black/30 px-2.5 py-1.5 rounded-xl border border-white/10">
+                              <span className="text-xs font-bold text-white">Soya</span>
+                              <div className="flex items-center gap-1.5">
+                                <button onClick={() => updateSoya(-1)} className="w-6 h-6 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[10px] font-bold active:scale-90 cursor-pointer text-white">
+                                  <i className="fa-solid fa-minus text-[9px]"></i>
+                                </button>
+                                <span className="text-xs font-bold w-3.5 text-center text-white">{soyaCount}</span>
+                                <button onClick={() => updateSoya(1)} className="w-6 h-6 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[10px] font-bold active:scale-90 cursor-pointer text-white">
+                                  <i className="fa-solid fa-plus text-[9px]"></i>
+                                </button>
+                              </div>
+                            </div>
+                            <div className="flex items-center justify-between bg-black/30 px-2.5 py-1.5 rounded-xl border border-white/10">
+                              <span className="text-xs font-bold text-white">Teriyaki</span>
+                              <div className="flex items-center gap-1.5">
+                                <button onClick={() => updateTeriyaki(-1)} className="w-6 h-6 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[10px] font-bold active:scale-90 cursor-pointer text-white">
+                                  <i className="fa-solid fa-minus text-[9px]"></i>
+                                </button>
+                                <span className="text-xs font-bold w-3.5 text-center text-white">{teriyakiCount}</span>
+                                <button onClick={() => updateTeriyaki(1)} className="w-6 h-6 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-[10px] font-bold active:scale-90 cursor-pointer text-white">
+                                  <i className="fa-solid fa-plus text-[9px]"></i>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="flex items-center gap-2.5 pt-0.5 pb-0">
+                        <div className={`flex items-center rounded-full border px-2.5 py-0.5 ${isLight ? 'bg-black/5 border-stone-900/20' : 'bg-black/30 border-white/25'} backdrop-blur-md`}>
+                          <button onClick={decreaseQty} className="w-5 h-5 flex items-center justify-center font-bold text-[10px] active:scale-90 cursor-pointer">
                             <i className="fa-solid fa-minus text-[9px]"></i>
                           </button>
-                          <span className={`w-5 text-center font-bold text-[11px] ${isLight ? 'text-stone-950 font-extrabold' : 'text-white'}`}>{quantity}</span>
-                          <button 
-                            onClick={increaseQty} 
-                            className={getQtyMobileBtnClass(false)}
-                          >
+                          <span className="w-5 text-center font-bold text-[11px]">{quantity}</span>
+                          <button onClick={increaseQty} className="w-5 h-5 flex items-center justify-center font-bold text-[10px] active:scale-90 cursor-pointer">
                             <i className="fa-solid fa-plus text-[9px]"></i>
                           </button>
                         </div>
@@ -1610,7 +1294,7 @@
                         <button 
                           onClick={addToCart}
                           disabled={allowCustomizations && (soyaCount + teriyakiCount !== quantity)}
-                          className={`font-semibold px-4 py-1.5 rounded-full flex items-center gap-1.5 transition active:scale-95 shadow-xl text-[11px] group cursor-pointer border bg-stone-950 text-white border-stone-800 hover:bg-stone-900 ${
+                          className={`font-semibold px-5 py-1.5 rounded-full flex items-center gap-1.5 transition active:scale-95 shadow-xl text-[11px] group cursor-pointer border bg-stone-950 text-white border-black hover:bg-stone-900 ${
                             allowCustomizations && (soyaCount + teriyakiCount !== quantity)
                               ? 'opacity-50 cursor-not-allowed bg-stone-800 text-white/50 border-white/10' 
                               : ''
@@ -1643,7 +1327,7 @@
                           <button
                             key={item.id}
                             onClick={() => handleItemChange(item)}
-                            className={`w-11 h-13 sm:w-14 sm:h-16 lg:w-20 lg:h-24 rounded-2xl overflow-hidden border-2 transition-all duration-300 relative cursor-pointer active:scale-95 ${glassClass} shadow-xl flex items-center justify-center p-1 lg:p-2 ${
+                            className={`w-11 h-13 sm:w-14 sm:h-16 lg:w-20 lg:h-24 rounded-2xl overflow-hidden border-2 transition-all duration-300 relative cursor-pointer active:scale-95 ${isLight ? 'bg-black/10' : 'bg-black/30'} shadow-md flex items-center justify-center p-1 lg:p-2 ${
                               selectedItem.id === item.id
                                 ? `${isLight ? 'border-stone-950 ring-2 ring-stone-950/40' : 'border-white ring-2 ring-white/50'} scale-110 shadow-2xl`
                                 : `${isLight ? 'border-stone-900/30 opacity-70 hover:opacity-100' : 'border-white/30 opacity-70 hover:opacity-100'}`
@@ -1670,7 +1354,7 @@
               {cartOpen && (
                 <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-4 overflow-y-auto">
                   
-                  <div className={`advanced-glass ${isLight ? 'text-stone-950' : 'text-white'} rounded-3xl max-w-4xl lg:max-w-6xl w-full p-6 lg:p-12 shadow-2xl shadow-black/50 border border-white/20 relative animate-in fade-in zoom-in duration-200 my-auto`}>
+                  <div className={`bg-gradient-to-br ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} rounded-3xl max-w-4xl lg:max-w-6xl w-full p-6 lg:p-12 shadow-2xl border ${isLight ? 'border-stone-900/20' : 'border-white/20'} relative animate-in fade-in zoom-in duration-200 my-auto`}>
                     
                     <button 
                       type="button"
@@ -1678,7 +1362,7 @@
                         e.stopPropagation();
                         setCartOpen(false);
                       }}
-                      className={`absolute top-6 right-6 w-9 h-9 rounded-full ${isLight ? 'bg-black/10 hover:bg-black/20 text-stone-950' : 'bg-white/10 hover:bg-white/20 text-white'} flex items-center justify-center transition active:scale-90 cursor-pointer z-20 font-bold text-sm shadow-lg`}
+                      className={`absolute top-6 right-6 w-9 h-9 rounded-full ${isLight ? 'bg-black/10 hover:bg-black/20 text-stone-950' : 'bg-white/10 hover:bg-white/20 text-white'} flex items-center justify-center transition active:scale-90 cursor-pointer z-20 font-bold text-sm`}
                     >
                       <i className="fa-solid fa-xmark text-xs"></i>
                     </button>
@@ -1686,7 +1370,7 @@
                     <h3 className="text-2xl lg:text-3xl font-extrabold mb-6 tracking-wide drop-shadow-sm pr-12">Resumen de tu Pedido</h3>
 
                     {!isOpen && (
-                      <div className={`mb-6 p-3.5 rounded-2xl text-xs lg:text-sm flex items-center gap-3 shadow-xl shadow-black/30 ${dynamicClosedBannerBg} ${dynamicClosedBannerText}`}>
+                      <div className={`mb-6 p-3.5 rounded-2xl text-xs lg:text-sm flex items-center gap-3 shadow-lg ${dynamicClosedBannerBg} ${dynamicClosedBannerText}`}>
                         <i className={`fa-solid fa-clock text-base ${isBackgroundLuminous ? 'text-stone-950' : 'text-white'}`}></i>
                         <span className={`font-semibold ${isBackgroundLuminous ? 'text-stone-950' : 'text-white'}`}>El local se encuentra cerrado en este momento. Tu pedido se enviará programado para la próxima apertura (12:00 PM).</span>
                       </div>
@@ -1694,7 +1378,7 @@
 
                     {orderSuccess ? (
                       <div className="py-20 text-center space-y-4">
-                        <div className="w-20 h-20 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto text-3xl font-bold shadow-xl">
+                        <div className="w-20 h-20 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto text-3xl font-bold">
                           <i className="fa-solid fa-check text-2xl"></i>
                         </div>
                         <h4 className="text-xl font-bold">¡Redirigiendo a WhatsApp!</h4>
@@ -1713,7 +1397,7 @@
                             <span className="text-xs uppercase tracking-wider font-bold opacity-95">Productos en tu bolsa</span>
                             <button 
                               onClick={clearCart}
-                              className={`text-xs font-bold px-3 py-1.5 rounded-full transition flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-lg backdrop-blur-xl ${isBackgroundLuminous ? 'bg-black/20 text-stone-950 hover:bg-black/30' : 'bg-white/20 text-white hover:bg-white/30'}`}
+                              className={`text-xs font-bold px-3 py-1.5 rounded-full transition flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-sm backdrop-blur-md ${isBackgroundLuminous ? 'bg-black/15 text-stone-950 hover:bg-black/25' : 'bg-white/15 text-white hover:bg-white/25'}`}
                             >
                               <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] ${isBackgroundLuminous ? 'bg-black/20 text-stone-950' : 'bg-white/20 text-white'}`}>
                                 <i className="fa-solid fa-trash-can"></i>
@@ -1724,15 +1408,15 @@
 
                           <div className="space-y-3.5 max-h-72 lg:max-h-96 overflow-y-auto no-scrollbar pr-1">
                             {cart.map((item) => (
-                              <div key={item.cartItemId} className={`flex flex-col sm:flex-row sm:items-center justify-between ${isLight ? 'bg-white/30 border-stone-900/15' : 'bg-black/30 border-white/15'} backdrop-blur-2xl p-4 rounded-3xl border gap-3.5 shadow-xl shadow-black/25`}>
+                              <div key={item.cartItemId} className={`flex flex-col sm:flex-row sm:items-center justify-between ${isLight ? 'bg-white/40 border-stone-900/10' : 'bg-black/40 border-white/10'} backdrop-blur-md p-4 rounded-2xl border gap-3.5 shadow-md`}>
                                 <div className="flex items-start sm:items-center gap-3.5 min-w-0 flex-1">
-                                  <img src={item.image} alt={item.title} className="w-12 h-12 sm:w-14 sm:h-14 object-cover rounded-2xl shrink-0 shadow-md" />
+                                  <img src={item.image} alt={item.title} className="w-12 h-12 sm:w-14 sm:h-14 object-cover rounded-xl shrink-0" />
                                   <div className="min-w-0 flex-1 flex flex-col justify-center">
                                     <h4 className="font-bold text-xs sm:text-sm leading-snug whitespace-normal break-words">{item.cleanTitle}</h4>
                                     
-                                    {item.extrasText && (
+                                    {item.saucesText && (
                                       <span className={`text-[11px] font-medium opacity-90 mt-0.5 whitespace-normal break-words ${isBackgroundLuminous ? 'text-stone-950 font-semibold' : 'text-white/90'}`}>
-                                        {item.extrasText}
+                                        {item.saucesText}
                                       </span>
                                     )}
 
@@ -1744,7 +1428,7 @@
                                   </div>
                                 </div>
                                 <div className="flex items-center justify-between sm:justify-end gap-3.5 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-white/10">
-                                  <div className={`flex items-center ${isLight ? 'bg-white/50 border-stone-900/20' : 'bg-stone-900/80 border-white/20'} border rounded-xl px-2.5 py-1 shadow-md`}>
+                                  <div className={`flex items-center ${isLight ? 'bg-white/60 border-stone-900/20' : 'bg-stone-900 border-white/20'} border rounded-xl px-2.5 py-1`}>
                                     <button onClick={() => updateCartItemQty(item.cartItemId, -1)} className="px-1.5 text-xs font-bold cursor-pointer active:scale-90">
                                       <i className="fa-solid fa-minus text-[8px]"></i>
                                     </button>
@@ -1756,7 +1440,7 @@
                                   <span className="font-bold text-xs sm:text-sm w-20 text-right">${(item.rawPrice * item.quantity).toLocaleString('es-CL')}</span>
                                   <button 
                                     onClick={() => removeCartItem(item.cartItemId)}
-                                    className={`w-7 h-7 rounded-full flex items-center justify-center transition cursor-pointer text-xs active:scale-90 shadow-md ${dynamicIconContainerBg}`}
+                                    className={`w-7 h-7 rounded-full flex items-center justify-center transition cursor-pointer text-xs active:scale-90 shadow-sm ${dynamicIconContainerBg}`}
                                     title="Eliminar producto"
                                   >
                                     <i className="fa-solid fa-trash-can text-[10px]"></i>
@@ -1784,7 +1468,7 @@
                               required
                               value={formData.fullName}
                               onChange={(e) => setFormData({...formData, fullName: e.target.value})}
-                              className={`w-full ${isLight ? 'bg-white/30 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/30 border-white/20 text-white placeholder-white/50'} backdrop-blur-2xl border rounded-2xl px-4 py-3 text-xs lg:text-sm outline-none focus:border-white/50 transition shadow-xl`}
+                              className={`w-full ${isLight ? 'bg-white/30 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/25 border-white/20 text-white placeholder-white/50'} backdrop-blur-lg border rounded-2xl px-4 py-3 text-xs lg:text-sm outline-none focus:border-stone-950 transition`}
                             />
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -1794,21 +1478,21 @@
                                 required
                                 value={formData.address}
                                 onChange={(e) => setFormData({...formData, address: e.target.value})}
-                                className={`w-full ${isLight ? 'bg-white/30 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/30 border-white/20 text-white placeholder-white/50'} backdrop-blur-2xl border rounded-2xl px-4 py-3 text-xs lg:text-sm outline-none focus:border-white/50 transition shadow-xl`}
+                                className={`w-full ${isLight ? 'bg-white/30 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/25 border-white/20 text-white placeholder-white/50'} backdrop-blur-lg border rounded-2xl px-4 py-3 text-xs lg:text-sm outline-none focus:border-stone-950 transition`}
                               />
 
                               <div className="relative" ref={comunaRef}>
                                 <div 
                                   onClick={() => setComunaDropdownOpen(!comunaDropdownOpen)}
-                                  className={`w-full ${isLight ? 'bg-white/30 border-stone-900/20 text-stone-950' : 'bg-black/30 border-white/20 text-white'} backdrop-blur-2xl border rounded-2xl px-4 py-3 text-xs lg:text-sm flex items-center justify-between cursor-pointer transition select-none shadow-xl`}
+                                  className={`w-full ${isLight ? 'bg-white/30 border-stone-900/20 text-stone-950' : 'bg-black/25 border-white/20 text-white'} backdrop-blur-lg border rounded-2xl px-4 py-3 text-xs lg:text-sm flex items-center justify-between cursor-pointer transition select-none`}
                                 >
                                   <span className="truncate">{formData.comuna}</span>
                                   <i className="fa-solid fa-chevron-down text-xs opacity-60"></i>
                                 </div>
 
                                 {comunaDropdownOpen && (
-                                  <div className={`absolute left-0 right-0 mt-2 ${isLight ? 'bg-white/95 text-stone-950 border-stone-300' : 'bg-stone-900/95 text-white border-white/15'} backdrop-blur-3xl rounded-2xl shadow-2xl border z-50 p-3`}>
-                                    <div className={`flex items-center gap-2 ${isLight ? 'bg-stone-100/70 border-stone-200 text-stone-900' : 'bg-stone-800/70 border-white/10 text-white'} backdrop-blur-md px-3 py-2 rounded-xl border mb-2`}>
+                                  <div className={`absolute left-0 right-0 mt-2 ${isLight ? 'bg-white/90 text-stone-950 border-stone-300' : 'bg-stone-900/90 text-white border-white/10'} backdrop-blur-xl rounded-2xl shadow-2xl border z-50 p-3`}>
+                                    <div className={`flex items-center gap-2 ${isLight ? 'bg-stone-100/50 border-stone-200 text-stone-900' : 'bg-stone-800/50 border-white/10 text-white'} backdrop-blur-md px-3 py-2 rounded-xl border mb-2`}>
                                       <i className="fa-solid fa-search text-xs opacity-50"></i>
                                       <input 
                                         type="text" 
@@ -1854,20 +1538,20 @@
                                 required
                                 value={formData.phone}
                                 onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                                className={`w-full ${isLight ? 'bg-white/30 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/30 border-white/20 text-white placeholder-white/50'} backdrop-blur-2xl border rounded-2xl px-4 py-3 text-xs lg:text-sm outline-none focus:border-white/50 transition shadow-xl`}
+                                className={`w-full ${isLight ? 'bg-white/30 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/25 border-white/20 text-white placeholder-white/50'} backdrop-blur-lg border rounded-2xl px-4 py-3 text-xs lg:text-sm outline-none focus:border-stone-950 transition`}
                               />
 
                               <div className="relative" ref={paymentRef}>
                                 <div 
                                   onClick={() => setPaymentDropdownOpen(!paymentDropdownOpen)}
-                                  className={`w-full ${isLight ? 'bg-white/30 border-stone-900/20 text-stone-950' : 'bg-black/30 border-white/20 text-white'} backdrop-blur-2xl border rounded-2xl px-4 py-3 text-xs lg:text-sm flex items-center justify-between cursor-pointer transition select-none shadow-xl`}
+                                  className={`w-full ${isLight ? 'bg-white/30 border-stone-900/20 text-stone-950' : 'bg-black/25 border-white/20 text-white'} backdrop-blur-lg border rounded-2xl px-4 py-3 text-xs lg:text-sm flex items-center justify-between cursor-pointer transition select-none`}
                                 >
                                   <span className="truncate">Pago: {formData.paymentMethod}</span>
                                   <i className="fa-solid fa-chevron-down text-xs opacity-60"></i>
                                 </div>
 
                                 {paymentDropdownOpen && (
-                                  <div className={`absolute left-0 right-0 mt-2 ${isLight ? 'bg-white/95 text-stone-950 border-stone-300' : 'bg-stone-900/95 text-white border-white/15'} backdrop-blur-3xl rounded-2xl shadow-2xl border z-50 p-2 space-y-1`}>
+                                  <div className={`absolute left-0 right-0 mt-2 ${isLight ? 'bg-white/90 text-stone-950 border-stone-300' : 'bg-stone-900/90 text-white border-white/10'} backdrop-blur-xl rounded-2xl shadow-2xl border z-50 p-2 space-y-1`}>
                                     {METODOS_PAGO.map((metodo) => (
                                       <div 
                                         key={metodo}
@@ -1891,7 +1575,7 @@
 
                             <button 
                               type="submit"
-                              className="w-full bg-stone-950 hover:bg-black text-white border border-white/25 font-bold py-4 rounded-2xl transition active:scale-95 shadow-2xl text-xs lg:text-sm uppercase tracking-wider cursor-pointer mt-3 flex items-center justify-center gap-3"
+                              className="w-full bg-stone-950 hover:bg-black text-white border border-white/20 font-bold py-4 rounded-2xl transition active:scale-95 shadow-xl text-xs lg:text-sm uppercase tracking-wider cursor-pointer mt-3 flex items-center justify-center gap-3"
                             >
                               <i className="fa-brands fa-whatsapp text-lg text-emerald-400"></i>
                               Enviar Pedido por WhatsApp
