@@ -466,6 +466,9 @@
 
           const [isOpen, setIsOpen] = useState(true);
 
+          // Estados para la notificación flotante de bienvenida por horario
+          const [welcomeNotification, setWelcomeNotification] = useState({ show: false, leaving: false, message: '' });
+
           useEffect(() => {
             const checkStoreStatus = () => {
               const now = new Date();
@@ -480,8 +483,40 @@
 
             checkStoreStatus();
             const interval = setInterval(checkStoreStatus, 60000);
-            return () => clearInterval(interval);
+
+            // Generar saludo por horario al cargar por primera vez
+            const currentHour = new Date().getHours();
+            let greetingText = "";
+            if (currentHour >= 6 && currentHour < 12) {
+              greetingText = "¡Buenos días! ☀️ ¿Qué vas a pedir hoy en HŌFU?";
+            } else if (currentHour >= 12 && currentHour < 19) {
+              greetingText = "¡Buenas tardes! 🍣 Disfruta tu almuerzo o tarde HŌFU";
+            } else {
+              greetingText = "¡Buenas noches! 🌙 Disfruta tu cena HŌFU";
+            }
+
+            setWelcomeNotification({ show: true, leaving: false, message: greetingText });
+
+            // Desaparecer automáticamente después de 5 segundos
+            const timer = setTimeout(() => {
+              setWelcomeNotification(prev => ({ ...prev, leaving: true }));
+              setTimeout(() => {
+                setWelcomeNotification({ show: false, leaving: false, message: '' });
+              }, 350);
+            }, 5000);
+
+            return () => {
+              clearInterval(interval);
+              clearTimeout(timer);
+            };
           }, []);
+
+          const dismissWelcomeNotification = () => {
+            setWelcomeNotification(prev => ({ ...prev, leaving: true }));
+            setTimeout(() => {
+              setWelcomeNotification({ show: false, leaving: false, message: '' });
+            }, 350);
+          };
 
           const [formData, setFormData] = useState({ 
             fullName: '', 
@@ -821,6 +856,31 @@
           return (
             <div className={`h-full w-full ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-hidden select-none relative`}>
               
+              {/* NOTIFICACIÓN FLOTANTE DE BIENVENIDA (TIPO ISLA / ALERTA) */}
+              {welcomeNotification.show && (
+                <div className="fixed dynamic-island-wrapper left-0 right-0 z-50 flex justify-center pointer-events-none px-4">
+                  <div 
+                    style={{ '--island-glow-color': activeNeonColor }}
+                    className={`dynamic-island-border-beam dynamic-island-content flex items-center gap-3 font-semibold tracking-wide pointer-events-auto bg-stone-950/90 text-white shadow-2xl ${welcomeNotification.leaving ? 'dynamic-island-exit' : 'dynamic-island-enter'}`}
+                  >
+                    <span 
+                      style={{ backgroundColor: activeNeonColor }}
+                      className="w-4 h-4 lg:w-5 lg:h-5 rounded-full text-white flex items-center justify-center text-[9px] lg:text-[11px] shadow-sm shrink-0 relative z-10"
+                    >
+                      <i className="fa-solid fa-bell"></i>
+                    </span>
+                    <span className="truncate relative z-10 text-white text-xs lg:text-sm font-medium">{welcomeNotification.message}</span>
+                    <button 
+                      onClick={dismissWelcomeNotification}
+                      className="w-5 h-5 rounded-full bg-white/10 hover:bg-white/25 flex items-center justify-center text-white/80 hover:text-white transition active:scale-90 cursor-pointer text-[10px] shrink-0 relative z-10 ml-1"
+                      title="Cerrar notificación"
+                    >
+                      <i className="fa-solid fa-xmark"></i>
+                    </button>
+                  </div>
+                </div>
+              )}
+
               {dynamicIsland.show && (
                 <div className="fixed dynamic-island-wrapper left-0 right-0 z-50 flex justify-center pointer-events-none px-4">
                   <div 
