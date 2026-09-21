@@ -466,7 +466,6 @@
 
           const [isOpen, setIsOpen] = useState(true);
 
-          // Estado para la notificación flotante de bienvenida por horario
           const [welcomeNotification, setWelcomeNotification] = useState({ show: false, leaving: false, message: '' });
 
           useEffect(() => {
@@ -484,7 +483,6 @@
             checkStoreStatus();
             const interval = setInterval(checkStoreStatus, 60000);
 
-            // Generar saludo por horario al cargar por primera vez
             const currentHour = new Date().getHours();
             let greetingText = "";
             if (currentHour >= 6 && currentHour < 12) {
@@ -497,7 +495,6 @@
 
             setWelcomeNotification({ show: true, leaving: false, message: greetingText });
 
-            // Desaparecer automáticamente después de 5 segundos
             const timer = setTimeout(() => {
               setWelcomeNotification(prev => ({ ...prev, leaving: true }));
               setTimeout(() => {
@@ -856,7 +853,6 @@
           return (
             <div className={`h-full w-full ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-hidden select-none relative`}>
               
-              {/* NOTIFICACIÓN FLOTANTE DE BIENVENIDA */}
               {welcomeNotification.show && (
                 <div className="fixed dynamic-island-wrapper left-0 right-0 z-50 flex justify-center pointer-events-none px-4">
                   <div 
@@ -1201,8 +1197,9 @@
 
                   <div className="lg:col-span-4 relative flex flex-col items-center justify-center order-2">
                     <div className="relative w-full h-[200px] sm:h-[250px] lg:h-[680px] flex items-center justify-center my-0">
-                      {/* EFECTO DE SOMBRA DIFUMINADA OSCURA / TONO HUMO TRAS LA IMAGEN */}
-                      <div className="absolute w-44 h-44 sm:w-64 sm:h-64 lg:w-[600px] lg:h-[600px] bg-black/55 rounded-full blur-3xl pointer-events-none transition-all duration-500"></div>
+                      
+                      {/* SOMBRA ELÍPTICA Y ORGÁNICA (PROYECCIÓN TRIDIMENSIONAL EN LA BASE) */}
+                      <div className="absolute bottom-2 lg:bottom-6 w-36 sm:w-56 lg:w-96 h-8 sm:h-12 lg:h-16 bg-[radial-gradient(ellipse_at_center,_rgba(0,0,0,0.75)_0%,_rgba(0,0,0,0.35)_45%,_transparent_75%)] rounded-[100%] blur-xl pointer-events-none transition-all duration-500 scale-105"></div>
                       
                       <img 
                         src={selectedItem.image} 
@@ -1212,7 +1209,7 @@
                         onMouseDown={() => setIsImageZoomed(true)}
                         onMouseUp={() => setIsImageZoomed(false)}
                         onMouseLeave={() => setIsImageZoomed(false)}
-                        className={`max-h-[185px] sm:max-h-[235px] lg:max-h-[660px] max-w-full object-contain ${selectedItem.id === 'onigiri' ? 'onigiri-deep-shadow' : 'drop-shadow-[0_20px_20px_rgba(0,0,0,0.5)] lg:drop-shadow-[0_40px_45px_rgba(0,0,0,0.8)]'} transition-all duration-300 ease-out cursor-pointer select-none ${
+                        className={`max-h-[185px] sm:max-h-[235px] lg:max-h-[660px] max-w-full object-contain ${selectedItem.id === 'onigiri' ? 'onigiri-deep-shadow' : 'drop-shadow-[0_20px_20px_rgba(0,0,0,0.5)] lg:drop-shadow-[0_40px_45px_rgba(0,0,0,0.8)]'} transition-all duration-300 ease-out cursor-pointer select-none relative z-10 ${
                           isImageZoomed ? 'scale-140 sm:scale-160 lg:scale-155 rotate-1' : 'scale-125 sm:scale-140 lg:scale-135'
                         } ${animating ? 'opacity-0 scale-75 rotate-3 translate-y-4' : 'opacity-100 translate-y-0'}`}
                         onError={(e)=>{
