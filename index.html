@@ -7,12 +7,12 @@
     <!-- VERIFICACIÓN DE GOOGLE SEARCH CONSOLE -->
     <meta name="google-site-verification" content="LHIXPh5mpvYoncRUG4CRQrtUWoIJXZ9JaoumOTkL-fo" />
 
-    <!-- MEJORAS DE SEO PARA GOOGLE -->
-    <title>HŌFU - Sushi a Domicilio en Santiago</title>
-    <meta name="description" content="Disfruta del mejor sushi, gohan y onigiri con despacho a domicilio en Santiago. Pide online de forma rápida y directa a nuestro WhatsApp.">
-    <meta name="keywords" content="sushi a domicilio, delivery sushi Santiago, gohan, onigiri, hofu sushi">
+    <!-- ENFOQUE LOCAL: ESTACIÓN CENTRAL Y ALREDEDORES -->
+    <title>HŌFU - Sushi y Delivery a Domicilio en Estación Central y Santiago</title>
+    <meta name="description" content="El mejor sushi, gohan y onigiri con despacho a domicilio en Estación Central, Santiago Centro, Quinta Normal, Lo Prado y Cerrillos. ¡Pide online directo a WhatsApp!">
+    <meta name="keywords" content="sushi Estación Central, delivery sushi Santiago, gohan Estación Central, onigiri, hofu sushi, reparto a domicilio Santiago">
     
-    <!-- Datos estructurados para negocio de reparto sin local físico -->
+    <!-- Datos estructurados optimizados para negocio local de reparto -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -20,7 +20,14 @@
       "name": "HŌFU",
       "currenciesAccepted": "CLP",
       "priceRange": "$$",
-      "servesCuisine": "Sushi, Japonesa, Comida asiática"
+      "servesCuisine": "Sushi, Japonesa, Comida asiática",
+      "areaServed": [
+        "Estación Central",
+        "Santiago Centro",
+        "Quinta Normal",
+        "Lo Prado",
+        "Cerrillos"
+      ]
     }
     </script>
 
@@ -515,7 +522,7 @@
           const [formData, setFormData] = useState({ 
             fullName: '', 
             address: '', 
-            comuna: 'Santiago', 
+            comuna: 'Estación Central', 
             phone: '',
             paymentMethod: 'Efectivo'
           });
@@ -823,7 +830,7 @@
               setOrderSuccess(false);
               setCart([]);
               setCartOpen(false);
-              setFormData({ fullName: '', address: '', comuna: 'Santiago', phone: '', paymentMethod: 'Efectivo' });
+              setFormData({ fullName: '', address: '', comuna: 'Estación Central', phone: '', paymentMethod: 'Efectivo' });
             }, 2000);
           };
 
