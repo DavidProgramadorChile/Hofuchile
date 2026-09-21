@@ -154,7 +154,7 @@
         const categoriesData = {
           favoritos: {
             name: 'FAVORITOS',
-            icon: 'fa-solid fa-heart text-black text-lg',
+            icon: 'fa-solid fa-heart text-white text-lg', // <-- CORREGIDO AQUÍ (text-white)
             items: [
               {
                 id: 'onigiri',
@@ -445,7 +445,6 @@
           const [selectedEnvoltura, setSelectedEnvoltura] = useState('Palta');
           const [animating, setAnimating] = useState(false);
           const [quantity, setQuantity] = useState(1);
-          const [specialNotes, setSpecialNotes] = useState('');
 
           const [isImageZoomed, setIsImageZoomed] = useState(false);
 
@@ -518,7 +517,6 @@
 
           const allowCustomizations = activeCategory !== 'bebidas' && activeCategory !== 'extras';
           
-          // Flags específicos para categorías
           const isExtra = activeCategory === 'extras';
           const isGohan = activeCategory === 'gohan';
 
@@ -588,7 +586,6 @@
             setQuantity(1);
             setSoyaCount(1);
             setTeriyakiCount(0);
-            setSpecialNotes('');
             setTimeout(() => setAnimating(false), 350);
           };
 
@@ -605,7 +602,6 @@
             setQuantity(1);
             setSoyaCount(1);
             setTeriyakiCount(0);
-            setSpecialNotes('');
             setTimeout(() => setAnimating(false), 350);
           };
 
@@ -690,9 +686,8 @@
               if (teriyakiCount > 0) saucesParts.push(`${teriyakiCount} Teriyaki`);
             }
             const saucesText = saucesParts.length > 0 ? `Salsas: ${saucesParts.join(', ')}` : '';
-            const notesText = (allowCustomizations && specialNotes.trim() !== '') ? `Nota: "${specialNotes.trim()}"` : '';
 
-            const cartItemId = `${selectedItem.id}|${variantTitle}|S${soyaCount}T${teriyakiCount}|N${specialNotes}`;
+            const cartItemId = `${selectedItem.id}|${variantTitle}|S${soyaCount}T${teriyakiCount}`;
 
             setCart(prevCart => {
               const existingIndex = prevCart.findIndex(item => item.cartItemId === cartItemId);
@@ -706,7 +701,6 @@
                   cartItemId, 
                   cleanTitle: variantTitle,
                   saucesText,
-                  notesText,
                   quantity 
                 }];
               }
@@ -714,7 +708,6 @@
             setQuantity(1);
             setSoyaCount(1);
             setTeriyakiCount(0);
-            setSpecialNotes('');
           };
 
           const updateCartItemQty = (cartItemId, delta) => {
@@ -760,7 +753,6 @@
             setQuantity(1);
             setSoyaCount(1);
             setTeriyakiCount(0);
-            setSpecialNotes('');
             setSearchOpen(false);
             setSearchQuery('');
             setTimeout(() => setAnimating(false), 350);
@@ -780,7 +772,6 @@
             cart.forEach((item, idx) => {
               let fullDesc = item.cleanTitle;
               if (item.saucesText) fullDesc += ` [${item.saucesText}]`;
-              if (item.notesText) fullDesc += ` [${item.notesText}]`;
               message += `${idx + 1}. ${fullDesc} x${item.quantity} - $${(item.rawPrice * item.quantity).toLocaleString('es-CL')}\n`;
             });
             message += `\n*💰 Total a pagar:* $${totalAmount.toLocaleString('es-CL')}\n`;
@@ -1056,19 +1047,6 @@
                       )}
 
                       {allowCustomizations && (
-                        <div className="space-y-1.5 pt-1">
-                          <label className="text-xs font-bold uppercase tracking-wider opacity-90 block">Notas especiales (opcional):</label>
-                          <input 
-                            type="text" 
-                            placeholder="Ej. Sin cebollín, salsa extra..."
-                            value={specialNotes}
-                            onChange={(e) => setSpecialNotes(e.target.value)}
-                            className={`w-full max-w-md ${isLight ? 'bg-black/5 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/30 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-2xl px-4 py-2.5 text-xs lg:text-sm outline-none focus:border-stone-950 transition`}
-                          />
-                        </div>
-                      )}
-
-                      {allowCustomizations && (
                         <div className="space-y-2 w-full max-w-md bg-black/25 p-3.5 rounded-2xl border border-white/10 backdrop-blur-md">
                           <div className="flex justify-between items-center px-1">
                             <span className="text-xs font-bold uppercase tracking-wider text-white/90">Elige tu salsa favorita</span>
@@ -1228,18 +1206,6 @@
                               </button>
                             ))}
                           </div>
-                        </div>
-                      )}
-
-                      {allowCustomizations && (
-                        <div className="w-full max-w-xs">
-                          <input 
-                            type="text" 
-                            placeholder="Nota (ej. sin cebollín)..."
-                            value={specialNotes}
-                            onChange={(e) => setSpecialNotes(e.target.value)}
-                            className={`w-full ${isLight ? 'bg-black/5 border-stone-900/20 text-stone-950 placeholder-stone-900/50' : 'bg-black/30 border-white/20 text-white placeholder-white/50'} backdrop-blur-md border rounded-xl px-2.5 py-0.5 text-[11px] outline-none focus:border-stone-950 transition`}
-                          />
                         </div>
                       )}
 
@@ -1417,12 +1383,6 @@
                                     {item.saucesText && (
                                       <span className={`text-[11px] font-medium opacity-90 mt-0.5 whitespace-normal break-words ${isBackgroundLuminous ? 'text-stone-950 font-semibold' : 'text-white/90'}`}>
                                         {item.saucesText}
-                                      </span>
-                                    )}
-
-                                    {item.notesText && (
-                                      <span className={`text-[10px] italic opacity-80 mt-0.5 whitespace-normal break-words ${isBackgroundLuminous ? 'text-stone-950' : 'text-white/80'}`}>
-                                        {item.notesText}
                                       </span>
                                     )}
                                   </div>
