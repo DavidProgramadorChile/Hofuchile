@@ -25,6 +25,7 @@
             margin: 0;
             padding: 0;
             overflow: hidden;
+            touch-action: manipulation;
         }
 
         .native-transition {
@@ -168,6 +169,14 @@
         .no-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
+        }
+
+        /* Scroll fluido optimizado para touch en móviles */
+        .touch-scrollable {
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+            touch-action: pan-y;
         }
     </style>
 </head>
@@ -1375,7 +1384,7 @@
                   </div>
 
                   <div className="lg:col-span-4 relative flex flex-col items-center justify-center order-2">
-                    <div className="relative w-full h-[150px] sm:h-[190px] lg:h-[680px] flex items-center justify-center my-0">
+                    <div className="relative w-full h-[150px] sm:h-[180px] lg:h-[680px] flex items-center justify-center my-0">
                       
                       <div className="absolute bottom-2 lg:bottom-6 w-36 sm:w-56 lg:w-96 h-8 sm:h-12 lg:h-16 bg-[radial-gradient(ellipse_at_center,_rgba(0,0,0,0.75)_0%,_rgba(0,0,0,0.35)_45%,_transparent_75%)] rounded-[100%] blur-xl pointer-events-none transition-all duration-500 scale-105"></div>
                       
@@ -1387,7 +1396,7 @@
                         onMouseDown={() => setIsImageZoomed(true)}
                         onMouseUp={() => setIsImageZoomed(false)}
                         onMouseLeave={() => setIsImageZoomed(false)}
-                        className={`max-h-[140px] sm:max-h-[175px] lg:max-h-[660px] max-w-full object-contain ${selectedItem.id === 'onigiri' ? 'onigiri-deep-shadow' : 'drop-shadow-[0_20px_20px_rgba(0,0,0,0.5)] lg:drop-shadow-[0_40px_45px_rgba(0,0,0,0.8)]'} transition-all duration-300 ease-out cursor-pointer select-none relative z-10 ${
+                        className={`max-h-[135px] sm:max-h-[165px] lg:max-h-[660px] max-w-full object-contain ${selectedItem.id === 'onigiri' ? 'onigiri-deep-shadow' : 'drop-shadow-[0_20px_20px_rgba(0,0,0,0.5)] lg:drop-shadow-[0_40px_45px_rgba(0,0,0,0.8)]'} transition-all duration-300 ease-out cursor-pointer select-none relative z-10 ${
                           isImageZoomed ? 'scale-140 sm:scale-160 lg:scale-155 rotate-1' : 'scale-125 sm:scale-140 lg:scale-135'
                         } ${animating ? 'opacity-0 scale-75 rotate-3 translate-y-4' : 'opacity-100 translate-y-0'}`}
                         onError={(e)=>{
@@ -1396,16 +1405,16 @@
                       />
                     </div>
 
-                    {/* Contenedor móvil optimizado con espaciado vertical reducido (py-0.5 / my-0) y respiro inferior (pb-4) */}
+                    {/* Contenedor móvil optimizado con scroll táctil fluido (touch-scrollable) y padding vertical reducido */}
                     <div className={`flex lg:hidden flex-col items-center text-center space-y-1 w-full px-2 mt-0 mb-0 pb-4 transition-all duration-300 ease-out ${animating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
                       <p className={`text-[11px] sm:text-xs font-medium leading-tight max-w-xs ${isLight ? 'text-stone-900/90' : 'text-white/95'} drop-shadow ${
-                        isExtra ? 'mt-4 sm:mt-5 mb-1' : isGohan ? 'mt-2 sm:mt-3 mb-1' : 'my-0.5'
+                        isExtra ? 'mt-3 sm:mt-4 mb-1' : isGohan ? 'mt-2 sm:mt-2.5 mb-1' : 'my-0.5'
                       }`}>
                         {selectedItem.description}
                       </p>
 
                       <div className="w-full max-w-xs relative">
-                        <div className={`w-full ${showWasabiJengibre ? 'max-h-[115px] sm:max-h-[135px] overflow-y-auto no-scrollbar [mask-image:linear-gradient(to_bottom,black_75%,transparent_100%)]' : ''} space-y-1 px-1 py-0.5 my-0`}>
+                        <div className={`w-full ${showWasabiJengibre ? 'max-h-[110px] sm:max-h-[130px] touch-scrollable [mask-image:linear-gradient(to_bottom,black_75%,transparent_100%)]' : ''} space-y-1 px-1 py-0.5 my-0`}>
                           {selectedItem.hasFlavorSelector && (
                             <div className={`space-y-0.5 w-full ${glassClass} p-1.5 rounded-2xl shadow-xl shadow-black/30`}>
                               <label className="text-[10px] font-bold uppercase tracking-wider opacity-90 block text-center">Elige tu sabor:</label>
