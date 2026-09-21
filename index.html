@@ -911,22 +911,50 @@
           const activeNeonColor = selectedItem.islandColor || '#10b981';
           const glassClass = isLight ? 'advanced-glass-light text-stone-950 shadow-xl shadow-black/30' : 'advanced-glass text-white shadow-xl shadow-black/30';
 
-          // Estilo de botones circulares adaptativos según fondo claro u oscuro
-          const circularBtnClass = isLight 
-            ? 'w-6 h-6 rounded-full bg-black text-white hover:bg-stone-800 flex items-center justify-center text-[10px] font-extrabold active:scale-90 transition cursor-pointer shadow-md' 
-            : 'w-6 h-6 rounded-full bg-white text-black hover:bg-stone-200 flex items-center justify-center text-[10px] font-extrabold active:scale-90 transition cursor-pointer shadow-md';
+          // Estilo de botones circulares adaptativos con soporte para estado disabled
+          const baseCircularBtn = isLight 
+            ? 'w-6 h-6 rounded-full bg-black text-white flex items-center justify-center text-[10px] font-extrabold transition shadow-md' 
+            : 'w-6 h-6 rounded-full bg-white text-black flex items-center justify-center text-[10px] font-extrabold transition shadow-md';
 
-          const circularBtnMobileClass = isLight 
-            ? 'w-5 h-5 rounded-full bg-black text-white hover:bg-stone-800 flex items-center justify-center text-[9px] font-extrabold active:scale-90 transition cursor-pointer shadow-sm' 
-            : 'w-5 h-5 rounded-full bg-white text-black hover:bg-stone-200 flex items-center justify-center text-[9px] font-extrabold active:scale-90 transition cursor-pointer shadow-sm';
+          const getCircularBtnClass = (isDisabled) => {
+            if (isDisabled) {
+              return `${baseCircularBtn} opacity-30 cursor-not-allowed pointer-events-none`;
+            }
+            return `${baseCircularBtn} ${isLight ? 'hover:bg-stone-800' : 'hover:bg-stone-200'} active:scale-90 cursor-pointer`;
+          };
 
-          const qtyContainerBtnClass = isLight
-            ? 'w-8 h-8 rounded-full bg-black text-white hover:bg-stone-800 flex items-center justify-center font-bold text-base active:scale-90 transition cursor-pointer shadow-md'
-            : 'w-8 h-8 rounded-full bg-white text-black hover:bg-stone-200 flex items-center justify-center font-bold text-base active:scale-90 transition cursor-pointer shadow-md';
+          const baseCircularMobileBtn = isLight 
+            ? 'w-5 h-5 rounded-full bg-black text-white flex items-center justify-center text-[9px] font-extrabold transition shadow-sm' 
+            : 'w-5 h-5 rounded-full bg-white text-black flex items-center justify-center text-[9px] font-extrabold transition shadow-sm';
 
-          const qtyContainerBtnMobileClass = isLight
-            ? 'w-5 h-5 rounded-full bg-black text-white hover:bg-stone-800 flex items-center justify-center font-bold text-[10px] active:scale-90 transition cursor-pointer shadow-sm'
-            : 'w-5 h-5 rounded-full bg-white text-black hover:bg-stone-200 flex items-center justify-center font-bold text-[10px] active:scale-90 transition cursor-pointer shadow-sm';
+          const getCircularMobileBtnClass = (isDisabled) => {
+            if (isDisabled) {
+              return `${baseCircularMobileBtn} opacity-30 cursor-not-allowed pointer-events-none`;
+            }
+            return `${baseCircularMobileBtn} ${isLight ? 'hover:bg-stone-800' : 'hover:bg-stone-200'} active:scale-90 cursor-pointer`;
+          };
+
+          const baseQtyBtn = isLight
+            ? 'w-8 h-8 rounded-full bg-black text-white flex items-center justify-center font-bold text-base transition shadow-md'
+            : 'w-8 h-8 rounded-full bg-white text-black flex items-center justify-center font-bold text-base transition shadow-md';
+
+          const getQtyBtnClass = (isDisabled) => {
+            if (isDisabled) {
+              return `${baseQtyBtn} opacity-30 cursor-not-allowed pointer-events-none`;
+            }
+            return `${baseQtyBtn} ${isLight ? 'hover:bg-stone-800' : 'hover:bg-stone-200'} active:scale-90 cursor-pointer`;
+          };
+
+          const baseQtyMobileBtn = isLight
+            ? 'w-5 h-5 rounded-full bg-black text-white flex items-center justify-center font-bold text-[10px] transition shadow-sm'
+            : 'w-5 h-5 rounded-full bg-white text-black flex items-center justify-center font-bold text-[10px] transition shadow-sm';
+
+          const getQtyMobileBtnClass = (isDisabled) => {
+            if (isDisabled) {
+              return `${baseQtyMobileBtn} opacity-30 cursor-not-allowed pointer-events-none`;
+            }
+            return `${baseQtyMobileBtn} ${isLight ? 'hover:bg-stone-800' : 'hover:bg-stone-200'} active:scale-90 cursor-pointer`;
+          };
 
           return (
             <div className={`h-full w-full ${selectedItem.bgGradient} ${isLight ? 'text-stone-950' : 'text-white'} native-transition flex flex-col overflow-hidden select-none relative`}>
@@ -1213,11 +1241,19 @@
                             <div className={`flex items-center justify-between ${isLight ? 'bg-black/10 border-black/10' : 'bg-white/10 border-white/15'} px-3.5 py-2 rounded-2xl border`}>
                               <span className="text-xs font-bold">Soya</span>
                               <div className="flex items-center gap-2">
-                                <button onClick={() => updateSoya(-1)} className={circularBtnClass}>
+                                <button 
+                                  onClick={() => updateSoya(-1)} 
+                                  disabled={soyaCount === 0}
+                                  className={getCircularBtnClass(soyaCount === 0)}
+                                >
                                   <i className="fa-solid fa-minus text-[9px]"></i>
                                 </button>
                                 <span className={`text-xs w-4 text-center ${isLight ? 'text-stone-950 font-extrabold' : 'text-white font-bold'}`}>{soyaCount}</span>
-                                <button onClick={() => updateSoya(1)} className={circularBtnClass}>
+                                <button 
+                                  onClick={() => updateSoya(1)} 
+                                  disabled={soyaCount + teriyakiCount >= quantity}
+                                  className={getCircularBtnClass(soyaCount + teriyakiCount >= quantity)}
+                                >
                                   <i className="fa-solid fa-plus text-[9px]"></i>
                                 </button>
                               </div>
@@ -1225,11 +1261,19 @@
                             <div className={`flex items-center justify-between ${isLight ? 'bg-black/10 border-black/10' : 'bg-white/10 border-white/15'} px-3.5 py-2 rounded-2xl border`}>
                               <span className="text-xs font-bold">Teriyaki</span>
                               <div className="flex items-center gap-2">
-                                <button onClick={() => updateTeriyaki(-1)} className={circularBtnClass}>
+                                <button 
+                                  onClick={() => updateTeriyaki(-1)} 
+                                  disabled={teriyakiCount === 0}
+                                  className={getCircularBtnClass(teriyakiCount === 0)}
+                                >
                                   <i className="fa-solid fa-minus text-[9px]"></i>
                                 </button>
                                 <span className={`text-xs w-4 text-center ${isLight ? 'text-stone-950 font-extrabold' : 'text-white font-bold'}`}>{teriyakiCount}</span>
-                                <button onClick={() => updateTeriyaki(1)} className={circularBtnClass}>
+                                <button 
+                                  onClick={() => updateTeriyaki(1)} 
+                                  disabled={soyaCount + teriyakiCount >= quantity}
+                                  className={getCircularBtnClass(soyaCount + teriyakiCount >= quantity)}
+                                >
                                   <i className="fa-solid fa-plus text-[9px]"></i>
                                 </button>
                               </div>
@@ -1248,11 +1292,19 @@
                             <div className={`flex items-center justify-between ${isLight ? 'bg-black/10 border-black/10' : 'bg-white/10 border-white/15'} px-3.5 py-2 rounded-2xl border`}>
                               <span className="text-xs font-bold">Wasabi</span>
                               <div className="flex items-center gap-2">
-                                <button onClick={() => updateWasabi(-1)} className={circularBtnClass}>
+                                <button 
+                                  onClick={() => updateWasabi(-1)} 
+                                  disabled={wasabiCount === 0}
+                                  className={getCircularBtnClass(wasabiCount === 0)}
+                                >
                                   <i className="fa-solid fa-minus text-[9px]"></i>
                                 </button>
                                 <span className={`text-xs w-4 text-center ${isLight ? 'text-stone-950 font-extrabold' : 'text-white font-bold'}`}>{wasabiCount}</span>
-                                <button onClick={() => updateWasabi(1)} className={circularBtnClass}>
+                                <button 
+                                  onClick={() => updateWasabi(1)} 
+                                  disabled={wasabiCount >= quantity}
+                                  className={getCircularBtnClass(wasabiCount >= quantity)}
+                                >
                                   <i className="fa-solid fa-plus text-[9px]"></i>
                                 </button>
                               </div>
@@ -1260,11 +1312,19 @@
                             <div className={`flex items-center justify-between ${isLight ? 'bg-black/10 border-black/10' : 'bg-white/10 border-white/15'} px-3.5 py-2 rounded-2xl border`}>
                               <span className="text-xs font-bold">Jengibre</span>
                               <div className="flex items-center gap-2">
-                                <button onClick={() => updateJengibre(-1)} className={circularBtnClass}>
+                                <button 
+                                  onClick={() => updateJengibre(-1)} 
+                                  disabled={jengibreCount === 0}
+                                  className={getCircularBtnClass(jengibreCount === 0)}
+                                >
                                   <i className="fa-solid fa-minus text-[9px]"></i>
                                 </button>
                                 <span className={`text-xs w-4 text-center ${isLight ? 'text-stone-950 font-extrabold' : 'text-white font-bold'}`}>{jengibreCount}</span>
-                                <button onClick={() => updateJengibre(1)} className={circularBtnClass}>
+                                <button 
+                                  onClick={() => updateJengibre(1)} 
+                                  disabled={jengibreCount >= quantity}
+                                  className={getCircularBtnClass(jengibreCount >= quantity)}
+                                >
                                   <i className="fa-solid fa-plus text-[9px]"></i>
                                 </button>
                               </div>
@@ -1275,11 +1335,18 @@
 
                       <div className="pt-2 flex items-center gap-6">
                         <div className={`flex items-center rounded-full border px-4 py-2 ${glassClass} shadow-xl`}>
-                          <button onClick={decreaseQty} className={qtyContainerBtnClass}>
+                          <button 
+                            onClick={decreaseQty} 
+                            disabled={quantity === 1}
+                            className={getQtyBtnClass(quantity === 1)}
+                          >
                             <i className="fa-solid fa-minus text-xs"></i>
                           </button>
                           <span className={`w-10 text-center font-bold text-base ${isLight ? 'text-stone-950 font-extrabold' : 'text-white'}`}>{quantity}</span>
-                          <button onClick={increaseQty} className={qtyContainerBtnClass}>
+                          <button 
+                            onClick={increaseQty} 
+                            className={getQtyBtnClass(false)}
+                          >
                             <i className="fa-solid fa-plus text-xs"></i>
                           </button>
                         </div>
@@ -1427,11 +1494,19 @@
                                 <div className={`flex items-center justify-between ${isLight ? 'bg-black/10 border-black/10' : 'bg-white/10 border-white/15'} px-2 py-1 rounded-xl border`}>
                                   <span className="text-[11px] font-bold">Soya</span>
                                   <div className="flex items-center gap-1.5">
-                                    <button onClick={() => updateSoya(-1)} className={circularBtnMobileClass}>
+                                    <button 
+                                      onClick={() => updateSoya(-1)} 
+                                      disabled={soyaCount === 0}
+                                      className={getCircularMobileBtnClass(soyaCount === 0)}
+                                    >
                                       <i className="fa-solid fa-minus text-[8px]"></i>
                                     </button>
                                     <span className={`text-[11px] w-3 text-center ${isLight ? 'text-stone-950 font-extrabold' : 'text-white font-bold'}`}>{soyaCount}</span>
-                                    <button onClick={() => updateSoya(1)} className={circularBtnMobileClass}>
+                                    <button 
+                                      onClick={() => updateSoya(1)} 
+                                      disabled={soyaCount + teriyakiCount >= quantity}
+                                      className={getCircularMobileBtnClass(soyaCount + teriyakiCount >= quantity)}
+                                    >
                                       <i className="fa-solid fa-plus text-[8px]"></i>
                                     </button>
                                   </div>
@@ -1439,11 +1514,19 @@
                                 <div className={`flex items-center justify-between ${isLight ? 'bg-black/10 border-black/10' : 'bg-white/10 border-white/15'} px-2 py-1 rounded-xl border`}>
                                   <span className="text-[11px] font-bold">Teriyaki</span>
                                   <div className="flex items-center gap-1.5">
-                                    <button onClick={() => updateTeriyaki(-1)} className={circularBtnMobileClass}>
+                                    <button 
+                                      onClick={() => updateTeriyaki(-1)} 
+                                      disabled={teriyakiCount === 0}
+                                      className={getCircularMobileBtnClass(teriyakiCount === 0)}
+                                    >
                                       <i className="fa-solid fa-minus text-[8px]"></i>
                                     </button>
                                     <span className={`text-[11px] w-3 text-center ${isLight ? 'text-stone-950 font-extrabold' : 'text-white font-bold'}`}>{teriyakiCount}</span>
-                                    <button onClick={() => updateTeriyaki(1)} className={circularBtnMobileClass}>
+                                    <button 
+                                      onClick={() => updateTeriyaki(1)} 
+                                      disabled={soyaCount + teriyakiCount >= quantity}
+                                      className={getCircularMobileBtnClass(soyaCount + teriyakiCount >= quantity)}
+                                    >
                                       <i className="fa-solid fa-plus text-[8px]"></i>
                                     </button>
                                   </div>
@@ -1462,11 +1545,19 @@
                                 <div className={`flex items-center justify-between ${isLight ? 'bg-black/10 border-black/10' : 'bg-white/10 border-white/15'} px-2 py-1 rounded-xl border`}>
                                   <span className="text-[11px] font-bold">Wasabi</span>
                                   <div className="flex items-center gap-1.5">
-                                    <button onClick={() => updateWasabi(-1)} className={circularBtnMobileClass}>
+                                    <button 
+                                      onClick={() => updateWasabi(-1)} 
+                                      disabled={wasabiCount === 0}
+                                      className={getCircularMobileBtnClass(wasabiCount === 0)}
+                                    >
                                       <i className="fa-solid fa-minus text-[8px]"></i>
                                     </button>
                                     <span className={`text-[11px] w-3 text-center ${isLight ? 'text-stone-950 font-extrabold' : 'text-white font-bold'}`}>{wasabiCount}</span>
-                                    <button onClick={() => updateWasabi(1)} className={circularBtnMobileClass}>
+                                    <button 
+                                      onClick={() => updateWasabi(1)} 
+                                      disabled={wasabiCount >= quantity}
+                                      className={getCircularMobileBtnClass(wasabiCount >= quantity)}
+                                    >
                                       <i className="fa-solid fa-plus text-[8px]"></i>
                                     </button>
                                   </div>
@@ -1474,11 +1565,19 @@
                                 <div className={`flex items-center justify-between ${isLight ? 'bg-black/10 border-black/10' : 'bg-white/10 border-white/15'} px-2 py-1 rounded-xl border`}>
                                   <span className="text-[11px] font-bold">Jengibre</span>
                                   <div className="flex items-center gap-1.5">
-                                    <button onClick={() => updateJengibre(-1)} className={circularBtnMobileClass}>
+                                    <button 
+                                      onClick={() => updateJengibre(-1)} 
+                                      disabled={jengibreCount === 0}
+                                      className={getCircularMobileBtnClass(jengibreCount === 0)}
+                                    >
                                       <i className="fa-solid fa-minus text-[8px]"></i>
                                     </button>
                                     <span className={`text-[11px] w-3 text-center ${isLight ? 'text-stone-950 font-extrabold' : 'text-white font-bold'}`}>{jengibreCount}</span>
-                                    <button onClick={() => updateJengibre(1)} className={circularBtnMobileClass}>
+                                    <button 
+                                      onClick={() => updateJengibre(1)} 
+                                      disabled={jengibreCount >= quantity}
+                                      className={getCircularMobileBtnClass(jengibreCount >= quantity)}
+                                    >
                                       <i className="fa-solid fa-plus text-[8px]"></i>
                                     </button>
                                   </div>
@@ -1499,11 +1598,18 @@
 
                       <div className="flex items-center gap-2 pt-1 pb-0">
                         <div className={`flex items-center rounded-full border px-2.5 py-0.5 ${glassClass} shadow-lg`}>
-                          <button onClick={decreaseQty} className={qtyContainerBtnMobileClass}>
+                          <button 
+                            onClick={decreaseQty} 
+                            disabled={quantity === 1}
+                            className={getQtyMobileBtnClass(quantity === 1)}
+                          >
                             <i className="fa-solid fa-minus text-[9px]"></i>
                           </button>
                           <span className={`w-5 text-center font-bold text-[11px] ${isLight ? 'text-stone-950 font-extrabold' : 'text-white'}`}>{quantity}</span>
-                          <button onClick={increaseQty} className={qtyContainerBtnMobileClass}>
+                          <button 
+                            onClick={increaseQty} 
+                            className={getQtyMobileBtnClass(false)}
+                          >
                             <i className="fa-solid fa-plus text-[9px]"></i>
                           </button>
                         </div>
