@@ -476,7 +476,7 @@
 
         function HofuLanding() {
           const [activeCategory, setActiveCategory] = useState('tempurarolls');
-          const [selectedItem, setSelectedItem] = useState(categoriesData.tempurarolls.items[4]); // Tori Roll por defecto
+          const [selectedItem, setSelectedItem] = useState(categoriesData.tempurarolls.items[4]);
           const [selectedFlavor, setSelectedFlavor] = useState('Coca-Cola');
           const [selectedProtein, setSelectedProtein] = useState('Pollo apanado');
           const [selectedEnvoltura, setSelectedEnvoltura] = useState('Palta');
@@ -553,7 +553,6 @@
           };
 
           const allowCustomizations = activeCategory !== 'bebidas' && activeCategory !== 'extras';
-          
           const isExtra = activeCategory === 'extras';
           const isGohan = activeCategory === 'gohan';
 
