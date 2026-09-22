@@ -11,23 +11,63 @@
     <title>HŌFU - Sushi y Delivery a Domicilio en Estación Central y Santiago</title>
     <meta name="description" content="El mejor sushi, gohan y onigiri con despacho a domicilio en Estación Central, Santiago Centro, Quinta Normal, Lo Prado y Cerrillos. ¡Pide online directo a WhatsApp!">
     <meta name="keywords" content="sushi Estación Central, delivery sushi Santiago, gohan Estación Central, onigiri, hofu sushi, reparto a domicilio Santiago">
+
+    <!-- OPEN GRAPH Y SOCIAL CARDS PARA WHATSAPP Y REDES SOCIALES -->
+    <meta property="og:title" content="HŌFU - Sushi y Delivery a Domicilio en Estación Central y Santiago">
+    <meta property="og:description" content="El mejor sushi, gohan y onigiri con despacho a domicilio. ¡Pide online directo a WhatsApp!">
+    <meta property="og:image" content="https://hofu.cl/logo/favicon.png">
+    <meta property="og:url" content="https://hofu.cl">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="HŌFU - Sushi y Delivery a Domicilio">
+    <meta name="twitter:description" content="El mejor sushi, gohan y onigiri con despacho a domicilio en Santiago. ¡Pide online!">
+    <meta name="twitter:image" content="https://hofu.cl/logo/favicon.png">
     
-    <!-- Datos estructurados optimizados para negocio local de reparto -->
+    <!-- DATOS ESTRUCTURADOS AVANZADOS (SCHEMA.ORG) PARA SEO LOCAL Y MENÚ -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "FoodEstablishment",
+      "@type": "Restaurant",
       "name": "HŌFU",
+      "url": "https://hofu.cl",
+      "image": "https://hofu.cl/logo/favicon.png",
       "currenciesAccepted": "CLP",
       "priceRange": "$$",
       "servesCuisine": "Sushi, Japonesa, Comida asiática",
+      "telephone": "+56920468336",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Estación Central",
+        "addressRegion": "Santiago Metropolitan Region",
+        "addressCountry": "CL"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": -33.4513,
+        "longitude": -70.6950
+      },
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+          "Sunday"
+        ],
+        "opens": "12:00",
+        "closes": "23:30"
+      },
       "areaServed": [
         "Estación Central",
         "Santiago Centro",
         "Quinta Normal",
         "Lo Prado",
         "Cerrillos"
-      ]
+      ],
+      "menu": "https://hofu.cl/#special-rolls"
     }
     </script>
 
@@ -203,6 +243,7 @@
                 islandColor: '#65a30d',
                 isLight: true,
                 image: 'favoritos/onigiri.png',
+                altText: 'Onigiri artesanal con palta, queso crema y cebollín en Hōfu Sushi Estación Central',
                 hasProteinSelector: true,
                 proteinas: ["Pollo apanado", "Camarón apanado", "Salmón", "Champiñón salteado"]
               },
@@ -216,6 +257,7 @@
                 islandColor: '#f43f5e',
                 isLight: false,
                 image: 'favoritos/handroll.png',
+                altText: 'Hand roll fresco con queso crema y cebollín para delivery en Santiago',
                 hasProteinSelector: true,
                 proteinas: ["Pollo apanado", "Camarón apanado", "Salmón", "Kanikama", "Champiñón salteado"]
               }
@@ -234,6 +276,7 @@
                 islandColor: '#f97316',
                 isLight: false,
                 image: 'gohan/gohansalmon.png',
+                altText: 'Gohan de salmón fresco con palta y queso crema Hōfu Sushi'
               },
               {
                 id: 'camaron',
@@ -245,6 +288,7 @@
                 islandColor: '#a855f7',
                 isLight: false,
                 image: 'gohan/gohancamaron.png',
+                altText: 'Gohan de camarón apanado con palta y queso crema en Estación Central'
               },
               {
                 id: 'pollo',
@@ -256,6 +300,7 @@
                 islandColor: '#eab308',
                 isLight: true,
                 image: 'gohan/gohanpollo.png',
+                altText: 'Gohan de pollo apanado crujiente con palta Hōfu Sushi'
               },
             ]
           },
@@ -272,12 +317,13 @@
                 islandColor: '#E9ECEF',
                 isLight: true,
                 image: 'specialroll/avocado.png',
+                altText: 'Avocado roll de pollo apanado y queso crema Hōfu Sushi Santiago',
                 hasEnvolturaSelector: true,
                 envolturas: ["Palta", "Salmón"]
               },
               {
-                id: 'avocadoalmond',
-                title: 'Avocado Almond',
+                id: 'almondroll',
+                title: 'Almond Roll',
                 description: 'Pollo Apanado • Queso Crema • Almendras Tostadas',
                 price: '$4.950',
                 rawPrice: 4950,
@@ -285,6 +331,7 @@
                 islandColor: '#FFD000',
                 isLight: true,
                 image: 'specialroll/avocadoalmond.png',
+                altText: 'Almond roll con almendras tostadas y pollo apanado Hōfu',
                 hasEnvolturaSelector: true,
                 envolturas: ["Palta", "Salmón"]
               },
@@ -298,6 +345,7 @@
                 islandColor: '#FF206E',
                 isLight: false,
                 image: 'specialroll/cinty.png',
+                altText: 'Nami roll con camarón y queso crema delivery Estación Central',
                 hasEnvolturaSelector: true,
                 envolturas: ["Palta", "Salmón"]
               },
@@ -311,6 +359,7 @@
                 islandColor: '#FF7B00',
                 isLight: false,
                 image: 'specialroll/ebifu.png',
+                altText: 'Osaka roll de camarón apanado y queso crema Hōfu Sushi',
                 hasEnvolturaSelector: true,
                 envolturas: ["Palta", "Salmón"]
               },
@@ -324,6 +373,7 @@
                 islandColor: '#C9184A',
                 isLight: false,
                 image: 'specialroll/kanikama.png',
+                altText: 'Crab roll con kanikama y queso crema delivery Santiago',
                 hasEnvolturaSelector: true,
                 envolturas: ["Palta", "Salmón"]
               },
@@ -337,6 +387,7 @@
                 islandColor: '#41EAD4',
                 isLight: false,
                 image: 'specialroll/veggie.png',
+                altText: 'Veggie roll con champiñón salteado y queso crema Hōfu',
                 hasEnvolturaSelector: true,
                 envolturas: ["Palta", "Salmón"]
               }
@@ -355,6 +406,7 @@
                 islandColor: '#ef4444',
                 isLight: false,
                 image: 'tempuraroll/ebifurai.png',
+                altText: 'Kenji roll tempura frito con camarón y pollo Hōfu Sushi'
               },
               {
                 id: 'crispycrab',
@@ -366,6 +418,7 @@
                 islandColor: '#e11d48',
                 isLight: false,
                 image: 'tempuraroll/kanihot.png',
+                altText: 'Crispy crab tempura frito con kanikama y queso crema'
               },
               {
                 id: 'natiroll',
@@ -377,6 +430,7 @@
                 islandColor: '#f97316',
                 isLight: false,
                 image: 'tempuraroll/nati.png',
+                altText: 'Nati roll frito tempura con pollo apanado Hōfu'
               },
               {
                 id: 'natialmond',
@@ -388,6 +442,7 @@
                 islandColor: '#d97706',
                 isLight: false,
                 image: 'tempuraroll/natialmond.png',
+                altText: 'Nati almond tempura frito con almendras tostadas Hōfu Sushi'
               },
               {
                 id: 'toriroll',
@@ -399,6 +454,7 @@
                 islandColor: '#41EAD4',
                 isLight: true,
                 image: 'tempuraroll/tori..png',
+                altText: 'Tori roll frito tempura con camarón apanado y queso crema'
               }
             ]
           },
@@ -415,6 +471,7 @@
                 islandColor: '#CE2029',
                 isLight: false,
                 image: 'bebidas/bebida1.5.png',
+                altText: 'Bebida formato familiar 1.5L bien fría delivery Hōfu',
                 hasFlavorSelector: true
               },
               {
@@ -427,6 +484,7 @@
                 islandColor: '#3b82f6',
                 isLight: false,
                 image: 'bebidas/bebidaslata.png',
+                altText: 'Bebida en lata individual 350cc Hōfu Sushi',
                 hasFlavorSelector: true
               }
             ]
@@ -444,6 +502,7 @@
                 islandColor: '#d97706',
                 isLight: false,
                 image: 'extras/soya.png',
+                altText: 'Salsa de soya extra 30ml Hōfu'
               },
               {
                 id: 'teriyaki',
@@ -455,6 +514,7 @@
                 islandColor: '#ea580c',
                 isLight: false,
                 image: 'extras/teriyaki.png',
+                altText: 'Salsa teriyaki extra 30ml Hōfu'
               }
             ]
           }
@@ -960,7 +1020,7 @@
                                 className="flex items-center justify-between p-2.5 rounded-xl hover:bg-white/10 cursor-pointer transition text-xs active:scale-98"
                               >
                                 <div className="flex items-center gap-2.5 min-w-0 flex-1 pr-2">
-                                  <img src={prod.image} alt={prod.title} className="w-8 h-8 object-cover rounded-lg shrink-0" />
+                                  <img src={prod.image} alt={prod.altText || prod.title} className="w-8 h-8 object-cover rounded-lg shrink-0" />
                                   <span className="font-semibold truncate">{prod.title}</span>
                                 </div>
                                 <span className="font-bold text-orange-400 shrink-0">{prod.price}</span>
@@ -1174,7 +1234,7 @@
 
                       <img 
                         src={selectedItem.image} 
-                        alt={selectedItem.title}
+                        alt={selectedItem.altText || selectedItem.title}
                         onTouchStart={() => setIsImageZoomed(true)}
                         onTouchEnd={() => setIsImageZoomed(false)}
                         onMouseDown={() => setIsImageZoomed(true)}
@@ -1352,7 +1412,7 @@
                             >
                               <img 
                                 src={item.image} 
-                                alt={item.title} 
+                                alt={item.altText || item.title} 
                                 className="w-full h-full object-cover rounded-xl"
                                 onError={(e)=>{
                                   e.target.src = "https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&q=80&w=800";
@@ -1428,7 +1488,7 @@
                             {cart.map((item) => (
                               <div key={item.cartItemId} className="flex flex-col sm:flex-row sm:items-center justify-between bg-black/55 border border-white/15 shadow-[0_8px_25px_rgba(0,0,0,0.6),inset_0_2px_4px_rgba(0,0,0,0.8)] backdrop-blur-md p-4 rounded-2xl gap-3.5">
                                 <div className="flex items-start sm:items-center gap-3.5 min-w-0 flex-1">
-                                  <img src={item.image} alt={item.title} className="w-12 h-12 sm:w-14 sm:h-14 object-cover rounded-xl shrink-0 shadow-sm" />
+                                  <img src={item.image} alt={item.altText || item.title} className="w-12 h-12 sm:w-14 sm:h-14 object-cover rounded-xl shrink-0 shadow-sm" />
                                   <div className="min-w-0 flex-1 flex flex-col justify-center">
                                     <h4 className="font-bold text-xs sm:text-sm leading-snug whitespace-normal break-words">{item.cleanTitle}</h4>
                                     
