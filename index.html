@@ -51,7 +51,7 @@
             min-height: 100%;
             margin: 0;
             padding: 0;
-            overflow-y: auto; /* Permite desplazamiento vertical fluido en móviles y pantallas compactas */
+            overflow-y: auto;
         }
 
         .native-transition {
@@ -866,7 +866,8 @@
                 </div>
               )}
 
-              <div className="w-full bg-black/35 backdrop-blur-md px-3 lg:px-6 py-1.5 flex items-center justify-center z-40 border-b border-white/15 shrink-0 shadow-sm">
+              {/* BARRA SUPERIOR CON ESTADO Y BOTÓN DE RESEÑAS DE GOOGLE */}
+              <div className="w-full bg-black/35 backdrop-blur-md px-3 lg:px-6 py-1.5 flex items-center justify-between z-40 border-b border-white/15 shrink-0 shadow-sm">
                 <div className={`flex items-center gap-1.5 transition-opacity duration-300 ${dynamicIsland.show ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
                   <span className={`w-1.5 h-1.5 lg:w-2 lg:h-2 rounded-full animate-pulse ${isOpen ? 'bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.9)]' : 'bg-red-600 shadow-[0_0_6px_rgba(220,38,38,0.9)]'}`}></span>
                   <i className="fa-solid fa-clock text-[9px] lg:text-[10px] text-white/70 ml-0.5"></i>
@@ -874,6 +875,16 @@
                     {isOpen ? 'ABIERTO • 12:00 PM - 11:30 PM' : 'CERRADO • 12:00 PM - 11:30 PM'}
                   </span>
                 </div>
+
+                <a 
+                  href="https://g.page/r/CYGk_1o0EKOpEBM/review" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 bg-white/15 hover:bg-white/25 border border-white/25 px-2.5 py-0.5 rounded-full text-[9px] lg:text-[10px] font-bold tracking-wider text-white transition active:scale-95 shadow-sm"
+                >
+                  <i className="fa-solid fa-star text-amber-300"></i>
+                  <span>¡Califícanos!</span>
+                </a>
               </div>
 
               <header className="w-full px-4 lg:px-16 py-3 lg:py-5 flex items-center justify-between z-30 max-w-[1600px] mx-auto relative shrink-0">
