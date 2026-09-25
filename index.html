@@ -125,6 +125,21 @@
             margin: 0;
             padding: 0;
             overflow-y: auto;
+            /* BLOQUEO DE SELECCIÓN DE TEXTO E IMÁGENES */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        /* BLOQUEO DE ARRASTRE DE IMÁGENES */
+        img {
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+            user-drag: none;
+            pointer-events: auto;
         }
 
         .native-transition {
@@ -594,6 +609,27 @@
           const [dynamicIsland, setDynamicIsland] = useState({ show: false, leaving: false, message: '¡Añadido con éxito! 🍣', icon: 'fa-solid fa-check' });
 
           const [isOpen, setIsOpen] = useState(true);
+
+          // SCRIPT DE SEGURIDAD ANTICopia Y ANTICLICKDERECHO
+          useEffect(() => {
+            const handleContextMenu = (e) => e.preventDefault();
+            const handleKeyDown = (e) => {
+              if (
+                e.keyCode === 123 || // F12
+                (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || // Ctrl+Shift+I/J/C
+                (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83)) // Ctrl+U (Ver código) o Ctrl+S (Guardar)
+              ) {
+                e.preventDefault();
+                return false;
+              }
+            };
+            document.addEventListener('contextmenu', handleContextMenu);
+            document.addEventListener('keydown', handleKeyDown);
+            return () => {
+              document.removeEventListener('contextmenu', handleContextMenu);
+              document.removeEventListener('keydown', handleKeyDown);
+            };
+          }, []);
 
           useEffect(() => {
             const checkStoreStatus = () => {
