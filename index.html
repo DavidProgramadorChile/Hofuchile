@@ -2115,29 +2115,33 @@
         }
 
         .order-modal-box {
-            padding: 10px 20px 20px 20px;
-            gap: 10px;
-            max-height: 90vh;
+            padding: 20px 24px;
+            gap: 12px;
+            max-height: 85vh;
             overflow-y: auto;
+            border-top-left-radius: 24px;
+            border-top-right-radius: 24px;
         }
 
         .order-modal-box h3 {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             font-weight: 700;
             color: var(--text-main);
             padding-right: 25px;
-            margin-top: 5px;
+            margin-top: 0;
+            margin-bottom: 4px;
         }
 
         .manual-form-group {
             display: flex;
             flex-direction: column;
-            gap: 6px;
-            margin-top: 4px;
+            gap: 8px;
+            margin-top: 0;
         }
 
         .manual-field-label {
-            font-size: 0.8rem;
+            font-size: 0.82rem;
+            font-weight: 500;
             color: var(--text-main);
         }
 
@@ -2202,13 +2206,17 @@
             background-color: var(--accent-action);
             color: #FFFFFF;
             border: none;
-            border-radius: 10px;
-            padding: 11px;
-            font-size: 0.9rem;
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
             text-align: center;
-            margin-top: 4px;
+            margin-top: 6px;
+            box-shadow: 0 8px 20px rgba(255, 0, 0, 0.25);
+        }
+        .btn-guardar-direccion:active {
+            transform: scale(0.98);
         }
 
         .btn-cerrar-modal {
@@ -2219,9 +2227,9 @@
             cursor: pointer;
             text-align: center;
             padding: 10px;
-            border-radius: 10px;
+            border-radius: 12px;
             width: 100%;
-            margin-top: 4px;
+            margin-top: 2px;
         }
 
         @media (min-width: 901px) {
@@ -2335,13 +2343,19 @@
             }
 
             .order-modal-box {
-                width: 750px !important;
-                max-width: 750px !important;
-                border-radius: 16px !important;
+                width: 500px !important;
+                max-width: 500px !important;
+                border-radius: 20px !important;
                 border: 1px solid var(--border-color) !important;
                 transform: scale(0.95) !important;
                 opacity: 0;
                 transition: transform 0.25s cubic-bezier(0.1, 0.9, 0.2, 1), opacity 0.25s ease !important;
+                max-height: 85vh !important;
+            }
+
+            .modal-overlay.show .order-modal-box {
+                transform: scale(1) !important;
+                opacity: 1 !important;
             }
 
             .product-modal-box {
@@ -2870,6 +2884,7 @@
         </div>
     </div>
 
+    <!-- MODAL DE DELIVERY ADAPTADO PARA MÓVIL Y PC -->
     <div class="modal-overlay" id="orderModal">
         <div class="order-modal-box modal-draggable-box">
             <button class="modal-close-pc-btn" onclick="closeModalInstance('orderModal')" title="Cerrar">
@@ -2877,7 +2892,7 @@
             </button>
             <h3>Datos de tu Delivery</h3>
             
-            <div class="manual-form-group" style="margin-top: 6px;">
+            <div class="manual-form-group">
                 <label class="manual-field-label">Nombre</label>
                 <div class="manual-input-box"><input type="text" id="manualNombre" placeholder="Ej: Carlos" autocomplete="off"></div>
 
